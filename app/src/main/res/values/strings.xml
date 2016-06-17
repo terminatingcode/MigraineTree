@@ -7,4 +7,10 @@
     <string name="action_settings">Settings</string>
     <string name="MigraineTree">Migraine Tree</string>
     <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="calendar">Calendar</string>
+    <string name="charts">Charts</string>
+    <string name="WUAPIKey">2bba77ed8a35a0af</string>
+    <string name="WUurl">http://api.wunderground.com/api/</string>
+    <string name="conditions">/conditions/q/</string>
+    <string name="json">.json</string>
 </resources>

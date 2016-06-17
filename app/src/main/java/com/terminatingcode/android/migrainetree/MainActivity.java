@@ -81,10 +81,10 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.calendar) {
+        if (id == R.id.nav_calendar) {
             Intent calendarIntent = new Intent(this, CalendarActivity.class);
             startActivity(calendarIntent);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_charts) {
 
         } else if (id == R.id.nav_slideshow) {
 
