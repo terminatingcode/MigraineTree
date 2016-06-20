@@ -16,6 +16,9 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, WeatherFragment.OnFragmentInteractionListener {
 
+    private CheckLocation mCheckLocation;
+    private boolean locationNeedsToBeSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +47,10 @@ public class MainActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.content_frame, new WeatherFragment()).commit();
+        mCheckLocation = new CheckLocation();
+        locationNeedsToBeSet = mCheckLocation.needLocationSpecified(this);
+        fragmentManager.beginTransaction().add(R.id.content_frame, WeatherFragment.newInstance(locationNeedsToBeSet)).commit();
 
 
     }

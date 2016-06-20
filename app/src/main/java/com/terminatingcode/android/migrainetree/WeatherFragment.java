@@ -24,9 +24,12 @@ public class WeatherFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+//    private String mParam1;
+//    private String mParam2;
     private OnFragmentInteractionListener mListener;
+    private View mAutoCompleteTextView;
+    private View mWeatherData;
+    private static boolean locationNeedsToBeSet;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -36,42 +39,46 @@ public class WeatherFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment WeatherFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static WeatherFragment newInstance(String param1, String param2) {
+    public static WeatherFragment newInstance(boolean param1) {
         WeatherFragment fragment = new WeatherFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        locationNeedsToBeSet = param1;
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.fragment_weather, container, false);
+        mAutoCompleteTextView = layout.findViewById(R.id.location);
+        mWeatherData = layout.findViewById(R.id.weather_data);
+        if(locationNeedsToBeSet){
+            mAutoCompleteTextView.setVisibility(View.VISIBLE);
+            mWeatherData.setVisibility(View.GONE);
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        return layout;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public void onLocationSet() {
+        mAutoCompleteTextView.setVisibility(View.GONE);
+        mWeatherData.setVisibility(View.VISIBLE);
     }
 
     @Override
