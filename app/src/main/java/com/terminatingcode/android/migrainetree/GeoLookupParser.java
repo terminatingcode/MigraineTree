@@ -25,7 +25,7 @@ public class GeoLookupParser {
             location[0] = parseCity(json.getJSONObject("location"));
             return location;
         }
-        else return new String[]{"huh"};
+        else return new String[]{"unknown error"};
     }
 
     private String[] extractResults(JSONArray array){
