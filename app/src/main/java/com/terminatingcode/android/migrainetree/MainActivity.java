@@ -1,6 +1,5 @@
 package com.terminatingcode.android.migrainetree;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,10 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, WeatherFragment.OnFragmentInteractionListener {
-
-    private CheckLocation mCheckLocation;
-    private boolean locationNeedsToBeSet;
+        implements NavigationView.OnNavigationItemSelectedListener,
+        WeatherFragment.OnFragmentInteractionListener,
+        SearchCitiesFragment.OnFragmentInteractionListener,
+        CalendarFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +47,13 @@ public class MainActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mCheckLocation = new CheckLocation();
-        locationNeedsToBeSet = mCheckLocation.needLocationSpecified(this);
-        fragmentManager.beginTransaction().add(R.id.content_frame, WeatherFragment.newInstance(locationNeedsToBeSet)).commit();
-
-
+        CheckLocation checkLocation = new CheckLocation();
+        boolean locationNeedsToBeSet = checkLocation.needLocationSpecified(this);
+        if(locationNeedsToBeSet){
+            fragmentManager.beginTransaction().add(R.id.content_frame, new SearchCitiesFragment()).commit();
+        }else{
+            fragmentManager.beginTransaction().add(R.id.content_frame, new WeatherFragment()).commit();
+        }
     }
 
     @Override
@@ -96,14 +97,13 @@ public class MainActivity extends AppCompatActivity
 
 
         if (id == R.id.nav_calendar) {
-            Intent calendarIntent = new Intent(this, CalendarActivity.class);
-            startActivity(calendarIntent);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new CalendarFragment()).commit();
         } else if (id == R.id.nav_charts) {
 
         } else if (id == R.id.nav_weather) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new WeatherFragment()).commit();
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_set_location) {
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new SearchCitiesFragment()).commit();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

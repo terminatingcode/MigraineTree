@@ -4,13 +4,6 @@
              android:layout_height="match_parent"
              tools:context="com.terminatingcode.android.migrainetree.WeatherFragment">
 
-    <AutoCompleteTextView
-        android:id="@+id/location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/location_prompt"
-        android:visibility="invisible"
-        />
     <RelativeLayout
         android:id="@+id/weather_data"
         android:layout_width="match_parent"

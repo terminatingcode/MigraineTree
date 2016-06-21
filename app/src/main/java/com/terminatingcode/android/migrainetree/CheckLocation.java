@@ -24,7 +24,6 @@ public class CheckLocation {
         final String CITY_NOT_SAVED = "city not saved";
         final String CITY_SAVED = mSharedPreferences.getString(LOCATION, CITY_NOT_SAVED);
 
-        //Toast.makeText(context, CITY_SAVED, LENGTH_SHORT).show();
         return CITY_SAVED.equals(CITY_NOT_SAVED);
     }
 

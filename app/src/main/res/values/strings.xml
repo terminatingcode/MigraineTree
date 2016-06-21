@@ -12,10 +12,12 @@
     <string name="WUAPIKey">2bba77ed8a35a0af</string>
     <string name="WUurl">http://api.wunderground.com/api/</string>
     <string name="conditions">/conditions/q/</string>
+    <string name="geolookup">/geolookup/q</string>
     <string name="json">.json</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="location_prompt">Please enter the city you are located in</string>
     <string name="weather">Weather</string>
+    <string name="set_location">Set Location</string>
 </resources>

@@ -23,9 +23,9 @@ public class CheckLocationTest {
 
     @Before
     public void setUp(){
-        mCheckLocation = new CheckLocation();
         mPrefs = Mockito.mock(SharedPreferences.class);
         context = Mockito.mock(Context.class);
+        mCheckLocation = new CheckLocation();
         Mockito
                 .when(context.getSharedPreferences(Mockito.anyString(), Mockito.anyInt()))
                 .thenReturn(mPrefs);
