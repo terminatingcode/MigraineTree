@@ -13,6 +13,11 @@ import java.util.List;
  * Created by Sarah on 6/16/2016.
  */
 public class GeoLookupParser {
+    CitiesMapWrapper map;
+
+    public GeoLookupParser(){
+        map = new CitiesMapWrapper();
+    }
 
     public String[] parse(JSONObject json) throws JSONException {
         if (json == null) return new String[]{"null JSONObject"};
@@ -24,7 +29,7 @@ public class GeoLookupParser {
         }else if(response.has("results")) {
             return extractResults(response.getJSONArray("results"));
         }
-        else return new String[]{"error"};
+        else return new String[]{"..."};
     }
 
     private String[] extractResults(JSONArray array){
@@ -43,17 +48,18 @@ public class GeoLookupParser {
     }
 
     private String parseCity(JSONObject json){
-        String city = "";
-        String state = "";
-        String country = "";
+        StringBuilder sb = new StringBuilder("");
         try {
-            city = json.getString("city");
-            state = json.getString("state");
-            country = json.getString("country_name");
+            String city = json.getString("city");
+            String state = json.getString("state");
+            String country = json.getString("country_name");
+            sb.append(city).append(" ")
+                    .append(state).append(" ")
+                    .append(country);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return city + " " + state + " " + country;
+        return sb.toString();
 
     }
 }
