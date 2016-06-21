@@ -16,21 +16,19 @@ public class GeoLookupParser {
 
     public String[] parse(JSONObject json) throws JSONException {
         if(json == null) return new String[]{"null JSONObject"};
-        if(json.has("results")) {
+        else if(json.has("results")) {
             return extractResults(json.getJSONArray("results"));
-        }else if(json.has("error")){
-            return new String[]{"city not found"};
         }else if(json.has("location")){
             String[] location = new String[1];
             location[0] = parseCity(json.getJSONObject("location"));
             return location;
         }
-        else return new String[]{"unknown error"};
+        else return new String[]{"error"};
     }
 
     private String[] extractResults(JSONArray array){
         List<String> list = new ArrayList<>();
-        for(int i = array.length() - 1; i >= 0; i--){
+        for(int i = 0; i < array.length(); i++){
             try {
                 JSONObject json = array.getJSONObject(i);
                 String city = parseCity(json);

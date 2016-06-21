@@ -37,23 +37,19 @@ public class GeoLookupParserUnitTest {
 
     @Test
     public void lookupReturnsCityStateCountryMultipleLocations() throws JSONException {
-        String s = "{ \"results\": [{\"name\": \"Paris\",\"city\": \"Paris\",\"state\": \"AR\",\"country\": \"US\",\"country_iso3166\":\"US\",\"country_name\":\"USA\"," +
+        String s = "{\"features\":{\"geolookup\":1},\"results\":"
+                + "[{\"name\": \"Paris\",\"city\": \"Paris\",\"state\": \"AR\",\"country\": \"US\",\"country_iso3166\":\"US\",\"country_name\":\"USA\"," +
                 "\"zmw\": \"72855.1.99999\"," +
-                "\"l\": \"/q/zmw:72855.1.99999\"" +
-                "}" +
-                "," +
-                "{" +
-                "\"name\": \"Paris\"," +
+                "\"l\": \"/q/zmw:72855.1.99999\"}," +
+                "{\"name\": \"Paris\"," +
                 "\"city\": \"Paris\"," +
                 "\"state\": \"\"," +
                 "\"country\": \"FR\"," +
                 "\"country_iso3166\":\"FR\"," +
                 "\"country_name\":\"France\"," +
                 "\"zmw\": \"00000.37.07156\"," +
-                "\"l\": \"/q/zmw:00000.37.07156\"" +
-                "}" +
+                "\"l\": \"/q/zmw:00000.37.07156\"}" +
                 "]" +
-                "}" +
                 "}";
         JSONObject j = new JSONObject(s);
         String[] result = glp.parse(j);

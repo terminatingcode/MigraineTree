@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,6 +31,7 @@ public class SearchCitiesFragment extends Fragment {
     private static final String ARG_LOCATION_SET = "location";
     private static final String NAME = "SearchCitiesFragment";
     private static String[] CITIES = {"..."};
+    private static GeoLookupArrayAdapter mAdapter;
     private static AutoCompleteTextView autoCompleteTextView;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -79,6 +79,9 @@ public class SearchCitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search_cities, container, false);
         autoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.location);
+        mAdapter = new GeoLookupArrayAdapter(getActivity(),R.layout.row_cities );
+        autoCompleteTextView.setThreshold(1);
+        autoCompleteTextView.setAdapter(mAdapter);
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -97,9 +100,6 @@ public class SearchCitiesFragment extends Fragment {
                 //do nothing
             }
         });
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, CITIES);
-        autoCompleteTextView.setThreshold(1);
-        autoCompleteTextView.setAdapter(adapter);
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -166,5 +166,11 @@ public class SearchCitiesFragment extends Fragment {
     public void onMessageEventSetCities(MessageEvent event){
         Log.d(NAME, event.cities[0]);
         CITIES = event.cities;
+        mAdapter.clear();
+        if(mAdapter != null){
+            for (String CITY : CITIES) {
+                mAdapter.add(CITY);
+            }
+        }
     }
 }
