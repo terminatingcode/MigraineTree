@@ -1,38 +1,25 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchCitiesFragment.OnFragmentInteractionListener} interface
+ * {@link ChartsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SearchCitiesFragment#newInstance} factory method to
+ * Use the {@link ChartsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchCitiesFragment extends Fragment {
+public class ChartsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_LOCATION_SET = "location";
-    private static final String NAME = "SearchCitiesFragment";
-    private static String[] CITIES = {"..."};
-    private static AutoCompleteTextView autoCompleteTextView;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -42,7 +29,7 @@ public class SearchCitiesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public SearchCitiesFragment() {
+    public ChartsFragment() {
         // Required empty public constructor
     }
 
@@ -52,11 +39,11 @@ public class SearchCitiesFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchCitiesFragment.
+     * @return A new instance of fragment ChartsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SearchCitiesFragment newInstance(String param1, String param2) {
-        SearchCitiesFragment fragment = new SearchCitiesFragment();
+    public static ChartsFragment newInstance(String param1, String param2) {
+        ChartsFragment fragment = new ChartsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,7 +54,6 @@ public class SearchCitiesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -77,45 +63,8 @@ public class SearchCitiesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_search_cities, container, false);
-        autoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.location);
-        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //do nothing
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Intent intent = new Intent(getActivity(), GeoLookupService.class);
-                intent.setAction(s.toString());
-                getActivity().startService(intent);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //do nothing
-            }
-        });
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, CITIES);
-        autoCompleteTextView.setThreshold(1);
-        autoCompleteTextView.setAdapter(adapter);
         // Inflate the layout for this fragment
-        return rootView;
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        EventBus.getDefault().register(this);
-        Log.d(NAME, "subscribed to EventBus");
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-        Log.d(NAME, "unsubscribed to EventBus");
+        return inflater.inflate(R.layout.fragment_charts, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -155,16 +104,5 @@ public class SearchCitiesFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    /**
-     * Receives String[] from EventBus GeoLookupService
-     * updates autocompleteTextView with potential locations
-     * @param event The cities received by the JsonRequest
-     */
-    @Subscribe
-    public void onMessageEventSetCities(MessageEvent event){
-        Log.d(NAME, event.cities[0]);
-        CITIES = event.cities;
     }
 }

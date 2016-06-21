@@ -16,7 +16,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         WeatherFragment.OnFragmentInteractionListener,
         SearchCitiesFragment.OnFragmentInteractionListener,
-        CalendarFragment.OnFragmentInteractionListener {
+        CalendarFragment.OnFragmentInteractionListener,
+        ChartsFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_calendar) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new CalendarFragment()).commit();
         } else if (id == R.id.nav_charts) {
-
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new ChartsFragment()).commit();
         } else if (id == R.id.nav_weather) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new WeatherFragment()).commit();
         } else if (id == R.id.nav_set_location) {

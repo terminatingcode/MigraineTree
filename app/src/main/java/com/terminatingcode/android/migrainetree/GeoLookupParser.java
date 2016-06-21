@@ -30,7 +30,7 @@ public class GeoLookupParser {
 
     private String[] extractResults(JSONArray array){
         List<String> list = new ArrayList<>();
-        for(int i = 0; i < array.length(); i++){
+        for(int i = array.length() - 1; i >= 0; i--){
             try {
                 JSONObject json = array.getJSONObject(i);
                 String city = parseCity(json);
