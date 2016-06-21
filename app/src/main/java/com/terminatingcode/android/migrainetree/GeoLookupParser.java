@@ -15,13 +15,14 @@ import java.util.List;
 public class GeoLookupParser {
 
     public String[] parse(JSONObject json) throws JSONException {
-        if(json == null) return new String[]{"null JSONObject"};
-        else if(json.has("results")) {
-            return extractResults(json.getJSONArray("results"));
-        }else if(json.has("location")){
+        if (json == null) return new String[]{"null JSONObject"};
+        JSONObject response = json.getJSONObject("response");
+        if(json.has("location")){
             String[] location = new String[1];
             location[0] = parseCity(json.getJSONObject("location"));
             return location;
+        }else if(response.has("results")) {
+            return extractResults(response.getJSONArray("results"));
         }
         else return new String[]{"error"};
     }

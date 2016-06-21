@@ -4,5 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="18sp"
-    android:id="@+id/row_city"
-    android:textColor="@android:color/white"/>
+    android:id="@+id/row_city"/>
