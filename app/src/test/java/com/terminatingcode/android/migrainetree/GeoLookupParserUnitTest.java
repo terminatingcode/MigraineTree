@@ -57,8 +57,8 @@ public class GeoLookupParserUnitTest {
     public void getUIDReturnsUID() throws JSONException {
         String s = "{\"response\":{\"version\":\"0.1\",\"termsofService\":\"http:\\/\\/www.wunderground.com\\/weather\\/api\\/d\\/terms.html\",\"features\":{\"geolookup\":1}},\"location\":{\"type\":\"INTLCITY\",\"country\":\"UK\",\"country_iso3166\":\"GB\",\"country_name\":\"United Kingdom\",\"state\":\"\",\"city\":\"Par\",\"tz_short\":\"BST\",\"tz_long\":\"Europe\\/London\",\"lat\":\"50.34999847\",\"lon\":\"-4.71666718\",\"zip\":\"00000\",\"magic\":\"8\",\"wmo\":\"03823\",\"l\":\"\\/q\\/zmw:00000.8.03823\"}}";
         JSONObject j = new JSONObject(s);
-        String expected = "/q\\/zmw:00000.8.03823";
-        String result = glp.getUID(j);
+        String expected = "/q/zmw:00000.8.03823";
+        String result = glp.getUID(j.getJSONObject("location"));
         assertEquals(expected, result);
     }
 

@@ -56,10 +56,15 @@ public class GeoLookupParser {
             sb.append(city).append(" ")
                     .append(state).append(" ")
                     .append(country);
+            map.put(sb.toString(), getUID(json));
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return sb.toString();
 
+    }
+
+    public String getUID(JSONObject json) throws JSONException {
+        return json.getString("l");
     }
 }
