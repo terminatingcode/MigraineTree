@@ -13,11 +13,7 @@ import java.util.List;
  * Created by Sarah on 6/16/2016.
  */
 public class GeoLookupParser {
-    CitiesMapWrapper map;
 
-    public GeoLookupParser(){
-        map = new CitiesMapWrapper();
-    }
 
     public String[] parse(JSONObject json) throws JSONException {
         if (json == null) return new String[]{"null JSONObject"};
@@ -56,7 +52,8 @@ public class GeoLookupParser {
             sb.append(city).append(" ")
                     .append(state).append(" ")
                     .append(country);
-            map.put(sb.toString(), getUID(json));
+            String uid = getUID(json);
+            putUID(sb.toString(), uid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -66,5 +63,9 @@ public class GeoLookupParser {
 
     public String getUID(JSONObject json) throws JSONException {
         return json.getString("l");
+    }
+
+    public void putUID(String city, String uid){
+        CitiesMapSingleton.newInstance().put(city, uid);
     }
 }
