@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class GeoLookupParser {
 
+    private CitiesMapSingleton mCitiesMapSingleton = CitiesMapSingleton.newInstance();
 
     public String[] parse(JSONObject json) throws JSONException {
         if (json == null) return new String[]{"null JSONObject"};
@@ -66,6 +67,6 @@ public class GeoLookupParser {
     }
 
     public void putUID(String city, String uid){
-        CitiesMapSingleton.newInstance().put(city, uid);
+        mCitiesMapSingleton.put(city, uid);
     }
 }
