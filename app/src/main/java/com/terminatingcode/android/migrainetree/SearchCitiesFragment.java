@@ -2,6 +2,7 @@ package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ public class SearchCitiesFragment extends Fragment {
     private static final String NAME = "SearchCitiesFragment";
     private static GeoLookupArrayAdapter mAdapter;
     private static String location;
+    private CitiesMapSingleton mCitiesMapSingleton;
     private OnFragmentInteractionListener mListener;
 
     public SearchCitiesFragment() {
@@ -48,6 +50,7 @@ public class SearchCitiesFragment extends Fragment {
         mAdapter = new GeoLookupArrayAdapter(getActivity(),R.layout.row_cities );
         autoCompleteTextView.setThreshold(1);
         autoCompleteTextView.setAdapter(mAdapter);
+        //add location results from Weather Underground as user modifies text
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -66,13 +69,29 @@ public class SearchCitiesFragment extends Fragment {
                 //do nothing
             }
         });
+        //if a user selects a city, save to SharedPreferences
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String citySelected = (String) parent.getItemAtPosition(position);
+                saveSelectedCity(citySelected);
             }
         });
         return rootView;
+    }
+
+    /**
+     * saves selected city to SharedPreferences
+     * as Weather Undergrounds unique id for that city
+     * @param citySelected the city the user selected from the AutoCompleteTextView
+     */
+    private void saveSelectedCity(String citySelected) {
+        String cityUID = mCitiesMapSingleton.getUID(citySelected);
+        if(cityUID != null){
+            SharedPreferences prefs = getActivity()
+                    .getSharedPreferences(getString(R.string.PREFERENCES_FILE_KEY), Context.MODE_PRIVATE);
+            prefs.edit().putString(citySelected, cityUID).apply();
+        }
     }
 
     @Override

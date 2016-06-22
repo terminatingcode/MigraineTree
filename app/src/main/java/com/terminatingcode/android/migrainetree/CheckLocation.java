@@ -17,7 +17,7 @@ public class CheckLocation {
      * @return boolean if not saved
      */
     public boolean needLocationSpecified(Context context){
-        String APP_NAME = "com.terminatingcode.migrainetree";
+        String APP_NAME = context.getString(R.string.PREFERENCES_FILE_KEY);
         final SharedPreferences mSharedPreferences = context
                 .getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         final String LOCATION = "location";
