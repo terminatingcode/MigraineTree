@@ -1,5 +1,6 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -15,9 +16,10 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         WeatherFragment.OnFragmentInteractionListener,
-        SearchCitiesFragment.OnFragmentInteractionListener,
         CalendarFragment.OnFragmentInteractionListener,
         ChartsFragment.OnFragmentInteractionListener{
+
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +27,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -48,8 +41,9 @@ public class MainActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        CheckLocation checkLocation = new CheckLocation();
-        boolean locationNeedsToBeSet = checkLocation.needLocationSpecified(this);
+        mSharedPreferences = this.getSharedPreferences(getString(R.string.PREFERENCES_FILE_KEY), MODE_PRIVATE);
+        SharedPrefsUtils sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
+        boolean locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
         if(locationNeedsToBeSet){
             fragmentManager.beginTransaction().add(R.id.content_frame, new SearchCitiesFragment()).commit();
         }else{

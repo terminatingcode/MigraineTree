@@ -3,7 +3,6 @@ package com.terminatingcode.android.migrainetree;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -20,22 +19,13 @@ import org.greenrobot.eventbus.Subscribe;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchCitiesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ *
  */
 public class SearchCitiesFragment extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String NAME = "SearchCitiesFragment";
     private static GeoLookupArrayAdapter mAdapter;
-    private static String location;
-    private CitiesMapSingleton mCitiesMapSingleton;
-    private OnFragmentInteractionListener mListener;
+    private SharedPreferences mSharedPreferences;
 
-    public SearchCitiesFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,24 +64,13 @@ public class SearchCitiesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String citySelected = (String) parent.getItemAtPosition(position);
-                saveSelectedCity(citySelected);
+                mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.PREFERENCES_FILE_KEY), Context.MODE_PRIVATE);
+                SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
+                String cityUID = CitiesMapSingleton.newInstance().getUID(citySelected);
+                mSharedPrefsUtils.saveSelectedCity(citySelected, cityUID);
             }
         });
         return rootView;
-    }
-
-    /**
-     * saves selected city to SharedPreferences
-     * as Weather Undergrounds unique id for that city
-     * @param citySelected the city the user selected from the AutoCompleteTextView
-     */
-    private void saveSelectedCity(String citySelected) {
-        String cityUID = mCitiesMapSingleton.getUID(citySelected);
-        if(cityUID != null){
-            SharedPreferences prefs = getActivity()
-                    .getSharedPreferences(getString(R.string.PREFERENCES_FILE_KEY), Context.MODE_PRIVATE);
-            prefs.edit().putString(citySelected, cityUID).apply();
-        }
     }
 
     @Override
@@ -106,38 +85,6 @@ public class SearchCitiesFragment extends Fragment {
         super.onStop();
         EventBus.getDefault().unregister(this);
         Log.d(NAME, "unsubscribed to EventBus");
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     /**

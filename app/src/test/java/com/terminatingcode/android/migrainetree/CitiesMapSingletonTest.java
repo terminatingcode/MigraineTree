@@ -1,5 +1,6 @@
 package com.terminatingcode.android.migrainetree;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,5 +49,10 @@ public class CitiesMapSingletonTest {
         mCitiesMapSingleton.put("test", "test");
         String expected = "test";
         assertEquals(expected, mCitiesMapSingleton.getUID("test"));
+    }
+
+    @After
+    public void cleanUp(){
+        mCitiesMapSingleton.clearMap();
     }
 }
