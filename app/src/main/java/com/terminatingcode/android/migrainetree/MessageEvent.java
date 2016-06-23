@@ -1,7 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
 /**
- * Defines a Message Event for EventBus Messaging
+ * Defines Message Events for EventBus Messaging
  * Created by Sarah on 6/21/2016.
  */
 public class MessageEvent {
