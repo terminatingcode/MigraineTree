@@ -171,4 +171,91 @@ public class WeatherHour {
         this.tornado = tornado;
     }
 
+    @Override
+    public String toString() {
+        return "WeatherHour{" +
+                "hourStart=" + hourStart +
+                ", temp=" + temp +
+                ", dewpt=" + dewpt +
+                ", hum=" + hum +
+                ", wspd=" + wspd +
+                ", wgust=" + wgust +
+                ", wdir=" + wdir +
+                ", vis=" + vis +
+                ", pressure=" + pressure +
+                ", windchill=" + windchill +
+                ", heatindex=" + heatindex +
+                ", preci=" + preci +
+                ", fog=" + fog +
+                ", rain=" + rain +
+                ", snow=" + snow +
+                ", hail=" + hail +
+                ", thunder=" + thunder +
+                ", tornado=" + tornado +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WeatherHour that = (WeatherHour) o;
+
+        if (Double.compare(that.temp, temp) != 0) return false;
+        if (Double.compare(that.dewpt, dewpt) != 0) return false;
+        if (Double.compare(that.hum, hum) != 0) return false;
+        if (Double.compare(that.wspd, wspd) != 0) return false;
+        if (Double.compare(that.wgust, wgust) != 0) return false;
+        if (Double.compare(that.wdir, wdir) != 0) return false;
+        if (Double.compare(that.vis, vis) != 0) return false;
+        if (Double.compare(that.pressure, pressure) != 0) return false;
+        if (Double.compare(that.windchill, windchill) != 0) return false;
+        if (Double.compare(that.heatindex, heatindex) != 0) return false;
+        if (Double.compare(that.preci, preci) != 0) return false;
+        if (fog != that.fog) return false;
+        if (rain != that.rain) return false;
+        if (snow != that.snow) return false;
+        if (hail != that.hail) return false;
+        if (thunder != that.thunder) return false;
+        if (tornado != that.tornado) return false;
+        return hourStart.equals(that.hourStart);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp1;
+        result = hourStart.hashCode();
+        temp1 = Double.doubleToLongBits(temp);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(dewpt);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(hum);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(wspd);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(wgust);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(wdir);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(vis);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(pressure);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(windchill);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(heatindex);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        temp1 = Double.doubleToLongBits(preci);
+        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
+        result = 31 * result + (fog ? 1 : 0);
+        result = 31 * result + (rain ? 1 : 0);
+        result = 31 * result + (snow ? 1 : 0);
+        result = 31 * result + (hail ? 1 : 0);
+        result = 31 * result + (thunder ? 1 : 0);
+        result = 31 * result + (tornado ? 1 : 0);
+        return result;
+    }
 }

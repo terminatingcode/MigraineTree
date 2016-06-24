@@ -14,12 +14,29 @@ import java.util.TimeZone;
  * Created by Sarah on 6/23/2016.
  */
 public class HistoryWeatherParser {
-    private String utcdate = "utcdate";
-    private String year = "year";
-    private String month = "mon";
-    private String day = "mday";
-    private String hour = "hour";
-    private String minutes = "min";
+    private static final String temperature = "tempm";
+    private static final String dewPoint = "dewptm";
+    private static final String humidity = "hum";
+    private static final String windSpeed = "wspdm";
+    private static final String windGust = "wgustm";
+    private static final String windDirection = "wdird";
+    private static final String visibility = "vism";
+    private static final String airPressure = "pressurem";
+    private static final String windChill = "windchillm";
+    private static final String heatIndex = "heatindexm";
+    private static final String precipitation = "precipm";
+    private static final String fog = "fog";
+    private static final String rain = "rain";
+    private static final String snow = "snow";
+    private static final String hail = "hail";
+    private static final String thunder = "thunder";
+    private static final String tornado = "tornado";
+    private static final String utcdate = "utcdate";
+    private static final String year = "year";
+    private static final String month = "mon";
+    private static final String day = "mday";
+    private static final String hour = "hour";
+    private static final String minutes = "min";
 
     public Weather24Hour parse(JSONObject jsonObject) throws JSONException {
         if(jsonObject == null) throw new JSONException("null JsonObject");
@@ -30,7 +47,24 @@ public class HistoryWeatherParser {
         if(jsonObject == null) throw new JSONException("null JsonObject");
         WeatherHour hour = new WeatherHour();
         hour.setHourStart(parseDate(jsonObject.getJSONObject(utcdate)));
-        return null;
+        hour.setTemp(jsonObject.getDouble(temperature));
+        hour.setDewpt(jsonObject.getDouble(dewPoint));
+        hour.setHum(jsonObject.getDouble(humidity));
+        hour.setWspd(jsonObject.getDouble(windSpeed));
+        hour.setWgust(jsonObject.getDouble(windGust));
+        hour.setWdir(jsonObject.getDouble(windDirection));
+        hour.setVis(jsonObject.getDouble(visibility));
+        hour.setPressure(jsonObject.getDouble(airPressure));
+        hour.setWindchill(jsonObject.getDouble(windChill));
+        hour.setHeatindex(jsonObject.getDouble(heatIndex));
+        hour.setPreci(jsonObject.getDouble(precipitation));
+        hour.setFog(jsonObject.getInt(fog) == 1);
+        hour.setRain(jsonObject.getInt(rain) == 1);
+        hour.setSnow(jsonObject.getInt(snow) == 1);
+        hour.setHail(jsonObject.getInt(hail) == 1);
+        hour.setThunder(jsonObject.getInt(thunder) == 1);
+        hour.setTornado(jsonObject.getInt(tornado) == 1);
+        return hour;
     }
 
     /**

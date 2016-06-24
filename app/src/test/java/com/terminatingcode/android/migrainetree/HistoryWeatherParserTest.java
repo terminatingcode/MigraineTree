@@ -112,12 +112,12 @@ public class HistoryWeatherParserTest {
     }
 
     @Test (expected = JSONException.class)
-    public void nullJSONObjectParseHourThrowsException() throws JSONException {
+    public void nullJSONObjectParseHourThrowsException() throws JSONException, ParseException {
         mHistoryWeatherParser.parseHour(null);
     }
 
     @Test
-    public void parseHourReturnsWeatherHour() throws JSONException {
+    public void parseHourReturnsWeatherHour() throws JSONException, ParseException {
         WeatherHour mWeatherHour = mHistoryWeatherParser.parseHour(jsonHour);
         assertEquals(mockHour, mWeatherHour);
     }
