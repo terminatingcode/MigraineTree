@@ -1,5 +1,6 @@
 package com.terminatingcode.android.migrainetree;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,9 +40,17 @@ public class HistoryWeatherParser {
     private static final String hour = "hour";
     private static final String minutes = "min";
 
-    public Weather24Hour parse(JSONObject jsonObject) throws JSONException {
+    public Weather24Hour parse(JSONObject jsonObject, Weather24Hour weather24Hour) throws JSONException, ParseException, IllegalArgumentException {
         if(jsonObject == null) throw new JSONException("null JsonObject");
-        return null;
+        if(weather24Hour == null) throw new IllegalArgumentException("weather24Hour not initialised");
+        JSONObject historyResults = jsonObject.getJSONObject("history");
+        JSONArray observations = historyResults.getJSONArray("observations");
+        for (int i = observations.length() - 1; i >= 0; i--) {
+            JSONObject hour = observations.getJSONObject(i);
+            WeatherHour weatherHour = parseHour(hour);
+            weather24Hour.addHour(weatherHour);
+        }
+        return weather24Hour;
     }
 
     public WeatherHour parseHour(JSONObject jsonObject) throws JSONException, ParseException {

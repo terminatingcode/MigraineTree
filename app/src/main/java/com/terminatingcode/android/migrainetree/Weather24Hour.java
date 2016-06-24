@@ -31,6 +31,11 @@ public class Weather24Hour {
         return mHours;
     }
 
+    /**
+     * Calculates the change in values
+     * 24 hours before migraine minus the start hour of the migraine
+     * @throws RuntimeException when method called and 24 hours have not been added
+     */
     public void calculateChanges() throws RuntimeException{
         if(mHours.size() == 24){
             WeatherHour one = mHours.get(23);
