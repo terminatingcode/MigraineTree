@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
@@ -96,7 +97,8 @@ public class HistoryWeatherParserTest {
     public void setUp() throws Exception {
         mHistoryWeatherParser = new HistoryWeatherParser();
         mJSONObject = new JSONObject(testQuery).getJSONObject("history");
-        startHour = new Date(1466668560);
+        Long milliseconds = 1466668560730L;
+        startHour = new Date(milliseconds);
         jsonHours = mJSONObject.getJSONArray("observations");
         jsonHour = jsonHours.getJSONObject(0);
         mockHour = initialiseMockWeatherHour();
@@ -121,10 +123,10 @@ public class HistoryWeatherParserTest {
     }
 
     @Test
-    public void parseDateReturnsDate() throws JSONException {
+    public void parseDateReturnsDate() throws JSONException, ParseException {
         JSONObject date = jsonHour.getJSONObject("utcdate");
         Date result = mHistoryWeatherParser.parseDate(date);
-        assertEquals(startHour, result);
+        assertEquals(startHour.toString(), result.toString());
     }
 
     @After
