@@ -29,11 +29,13 @@ public class CitiesMapSingleton
     }
 
     public void put(String city, String uid){
-        if(!citiesUID.containsKey(city)) citiesUID.put(city, uid);
+        if(city != null && uid != null) citiesUID.put(city, uid);
     }
 
     public String getUID(String city){
-        return citiesUID.get(city);
+        String missing = "city not mapped";
+        String uid =  citiesUID.get(city);
+        return (uid == null? missing: uid);
     }
 
     public void clearMap(){

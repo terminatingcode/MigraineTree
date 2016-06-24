@@ -73,4 +73,15 @@ public class GeoLookupParserUnitTest {
         assertEquals(expected, instance.getUID(city));
     }
 
+    @Test
+    public void putUIDPutsNothingWhenNull(){
+        String city = null;
+        String uid = null;
+        String expected = "city not mapped";
+        CitiesMapSingleton instance =CitiesMapSingleton.newInstance();
+        instance.clearMap();
+        glp.putUID(city, uid);
+        assertEquals(expected, instance.getUID(city));
+    }
+
 }
