@@ -1,10 +1,15 @@
 package com.terminatingcode.android.migrainetree;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Date;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Unit Tests for HistoryWeatherParser
@@ -14,9 +19,12 @@ public class HistoryWeatherParserTest {
 
     private HistoryWeatherParser mHistoryWeatherParser;
     private JSONObject mJSONObject;
-    private String testQuery =
-            "{\"response\": {" +
-            "\"version\":\"0.1\"" +
+    private WeatherHour mockHour;
+    private Date startHour;
+    private JSONArray jsonHours;
+    private JSONObject jsonHour;
+    private String testQuery = "{\"response\": {" +
+            "\"version\":\"0.1\"," +
             "\"termsofService\":\"http://www.wunderground.com/weather/api/d/terms.html\"," +
             "\"features\": {" +
             "\"history\": 1}}," +
@@ -37,7 +45,7 @@ public class HistoryWeatherParserTest {
             "\"hour\": \"07\"," +
             "\"min\": \"56\"," +
             "\"tzname\": \"UTC\"}," +
-            "\"observations\": [" +
+            "\"observations\": [{" +
             "\"date\": {" +
             "\"pretty\": \"12:56 AM PDT on June 23, 2016\"," +
             "\"year\": \"2016\"," +
@@ -87,17 +95,64 @@ public class HistoryWeatherParserTest {
     @Before
     public void setUp() throws Exception {
         mHistoryWeatherParser = new HistoryWeatherParser();
-        mJSONObject = new JSONObject(testQuery);
+        mJSONObject = new JSONObject(testQuery).getJSONObject("history");
+        startHour = new Date(1466668560);
+        jsonHours = mJSONObject.getJSONArray("observations");
+        jsonHour = jsonHours.getJSONObject(0);
+        mockHour = initialiseMockWeatherHour();
+
     }
 
 
     @Test (expected = JSONException.class)
-    public void nullJSONObject() throws JSONException {
-        WeatherHour weatherHour = mHistoryWeatherParser.parse(null);
+    public void nullJSONObjectParseThrowsException() throws JSONException {
+        mHistoryWeatherParser.parse(null);
+    }
+
+    @Test (expected = JSONException.class)
+    public void nullJSONObjectParseHourThrowsException() throws JSONException {
+        mHistoryWeatherParser.parseHour(null);
+    }
+
+    @Test
+    public void parseHourReturnsWeatherHour() throws JSONException {
+        WeatherHour mWeatherHour = mHistoryWeatherParser.parseHour(jsonHour);
+        assertEquals(mockHour, mWeatherHour);
+    }
+
+    @Test
+    public void parseDateReturnsDate() throws JSONException {
+        JSONObject date = jsonHour.getJSONObject("utcdate");
+        Date result = mHistoryWeatherParser.parseDate(date);
+        assertEquals(startHour, result);
     }
 
     @After
     public void tearDown() throws Exception {
+
+    }
+
+    private WeatherHour initialiseMockWeatherHour(){
+        WeatherHour mockHour = new WeatherHour();
+        mockHour.setHourStart(startHour);
+        mockHour.setTemp(12.8);
+        mockHour.setDewpt(10.0);
+        mockHour.setHum(83);
+        mockHour.setWspd(20.4);
+        mockHour.setWgust(-9999.0);
+        mockHour.setWdir(280);
+        mockHour.setVis(16.1);
+        mockHour.setPressure(1016.9);
+        mockHour.setWindchill(-999);
+        mockHour.setHeatindex(-9999);
+        mockHour.setPreci(-9999.00);
+        mockHour.setFog(false);
+        mockHour.setRain(false);
+        mockHour.setSnow(false);
+        mockHour.setHail(false);
+        mockHour.setThunder(false);
+        mockHour.setTornado(false);
+        return mockHour;
 
     }
 }
