@@ -1,17 +1,23 @@
 package com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.terminatingcode.android.migrainetree.R;
 
@@ -22,6 +28,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * This class extends Activity to handle a picture preview, process the preview
  * for a red values and determine a heart beat.
  *
+ * Forked from:
+ * https://github.com/phishman3579/android-heart-rate-monitor/blob/master/src/com/jwetherell/
+ * heart_rate_monitor/HeartRateMonitor.java
  * @author Justin Wetherell <phishman3579@gmail.com>
  */
 public class HeartRateMonitor extends Activity {
@@ -57,18 +66,57 @@ public class HeartRateMonitor extends Activity {
     private static double beats = 0;
     private static long startTime = 0;
 
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Image captured and saved to fileUri specified in the Intent
+                Toast.makeText(this, "Image saved to:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // User cancelled the image capture
+            } else {
+                // Image capture failed, advise user
+            }
+        }
+
+        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Video captured and saved to fileUri specified in the Intent
+                Toast.makeText(this, "Video saved to:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // User cancelled the video capture
+            } else {
+                // Video capture failed, advise user
+            }
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    0);
+        }
         setContentView(R.layout.main);
+
 
         preview = (SurfaceView) findViewById(R.id.preview);
         previewHolder = preview.getHolder();
         previewHolder.addCallback(surfaceCallback);
-//        previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         image = findViewById(R.id.image);
         text = (TextView) findViewById(R.id.text);
@@ -93,8 +141,11 @@ public class HeartRateMonitor extends Activity {
         super.onResume();
 
         wakeLock.acquire();
-
-        camera = Camera.open();
+        try {
+            camera = Camera.open();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         startTime = System.currentTimeMillis();
     }
@@ -107,14 +158,26 @@ public class HeartRateMonitor extends Activity {
         super.onPause();
 
         wakeLock.release();
-
-        camera.setPreviewCallback(null);
-        camera.stopPreview();
-        camera.release();
-        camera = null;
+        if(camera != null) {
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
     }
 
     private static Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
+
+        /** Check if this device has a camera */
+        private boolean checkCameraHardware(Context context) {
+            if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+                // this device has a camera
+                return true;
+            } else {
+                // no camera on this device
+                return false;
+            }
+        }
 
         /**
          * {@inheritDoc}
@@ -214,6 +277,8 @@ public class HeartRateMonitor extends Activity {
             try {
                 camera.setPreviewDisplay(previewHolder);
                 camera.setPreviewCallback(previewCallback);
+            } catch(Exception e){
+                e.printStackTrace();
             } catch (Throwable t) {
                 Log.e("PreviewDemo-surfaceCallback", "Exception in setPreviewDisplay()", t);
             }
@@ -224,15 +289,17 @@ public class HeartRateMonitor extends Activity {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            Camera.Parameters parameters = camera.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-            Camera.Size size = getSmallestPreviewSize(width, height, parameters);
-            if (size != null) {
-                parameters.setPreviewSize(size.width, size.height);
-                Log.d(TAG, "Using width=" + size.width + " height=" + size.height);
+            if(camera != null) {
+                Camera.Parameters parameters = camera.getParameters();
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                Camera.Size size = getSmallestPreviewSize(width, height, parameters);
+                if (size != null) {
+                    parameters.setPreviewSize(size.width, size.height);
+                    Log.d(TAG, "Using width=" + size.width + " height=" + size.height);
+                }
+                camera.setParameters(parameters);
+                camera.startPreview();
             }
-            camera.setParameters(parameters);
-            camera.startPreview();
         }
 
         /**
