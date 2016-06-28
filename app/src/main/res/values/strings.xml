@@ -18,5 +18,6 @@
     <string name="location_prompt">Please enter the city you are located in</string>
     <string name="weather">Weather</string>
     <string name="set_location">Set Location</string>
-    <string name="PREFERENCES_FILE_KEY">com.terminatingcode.migrainetree.PREFERENCE_FILE_KEY</string>
+    <string name="default_text">--</string>
+    <string name="app_name_HRM">HeartRateMonitor</string>
 </resources>

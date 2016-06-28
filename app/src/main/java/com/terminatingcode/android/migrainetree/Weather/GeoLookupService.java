@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree;
+package com.terminatingcode.android.migrainetree.Weather;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -8,6 +8,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.terminatingcode.android.migrainetree.MessageEvent;
+import com.terminatingcode.android.migrainetree.MyRequestQueue;
+import com.terminatingcode.android.migrainetree.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree;
+package com.terminatingcode.android.migrainetree.Weather;
 
 import java.util.Date;
 

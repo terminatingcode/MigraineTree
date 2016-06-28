@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree;
+package com.terminatingcode.android.migrainetree.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +15,6 @@ import java.util.TimeZone;
  * Created by Sarah on 6/23/2016.
  */
 public class HistoryWeatherParser {
-    private Weather24Hour mWeather24Hour;
     private static final String temperature = "tempm";
     private static final String dewPoint = "dewptm";
     private static final String humidity = "hum";

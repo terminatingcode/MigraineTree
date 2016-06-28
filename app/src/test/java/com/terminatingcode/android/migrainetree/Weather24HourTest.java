@@ -1,5 +1,8 @@
 package com.terminatingcode.android.migrainetree;
 
+import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
+import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
+
 import org.junit.Before;
 import org.junit.Test;
 

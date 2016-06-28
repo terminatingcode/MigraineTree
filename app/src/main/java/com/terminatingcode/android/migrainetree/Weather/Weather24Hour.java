@@ -1,10 +1,10 @@
-package com.terminatingcode.android.migrainetree;
+package com.terminatingcode.android.migrainetree.Weather;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores data for 24 hour period leading up to a migraine occurrence
+ * Stores data for the 24 hour period leading up to a migraine occurrence
  * Created by Sarah on 6/24/2016.
  */
 public class Weather24Hour {

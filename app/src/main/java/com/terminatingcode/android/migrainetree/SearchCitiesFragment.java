@@ -16,6 +16,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.terminatingcode.android.migrainetree.Weather.GeoLookupArrayAdapter;
+import com.terminatingcode.android.migrainetree.Weather.GeoLookupService;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -79,7 +82,7 @@ public class SearchCitiesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String citySelected = (String) parent.getItemAtPosition(position);
                 mSharedPreferences = getActivity()
-                        .getSharedPreferences(getString(R.string.PREFERENCES_FILE_KEY), Context.MODE_PRIVATE);
+                        .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
                 SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
                 String cityUID = CitiesMapSingleton.newInstance().getUID(citySelected);
                 mSharedPrefsUtils.saveSelectedCity(citySelected, cityUID);

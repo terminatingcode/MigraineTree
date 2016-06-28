@@ -1,4 +1,6 @@
-package com.terminatingcode.android.migrainetree;
+package com.terminatingcode.android.migrainetree.Weather;
+
+import com.terminatingcode.android.migrainetree.CitiesMapSingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;

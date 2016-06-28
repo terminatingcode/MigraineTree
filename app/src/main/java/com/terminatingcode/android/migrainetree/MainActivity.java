@@ -1,5 +1,6 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.terminatingcode.android.migrainetree.Weather.WeatherFragment;
+import com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor.HeartRateMonitor;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mSharedPreferences = this.getSharedPreferences(getString(R.string.PREFERENCES_FILE_KEY), MODE_PRIVATE);
+        mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
         SharedPrefsUtils sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
         boolean locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
         if(locationNeedsToBeSet){
@@ -100,7 +104,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_set_location) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new SearchCitiesFragment()).commit();
         } else if (id == R.id.nav_share) {
-
+            Intent intent = new Intent(this, HeartRateMonitor.class);
+            startActivity(intent);
         } else if (id == R.id.nav_send) {
 
         }
