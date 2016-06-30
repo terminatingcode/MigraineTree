@@ -11,7 +11,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/displayCity"
         android:visibility="gone"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        tools:targetApi="jelly_bean_mr1"/>
 
     <AutoCompleteTextView
         android:id="@+id/location"
@@ -29,7 +30,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="search"
+        android:text="@string/search"
         android:id="@+id/searchButton"
         android:clickable="true"
         android:layout_below="@+id/location"

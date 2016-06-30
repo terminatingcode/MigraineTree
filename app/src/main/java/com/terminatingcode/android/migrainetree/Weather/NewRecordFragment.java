@@ -1,12 +1,12 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.terminatingcode.android.migrainetree.R;
 
@@ -14,15 +14,15 @@ import com.terminatingcode.android.migrainetree.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link WeatherFragment.OnFragmentInteractionListener} interface
+ * {@link NewRecordFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link WeatherFragment#newInstance} factory method to
+ * Use the {@link NewRecordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WeatherFragment extends Fragment {
+public class NewRecordFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
-    public WeatherFragment() {
+    public NewRecordFragment() {
         // Required empty public constructor
     }
 
@@ -30,11 +30,11 @@ public class WeatherFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment WeatherFragment.
+     * @return A new instance of fragment NewRecordFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static WeatherFragment newInstance() {
-        WeatherFragment fragment = new WeatherFragment();
+    public static NewRecordFragment newInstance() {
+        NewRecordFragment fragment = new NewRecordFragment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
@@ -54,7 +54,15 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_new_record, container, false);
+        Button newRecordButton = (Button) rootView.findViewById(R.id.record_new_migraine_button);
+        newRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onNewRecordButtonClicked();
+            }
+        });
+        return rootView;
     }
 
     @Override
@@ -85,7 +93,6 @@ public class WeatherFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onNewRecordButtonClicked();
     }
 }

@@ -14,16 +14,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.terminatingcode.android.migrainetree.Weather.WeatherFragment;
+import com.terminatingcode.android.migrainetree.Weather.NewRecordFragment;
 import com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor.HeartRateMonitor;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        WeatherFragment.OnFragmentInteractionListener,
+        NewRecordFragment.OnFragmentInteractionListener,
         CalendarFragment.OnFragmentInteractionListener,
-        ChartsFragment.OnFragmentInteractionListener{
+        ChartsFragment.OnFragmentInteractionListener,
+        InputTriggersFragment.OnFragmentInteractionListener{
 
     private SharedPreferences mSharedPreferences;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +46,14 @@ public class MainActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
         SharedPrefsUtils sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
         boolean locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
         if(locationNeedsToBeSet){
             fragmentManager.beginTransaction().add(R.id.content_frame, new SearchCitiesFragment()).commit();
         }else{
-            fragmentManager.beginTransaction().add(R.id.content_frame, new WeatherFragment()).commit();
+            fragmentManager.beginTransaction().add(R.id.content_frame, new NewRecordFragment()).commit();
         }
     }
 
@@ -92,22 +94,17 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
 
         if (id == R.id.nav_calendar) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new CalendarFragment()).commit();
-        }
- else if (id == R.id.nav_charts) {
+        } else if (id == R.id.nav_charts) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new ChartsFragment()).commit();
-        }
- else if (id == R.id.nav_weather) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new WeatherFragment()).commit();
-        }
- else if (id == R.id.nav_set_location) {
+        } else if (id == R.id.nav_weather) {
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new NewRecordFragment()).commit();
+        } else if (id == R.id.nav_set_location) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new SearchCitiesFragment()).commit();
-        }
-        if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_share) {
             Intent intent = new Intent(this, HeartRateMonitor.class);
             startActivity(intent);
         } else if (id == R.id.nav_send) {
@@ -121,5 +118,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * replaces inputEventFragment with
+     */
+    @Override
+    public void onNewRecordButtonClicked() {
+        fragmentManager.beginTransaction().replace(R.id.content_frame, new InputTriggersFragment()).commit();
     }
 }

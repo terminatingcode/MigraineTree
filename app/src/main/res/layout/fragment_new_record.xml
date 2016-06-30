@@ -1,0 +1,38 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".Weather.NewRecordFragment"
+             android:background="@android:color/black">
+
+    <RelativeLayout
+        android:id="@+id/weather_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/i_have_a_migraine"
+            android:id="@+id/temperature"
+            android:layout_marginTop="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="50sp"
+            android:textColor="@android:color/white"
+            android:textAlignment="center"
+            tools:targetApi="jelly_bean_mr1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/record_new_migraine"
+            android:id="@+id/record_new_migraine_button"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+
+</FrameLayout>
