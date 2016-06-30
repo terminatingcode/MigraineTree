@@ -5,14 +5,16 @@
 	android:layout_height="fill_parent" 
 	android:id="@+id/layout">
 	<LinearLayout android:id="@+id/top"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:orientation="horizontal" 
-        android:layout_width="fill_parent"
-        android:layout_height="50dp">
+				  android:paddingLeft="10dp"
+				  android:paddingRight="10dp"
+				  android:orientation="horizontal"
+				  android:layout_width="fill_parent"
+				  android:layout_height="100dp"
+				  android:background="@android:color/black">
         <TextView android:id="@+id/text"
             android:text="@string/default_text"
             android:textSize="32sp"
+			android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">        
         </TextView>

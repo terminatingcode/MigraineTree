@@ -22,8 +22,8 @@ public class HeartbeatView extends View {
     private static final Matrix matrix = new Matrix();
     private static final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    private static Bitmap greenBitmap = null;
-    private static Bitmap redBitmap = null;
+    private static Bitmap emptyHeart = null;
+    private static Bitmap fullHeart = null;
 
     private static int parentWidth = 0;
     private static int parentHeight = 0;
@@ -31,15 +31,15 @@ public class HeartbeatView extends View {
     public HeartbeatView(Context context, AttributeSet attr) {
         super(context, attr);
 
-        greenBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.green_icon);
-        redBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.red_icon);
+        emptyHeart = BitmapFactory.decodeResource(getResources(), R.drawable.ic_favorite_border_white_48dp);
+        fullHeart = BitmapFactory.decodeResource(getResources(), R.drawable.ic_favorite_white_48dp);
     }
 
     public HeartbeatView(Context context) {
         super(context);
 
-        greenBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.green_icon);
-        redBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.red_icon);
+        emptyHeart = BitmapFactory.decodeResource(getResources(), R.drawable.ic_favorite_border_white_48dp);
+        fullHeart = BitmapFactory.decodeResource(getResources(), R.drawable.ic_favorite_white_48dp);
     }
 
     /**
@@ -62,8 +62,8 @@ public class HeartbeatView extends View {
         if (canvas == null) throw new NullPointerException();
 
         Bitmap bitmap = null;
-        if (HeartRateMonitor.getCurrent() == HeartRateMonitor.TYPE.GREEN) bitmap = greenBitmap;
-        else bitmap = redBitmap;
+        if (HeartRateMonitor.getCurrent() == HeartRateMonitor.TYPE.FULL) bitmap = emptyHeart;
+        else bitmap = fullHeart;
 
         int bitmapX = bitmap.getWidth() / 2;
         int bitmapY = bitmap.getHeight() / 2;

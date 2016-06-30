@@ -3,7 +3,6 @@ package com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
@@ -17,7 +16,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.terminatingcode.android.migrainetree.R;
 
@@ -51,10 +49,10 @@ public class HeartRateMonitor extends Activity {
     private static final int[] averageArray = new int[averageArraySize];
 
     public static enum TYPE {
-        GREEN, RED
+        FULL, EMPTY
     };
 
-    private static TYPE currentType = TYPE.GREEN;
+    private static TYPE currentType = TYPE.FULL;
 
     public static TYPE getCurrent() {
         return currentType;
@@ -66,35 +64,6 @@ public class HeartRateMonitor extends Activity {
     private static double beats = 0;
     private static long startTime = 0;
 
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Image captured and saved to fileUri specified in the Intent
-                Toast.makeText(this, "Image saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the image capture
-            } else {
-                // Image capture failed, advise user
-            }
-        }
-
-        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Video captured and saved to fileUri specified in the Intent
-                Toast.makeText(this, "Video saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the video capture
-            } else {
-                // Video capture failed, advise user
-            }
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -102,7 +71,7 @@ public class HeartRateMonitor extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Here, thisActivity is the current activity
+        //added runtime permission request
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -110,7 +79,7 @@ public class HeartRateMonitor extends Activity {
                     new String[]{Manifest.permission.CAMERA},
                     0);
         }
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_heart_rate);
 
 
         preview = (SurfaceView) findViewById(R.id.preview);
@@ -168,17 +137,6 @@ public class HeartRateMonitor extends Activity {
 
     private static Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
 
-        /** Check if this device has a camera */
-        private boolean checkCameraHardware(Context context) {
-            if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-                // this device has a camera
-                return true;
-            } else {
-                // no camera on this device
-                return false;
-            }
-        }
-
         /**
          * {@inheritDoc}
          */
@@ -212,13 +170,13 @@ public class HeartRateMonitor extends Activity {
             int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
             TYPE newType = currentType;
             if (imgAvg < rollingAverage) {
-                newType = TYPE.RED;
+                newType = TYPE.EMPTY;
                 if (newType != currentType) {
                     beats++;
                     // Log.d(TAG, "BEAT!! beats="+beats);
                 }
             } else if (imgAvg > rollingAverage) {
-                newType = TYPE.GREEN;
+                newType = TYPE.FULL;
             }
 
             if (averageIndex == averageArraySize) averageIndex = 0;
