@@ -25,4 +25,5 @@
     <string name="search">search</string>
     <string name="start_date_dd_mm_yyyy_hh_mm">Start Date: DD/MM/YYYY, HH:MM</string>
     <string name="set_date_time">set_date_time</string>
+    <string name="please_enter_your_current_city">please enter your current city</string>
 </resources>

@@ -47,7 +47,12 @@ public class SearchCitiesFragment extends Fragment {
         mAutoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.location);
         cityTextView = (TextView) rootView.findViewById(R.id.displayCity);
         searchButton = (Button) rootView.findViewById(R.id.searchButton);
-
+        //set cityTextView
+        mSharedPreferences = getActivity()
+                .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
+        String city = returnSavedCity(mSharedPreferences);
+        cityTextView.setText(city);
+        //create auto-complete
         mAdapter = new GeoLookupArrayAdapter(getActivity(),R.layout.row_cities );
         mAutoCompleteTextView.setThreshold(1);
         mAutoCompleteTextView.setAdapter(mAdapter);
@@ -81,13 +86,10 @@ public class SearchCitiesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String citySelected = (String) parent.getItemAtPosition(position);
-                mSharedPreferences = getActivity()
-                        .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
                 SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
                 String cityUID = CitiesMapSingleton.newInstance().getUID(citySelected);
                 mSharedPrefsUtils.saveSelectedCity(citySelected, cityUID);
                 cityTextView.setText(citySelected);
-                cityTextView.setVisibility(View.VISIBLE);
             }
         });
         return rootView;
@@ -126,5 +128,12 @@ public class SearchCitiesFragment extends Fragment {
         Intent intent = new Intent(getActivity(), GeoLookupService.class);
         intent.setAction(inputtedCity);
         getActivity().startService(intent);
+    }
+
+    public String returnSavedCity(SharedPreferences sharedPreferences){
+        String city = sharedPreferences.getString(Constants.LOCATION_NAME, Constants.LOCATION_UNDEFINED);
+        if(city.equals(Constants.LOCATION_UNDEFINED)) return Constants.CITY_NOT_SET;
+        else return city;
+
     }
 }

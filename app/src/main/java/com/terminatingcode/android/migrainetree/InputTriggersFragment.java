@@ -12,8 +12,6 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TimePicker;
 
-import java.sql.Time;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -53,10 +51,6 @@ public class InputTriggersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
@@ -89,22 +83,23 @@ public class InputTriggersFragment extends Fragment {
                 String date = day + "/" + month + "/" + year;
                 startDateButton.setText(date);
                 mDatePicker.setVisibility(View.GONE);
-                setTime();
+                setTime(day, month, year);
             }
         });
     }
 
-    private void setTime() {
+    //TODO: store date
+    private String setTime(final int day, final int month, final int year) {
         mTimePicker.setVisibility(View.VISIBLE);
         addDateTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hour = mTimePicker.getHour();
-                int minute = mTimePicker.getMinute();
-                Time time = new Time(hour, minute, 0);
                 mTimePicker.setVisibility(View.GONE);
             }
         });
+        int hour = mTimePicker.getHour();
+        int minute = mTimePicker.getMinute();
+        return year + month + day +" " + hour + ":" + minute;
     }
 
 

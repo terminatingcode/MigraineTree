@@ -27,6 +27,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'org.json:json:20160212'
     testCompile "org.robolectric:robolectric:3.0"
+    testCompile "org.robolectric:shadows-support-v4:3.0"
     androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2'){
         // Espresso does not work with v23+
         exclude group: 'com.android.support', module: 'support-annotations'

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 public class SharedPrefsUtils {
 
     private SharedPreferences mSharedPreferences;
-    private static final String LOCATION = "location";
 
 
     public SharedPrefsUtils(SharedPreferences mSharedPreferences){
@@ -23,9 +22,8 @@ public class SharedPrefsUtils {
      * @return boolean if not saved
      */
     public boolean needLocationSpecified(){
-        final String CITY_NOT_SAVED = "city not saved";
-        final String CITY_SAVED = mSharedPreferences.getString(LOCATION, CITY_NOT_SAVED);
-        return CITY_SAVED.equals(CITY_NOT_SAVED);
+        final String CITY_SAVED = mSharedPreferences.getString(Constants.LOCATIONUID, Constants.LOCATION_UNDEFINED);
+        return CITY_SAVED.equals(Constants.LOCATION_UNDEFINED);
     }
 
     /**
@@ -35,7 +33,8 @@ public class SharedPrefsUtils {
      */
     public void saveSelectedCity(String citySelected, String cityUID) {
         if(cityUID != null && citySelected != null && mSharedPreferences != null){
-            mSharedPreferences.edit().putString(LOCATION, cityUID).apply();
+            mSharedPreferences.edit().putString(Constants.LOCATIONUID, cityUID).apply();
+            mSharedPreferences.edit().putString(Constants.LOCATION_NAME, citySelected);
         }
     }
 
