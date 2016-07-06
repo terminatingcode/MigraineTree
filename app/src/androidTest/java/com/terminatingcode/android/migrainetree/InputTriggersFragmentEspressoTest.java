@@ -14,6 +14,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 
 // Tests for MainActivity
 
@@ -90,6 +92,12 @@ public class InputTriggersFragmentEspressoTest {
     }
 
     @Test
+    public void testPainSeekBarUpdatesTextView(){
+        onView(withId(R.id.painSeekBar)).perform(EspressoActions.setProgress(10));
+        onView(allOf(withId(R.id.painLevelTextView), withText("10"))).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testAuraIsVisible(){
         onView(withId(R.id.auraCheckBox))
                 .check(matches(isDisplayed()))
@@ -116,6 +124,12 @@ public class InputTriggersFragmentEspressoTest {
     }
 
     @Test
+    public void testSleepSeekBarUpdatesTextView(){
+        onView(withId(R.id.sleepSeekBar)).perform(EspressoActions.setProgress(10));
+        onView(allOf(withId(R.id.sleepLevelTextView), withText("10"))).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testStressLevelIsVisible(){
         onView(withId(R.id.stressTextView))
                 .check(matches(isDisplayed()));
@@ -126,6 +140,12 @@ public class InputTriggersFragmentEspressoTest {
     }
 
     @Test
+    public void testStressSeekBarUpdatesTextView(){
+        onView(withId(R.id.stressSeekBar)).perform(EspressoActions.setProgress(10));
+        onView(allOf(withId(R.id.stressLevelTextView), withText("10"))).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testEyeStrainLevelIsVisible(){
         onView(withId(R.id.eyesTextView))
                 .check(matches(isDisplayed()));
@@ -133,6 +153,12 @@ public class InputTriggersFragmentEspressoTest {
                 .check(matches(isDisplayed()));
         onView(withId(R.id.eyesSeekBar))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testEyeStrainSeekBarUpdatesTextView(){
+        onView(withId(R.id.eyesSeekBar)).perform(EspressoActions.setProgress(10));
+        onView(allOf(withId(R.id.eyesLevelTextView), withText("10"))).check(matches(isDisplayed()));
     }
 
     @Test

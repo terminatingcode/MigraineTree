@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 /**
@@ -68,6 +70,10 @@ public class InputTriggersFragment extends Fragment {
                 setDate();
             }
         });
+        updateProgressTextView(R.id.painLevelTextView, R.id.painSeekBar, rootView);
+        updateProgressTextView(R.id.sleepLevelTextView, R.id.sleepSeekBar, rootView);
+        updateProgressTextView(R.id.stressLevelTextView, R.id.stressSeekBar, rootView);
+        updateProgressTextView(R.id.eyesLevelTextView, R.id.eyesSeekBar, rootView);
         return rootView;
     }
 
@@ -106,6 +112,26 @@ public class InputTriggersFragment extends Fragment {
                 startDateButton.setText(fullDate);
             }
         });
+    }
+
+    public void updateProgressTextView(int textViewId, int seekBarId, View view){
+        SeekBar seekbar = (SeekBar) view.findViewById(seekBarId);
+        final TextView textView = (TextView) view.findViewById(textViewId);
+        if(seekbar != null){
+            seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    String s = String.valueOf(progress);
+                    textView.setText(s);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+        }
     }
 
 
