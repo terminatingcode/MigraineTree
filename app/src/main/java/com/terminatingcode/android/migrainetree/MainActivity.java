@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.terminatingcode.android.migrainetree.Weather.NewRecordFragment;
 import com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor.HeartRateMonitor;
 
 public class MainActivity extends AppCompatActivity

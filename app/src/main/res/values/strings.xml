@@ -26,4 +26,13 @@
     <string name="start_date_dd_mm_yyyy_hh_mm">Start Date: DD/MM/YYYY, HH:MM</string>
     <string name="set_date_time">set_date_time</string>
     <string name="please_enter_your_current_city">please enter your current city</string>
+    <string name="pain_at_beginning_of_migraine">Pain at beginning of migraine:</string>
+    <string name="zero">0</string>
+    <string name="are_you_experiencing_aura">Are you experiencing Aura?</string>
+    <string name="have_you_eaten_in_the_last_3_hours">Have you eaten in the last 3 hours?</string>
+    <string name="hours_of_quality_sleep">Hours of quality sleep?</string>
+    <string name="stress_levels">Stress levels</string>
+    <string name="amount_of_eye_strain">Amount of eye strain</string>
+    <string name="is_the_current_location_correct">Is the current location correct?</string>
+    <string name="city_not_set">city not set</string>
 </resources>

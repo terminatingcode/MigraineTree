@@ -83,23 +83,29 @@ public class InputTriggersFragment extends Fragment {
                 String date = day + "/" + month + "/" + year;
                 startDateButton.setText(date);
                 mDatePicker.setVisibility(View.GONE);
-                setTime(day, month, year);
+                setTime(date);
+
             }
         });
     }
 
     //TODO: store date
-    private String setTime(final int day, final int month, final int year) {
+    private void setTime(final String date) {
         mTimePicker.setVisibility(View.VISIBLE);
         addDateTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mTimePicker.setVisibility(View.GONE);
+                int hour = mTimePicker.getHour();
+                int minutes = mTimePicker.getMinute();
+                String fullDate = date +
+                        " " +
+                        hour +
+                        ":" +
+                        minutes;
+                startDateButton.setText(fullDate);
             }
         });
-        int hour = mTimePicker.getHour();
-        int minute = mTimePicker.getMinute();
-        return year + month + day +" " + hour + ":" + minute;
     }
 
 

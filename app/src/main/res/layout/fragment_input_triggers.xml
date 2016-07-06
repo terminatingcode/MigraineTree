@@ -1,9 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_marginTop="?android:attr/actionBarSize"
-             tools:context=".InputTriggersFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="?android:attr/actionBarSize"
+                tools:context=".InputTriggersFragment"
+                android:background="@android:color/black">
 
     <Button
         android:layout_width="wrap_content"
@@ -22,13 +23,201 @@
         android:src="@android:drawable/ic_input_add"
         android:visibility="gone"
         android:contentDescription="@string/set_date_time"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/painTextView"
+        android:text="@string/pain_at_beginning_of_migraine"
+        android:layout_below="@+id/start_date_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="false"
+        android:clickable="false"
+        android:enabled="false"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zero"
+        android:id="@+id/painLevelTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_below="@+id/start_date_button"/>
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:id="@+id/painSeekBar"
+        android:layout_below="@+id/painTextView"
+        android:progress="0"
+        android:max="10"
+        android:background="#494949"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/are_you_experiencing_aura"
+        android:id="@+id/auraCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/painSeekBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/have_you_eaten_in_the_last_3_hours"
+        android:id="@+id/eatenCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/auraCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hours_of_quality_sleep"
+        android:id="@+id/sleepTextView"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        android:layout_below="@+id/eatenCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zero"
+        android:id="@+id/sleepLevelTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_below="@+id/eatenCheckBox"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:id="@+id/sleepSeekBar"
+        android:layout_below="@+id/sleepTextView"
+        android:progress="0"
+        android:max="24"
+        android:background="#494949"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stress_levels"
+        android:id="@+id/stressTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/sleepSeekBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zero"
+        android:id="@+id/stressLevelTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_below="@+id/sleepSeekBar"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:id="@+id/stressSeekBar"
+        android:layout_below="@+id/stressTextView"
+        android:progress="0"
+        android:max="10"
+        android:background="#494949"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/amount_of_eye_strain"
+        android:id="@+id/eyesTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/stressSeekBar"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zero"
+        android:id="@+id/eyesLevelTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_below="@+id/stressSeekBar"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:id="@+id/eyesSeekBar"
+        android:layout_below="@+id/eyesTextView"
+        android:progress="0"
+        android:max="10"
+        android:background="#494949"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/is_the_current_location_correct"
+        android:id="@+id/correctLocationTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/eyesSeekBar"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/city_not_set"
+        android:id="@+id/locationTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/correctLocationTextView"/>
+
     <DatePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/datePicker"
         android:layout_below="@+id/start_date_button"
         android:visibility="gone"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="#303030"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
 
     <TimePicker
         android:layout_width="wrap_content"
@@ -36,8 +225,7 @@
         android:id="@+id/timePicker"
         android:layout_below="@+id/start_date_button"
         android:visibility="gone"
-        android:clickable="true"/>
-
-
+        android:clickable="true"
+        android:background="#303030"/>
 
 </RelativeLayout>
