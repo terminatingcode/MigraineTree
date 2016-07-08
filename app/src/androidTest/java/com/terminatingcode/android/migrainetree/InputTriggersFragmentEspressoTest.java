@@ -1,5 +1,6 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.app.Fragment;
@@ -163,9 +164,85 @@ public class InputTriggersFragmentEspressoTest {
 
     @Test
     public void testLocationIsVisible(){
-        onView(withId(R.id.correctLocationTextView))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.newLocationButton))
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()));
         onView(withId(R.id.locationTextView))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testTypeOfPainIsVisible(){
+        onView(withId(R.id.typeOfPainSpinner))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()));
+        onView(withId(R.id.typeOfPainTextView))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testAreasOfPainIsVisible(){
+        onView(withId(R.id.areasOfPainSpinner))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()));
+        onView(withId(R.id.areaOfPainTextView))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testTypeOfMedsIsVisible(){
+        onView(withId(R.id.typeOfMedsSpinner))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()));
+        onView(withId(R.id.typeOfMedsTextView))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testSymptomsIsVisible(){
+        onView(withId(R.id.symptomsTextView))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.nauseaCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(ViewMatchers.isNotChecked()));
+        onView(withId(R.id.sensitivityLightCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(ViewMatchers.isNotChecked()));
+        onView(withId(R.id.sensitivityNoiseCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(ViewMatchers.isNotChecked()));
+        onView(withId(R.id.sensitivitySmellCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(ViewMatchers.isNotChecked()));
+        onView(withId(R.id.nasalCongestionCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(ViewMatchers.isNotChecked()));
+        onView(withId(R.id.earsCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(ViewMatchers.isNotChecked()));
+        onView(withId(R.id.confusionCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(ViewMatchers.isNotChecked()));
     }
 }

@@ -35,4 +35,42 @@
     <string name="amount_of_eye_strain">Amount of eye strain</string>
     <string name="is_the_current_location_correct">Is the current location correct?</string>
     <string name="city_not_set">city not set</string>
+    <string name="set_new_location">Set new location</string>
+    <string name="have_you_had_a_glass_of_water_in_the_last_3_hours">Have you had a glass of water in the last 3 hours?</string>
+    <string name="nauseous">Nausea</string>
+    <string name="type_of_pain">Type of pain:</string>
+    <string name="sensitivity_to_light">Sensitivity to light</string>
+    <string name="symptoms">Symptoms:</string>
+    <string name="sensitivity_noise">Sensitivity to noise</string>
+    <string name="nasal_congestion">Nasal congestion</string>
+    <string name="sensitivity_to_smell">Sensitivity to smell</string>
+    <string name="ringing_or_popped_ears">Ringing or popped ears</string>
+    <string name="confusion">Confusion or mental fog</string>
+    <string name="meds_taken">Medication taken:</string>
+    <string name="source_of_pain">Source of pain:</string>
+    <string-array name="pain_types_array">
+        <item>throbbing</item>
+        <item>stabbing</item>
+        <item>pressure</item>
+        <item>dull</item>
+        <item>nagging</item>
+        <item>numbness</item>
+        <item>tingling</item>
+        <item>radiating</item>
+    </string-array>
+    <string-array name="medication_types">
+        <item>No medication taken</item>
+        <item>Ibuprofen (Advil, Motrin, Nurofen)</item>
+        <item>Paracetamol (Tylenol, Panadol)</item>
+        <item>Sumatriptan (Imitrex, Imigran)</item>
+        <item>Rizatriptan (Maxalt)</item>
+        <item>Almotriptan (Axert, Almogran)</item>
+        <item>Excedrin</item>
+        <item>Eletriptan (Relpax, Relert)</item>
+        <item>Naratriptan (Naramig, Amerge)</item>
+        <item>Zolmitriptan (Zomig, Zomigon)</item>
+        <item>Propranolol</item>
+        <item>Naproxen</item>
+        <item>Frovatriptan (Frova, Migard)</item>
+    </string-array>
 </resources>

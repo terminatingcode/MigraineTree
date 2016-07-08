@@ -1,9 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".InputTriggersFragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="?android:attr/actionBarSize">
+
+<RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="?android:attr/actionBarSize"
-                tools:context=".InputTriggersFragment"
+                android:layout_height="wrap_content"
                 android:background="@android:color/black">
 
     <Button
@@ -91,6 +96,19 @@
         android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/have_you_had_a_glass_of_water_in_the_last_3_hours"
+        android:id="@+id/waterCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/eatenCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -98,7 +116,7 @@
         android:id="@+id/sleepTextView"
         android:textColor="#ffffff"
         android:textSize="24sp"
-        android:layout_below="@+id/eatenCheckBox"
+        android:layout_below="@+id/waterCheckBox"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
     <TextView
@@ -113,7 +131,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp"
-        android:layout_below="@+id/eatenCheckBox"/>
+        android:layout_below="@+id/waterCheckBox"/>
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="24dp"
@@ -190,15 +208,7 @@
         android:background="#494949"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/is_the_current_location_correct"
-        android:id="@+id/correctLocationTextView"
-        android:textColor="#ffffff"
-        android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/eyesSeekBar"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -207,7 +217,178 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/correctLocationTextView"/>
+        android:layout_below="@+id/eyesSeekBar"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_new_location"
+        android:id="@+id/newLocationButton"
+        android:layout_below="@+id/eyesSeekBar"
+        android:textSize="12sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/type_of_pain"
+        android:id="@+id/typeOfPainTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/newLocationButton"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/typeOfPainSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/typeOfPainTextView"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/source_of_pain"
+        android:id="@+id/areaOfPainTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/typeOfPainSpinner"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/areasOfPainSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/areaOfPainTextView"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/meds_taken"
+        android:id="@+id/typeOfMedsTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/areasOfPainSpinner"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/typeOfMedsSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/typeOfMedsTextView"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/symptoms"
+        android:id="@+id/symptomsTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/typeOfMedsSpinner"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nauseous"
+        android:id="@+id/nauseaCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/symptomsTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sensitivity_to_light"
+        android:id="@+id/sensitivityLightCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/nauseaCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sensitivity_noise"
+        android:id="@+id/sensitivityNoiseCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/sensitivityLightCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sensitivity_to_smell"
+        android:id="@+id/sensitivitySmellCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/sensitivityNoiseCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nasal_congestion"
+        android:id="@+id/nasalCongestionCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/sensitivitySmellCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ringing_or_popped_ears"
+        android:id="@+id/earsCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/nasalCongestionCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confusion"
+        android:id="@+id/confusionCheckBox"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/earsCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:buttonTint="#ffffff"
+        tools:targetApi="lollipop"/>
+
 
     <DatePicker
         android:layout_width="wrap_content"
@@ -228,4 +409,7 @@
         android:clickable="true"
         android:background="#303030"/>
 
+
+
 </RelativeLayout>
+</ScrollView>
