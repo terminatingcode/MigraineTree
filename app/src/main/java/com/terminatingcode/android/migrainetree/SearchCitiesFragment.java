@@ -50,7 +50,8 @@ public class SearchCitiesFragment extends Fragment {
         //set cityTextView
         mSharedPreferences = getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
-        String city = returnSavedCity(mSharedPreferences);
+        SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
+        String city = mSharedPrefsUtils.getSavedCity();
         cityTextView.setText(city);
         //create auto-complete
         mAdapter = new GeoLookupArrayAdapter(getActivity(),R.layout.row_cities );
@@ -128,12 +129,5 @@ public class SearchCitiesFragment extends Fragment {
         Intent intent = new Intent(getActivity(), GeoLookupService.class);
         intent.setAction(inputtedCity);
         getActivity().startService(intent);
-    }
-
-    public String returnSavedCity(SharedPreferences sharedPreferences){
-        String city = sharedPreferences.getString(Constants.LOCATION_NAME, Constants.LOCATION_UNDEFINED);
-        if(city.equals(Constants.LOCATION_UNDEFINED)) return Constants.CITY_NOT_SET;
-        else return city;
-
     }
 }

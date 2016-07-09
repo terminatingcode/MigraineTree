@@ -12,6 +12,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowPreferenceManager;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -50,7 +51,17 @@ public class SharedPrefsUtilsTest {
     @Test
     public void testSaveSelectedCity(){
         mSharedPrefsUtils.saveSelectedCity(location, uid);
+        String resultLocation = mPrefs.getString(Constants.LOCATION_NAME, null);
+        String resultuid = mPrefs.getString(Constants.LOCATIONUID, null);
+        assertEquals(location, resultLocation);
+        assertEquals(uid, resultuid);
+    }
 
+    @Test
+    public void getSavedCity(){
+        mPrefs.edit().putString(Constants.LOCATION_NAME, location).apply();
+        String result = mSharedPrefsUtils.getSavedCity();
+        assertEquals(location, result);
     }
 
     @After

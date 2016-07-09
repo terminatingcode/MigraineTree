@@ -34,8 +34,16 @@ public class SharedPrefsUtils {
     public void saveSelectedCity(String citySelected, String cityUID) {
         if(cityUID != null && citySelected != null && mSharedPreferences != null){
             mSharedPreferences.edit().putString(Constants.LOCATIONUID, cityUID).apply();
-            mSharedPreferences.edit().putString(Constants.LOCATION_NAME, citySelected);
+            mSharedPreferences.edit().putString(Constants.LOCATION_NAME, citySelected).apply();
         }
+    }
+
+    /**
+     * Returns city saved by user previously in SharedPreferences
+     * @return city saved
+     */
+    public String getSavedCity(){
+        return mSharedPreferences.getString(Constants.LOCATION_NAME, Constants.CITY_NOT_SET);
     }
 
 }

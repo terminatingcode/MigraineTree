@@ -1,6 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,12 +29,11 @@ public class InputTriggersFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private Button startDateButton;
-    private ImageButton addDateTimeButton;
+    private ImageButton mAddDateTimeButton;
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
-    private Spinner typeOfPainSpinner;
-    private Spinner areaOfPainSpinner;
-    private Spinner typeOfMedsSpinner;
+    private TextView mCityTextView;
+
 
     public InputTriggersFragment() {
         // Required empty public constructor
@@ -67,7 +67,7 @@ public class InputTriggersFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_input_triggers, container, false);
         mDatePicker = (DatePicker) rootView.findViewById(R.id.datePicker);
         mTimePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
-        addDateTimeButton = (ImageButton) rootView.findViewById(R.id.set_button);
+        mAddDateTimeButton = (ImageButton) rootView.findViewById(R.id.set_button);
         startDateButton = (Button) rootView.findViewById(R.id.start_date_button);
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +75,14 @@ public class InputTriggersFragment extends Fragment {
                 setDate();
             }
         });
-        typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
+        mCityTextView = (TextView) rootView.findViewById(R.id.locationTextView);
+        SharedPreferences mSharedPreferences = getActivity()
+                .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
+        SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
+        String city = mSharedPrefsUtils.getSavedCity();
+        mCityTextView.setText(city);
+        //initialise Spinners
+        Spinner typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
         ArrayAdapter<CharSequence> typeOfPainAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -83,7 +90,7 @@ public class InputTriggersFragment extends Fragment {
                                 android.R.layout.simple_spinner_dropdown_item);
         typeOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeOfPainSpinner.setAdapter(typeOfPainAdapter);
-        areaOfPainSpinner = (Spinner) rootView.findViewById(R.id.areasOfPainSpinner);
+        Spinner areaOfPainSpinner = (Spinner) rootView.findViewById(R.id.areasOfPainSpinner);
         ArrayAdapter<CharSequence> areasOfPainAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -91,7 +98,7 @@ public class InputTriggersFragment extends Fragment {
                                 android.R.layout.simple_spinner_dropdown_item);
         areasOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         areaOfPainSpinner.setAdapter(areasOfPainAdapter);
-        typeOfMedsSpinner = (Spinner) rootView.findViewById(R.id.typeOfMedsSpinner);
+        Spinner typeOfMedsSpinner = (Spinner) rootView.findViewById(R.id.typeOfMedsSpinner);
         ArrayAdapter<CharSequence> typeOfMedsAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -99,6 +106,7 @@ public class InputTriggersFragment extends Fragment {
                                 android.R.layout.simple_spinner_dropdown_item);
         typeOfMedsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeOfMedsSpinner.setAdapter(typeOfMedsAdapter);
+        //have TextViews change with SeekBar
         updateProgressTextView(R.id.painLevelTextView, R.id.painSeekBar, rootView);
         updateProgressTextView(R.id.sleepLevelTextView, R.id.sleepSeekBar, rootView);
         updateProgressTextView(R.id.stressLevelTextView, R.id.stressSeekBar, rootView);
@@ -106,10 +114,13 @@ public class InputTriggersFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Update startDateButton text to be the date chosen by the user
+     */
     private void setDate() {
         mDatePicker.setVisibility(View.VISIBLE);
-        addDateTimeButton.setVisibility(View.VISIBLE);
-        addDateTimeButton.setOnClickListener(new View.OnClickListener() {
+        mAddDateTimeButton.setVisibility(View.VISIBLE);
+        mAddDateTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int day = mDatePicker.getDayOfMonth();
@@ -124,10 +135,14 @@ public class InputTriggersFragment extends Fragment {
         });
     }
 
-    //TODO: store date
+    /**
+     * Updates the startDateButton text to be the date plus the
+     * time specified by the user
+     * @param date the date chosen by the user
+     */
     private void setTime(final String date) {
         mTimePicker.setVisibility(View.VISIBLE);
-        addDateTimeButton.setOnClickListener(new View.OnClickListener() {
+        mAddDateTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mTimePicker.setVisibility(View.GONE);
@@ -143,6 +158,12 @@ public class InputTriggersFragment extends Fragment {
         });
     }
 
+    /**
+     * Tracks changes to the SeekBar and updates TextView with progress
+     * @param textViewId the TextView to be updated
+     * @param seekBarId the SeekBar to be tracked
+     * @param view the root view of the Fragment
+     */
     public void updateProgressTextView(int textViewId, int seekBarId, View view){
         SeekBar seekbar = (SeekBar) view.findViewById(seekBarId);
         final TextView textView = (TextView) view.findViewById(textViewId);
