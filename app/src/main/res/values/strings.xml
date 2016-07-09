@@ -58,6 +58,16 @@
         <item>tingling</item>
         <item>radiating</item>
     </string-array>
+    <string-array name="pain_areas_array">
+        <item>eye</item>
+        <item>temple</item>
+        <item>ear</item>
+        <item>neck</item>
+        <item>sinus</item>
+        <item>jaw</item>
+        <item>teeth</item>
+        <item>other</item>
+    </string-array>
     <string-array name="medication_types">
         <item>No medication taken</item>
         <item>Ibuprofen (Advil, Motrin, Nurofen)</item>

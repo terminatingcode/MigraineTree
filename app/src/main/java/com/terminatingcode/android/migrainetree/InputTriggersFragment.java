@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -29,6 +31,9 @@ public class InputTriggersFragment extends Fragment {
     private ImageButton addDateTimeButton;
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
+    private Spinner typeOfPainSpinner;
+    private Spinner areaOfPainSpinner;
+    private Spinner typeOfMedsSpinner;
 
     public InputTriggersFragment() {
         // Required empty public constructor
@@ -70,6 +75,30 @@ public class InputTriggersFragment extends Fragment {
                 setDate();
             }
         });
+        typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
+        ArrayAdapter<CharSequence> typeOfPainAdapter =
+                ArrayAdapter
+                        .createFromResource(getActivity(),
+                                R.array.pain_types_array,
+                                android.R.layout.simple_spinner_dropdown_item);
+        typeOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeOfPainSpinner.setAdapter(typeOfPainAdapter);
+        areaOfPainSpinner = (Spinner) rootView.findViewById(R.id.areasOfPainSpinner);
+        ArrayAdapter<CharSequence> areasOfPainAdapter =
+                ArrayAdapter
+                        .createFromResource(getActivity(),
+                                R.array.pain_areas_array,
+                                android.R.layout.simple_spinner_dropdown_item);
+        areasOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        areaOfPainSpinner.setAdapter(areasOfPainAdapter);
+        typeOfMedsSpinner = (Spinner) rootView.findViewById(R.id.typeOfMedsSpinner);
+        ArrayAdapter<CharSequence> typeOfMedsAdapter =
+                ArrayAdapter
+                        .createFromResource(getActivity(),
+                                R.array.medication_types,
+                                android.R.layout.simple_spinner_dropdown_item);
+        typeOfMedsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeOfMedsSpinner.setAdapter(typeOfMedsAdapter);
         updateProgressTextView(R.id.painLevelTextView, R.id.painSeekBar, rootView);
         updateProgressTextView(R.id.sleepLevelTextView, R.id.sleepSeekBar, rootView);
         updateProgressTextView(R.id.stressLevelTextView, R.id.stressSeekBar, rootView);

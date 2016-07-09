@@ -5,6 +5,8 @@
         <!-- Customize your theme here. -->
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:spinnerDropDownItemStyle">@style/AppSpinnerItemStyle</item>
+        <item name="android:spinnerItemStyle">@style/AppSpinnerItemStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -20,5 +22,8 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:windowTranslucentStatus">false</item>
     </style>
-
+    <style name="AppSpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
 </resources>

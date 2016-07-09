@@ -9,14 +9,19 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 
 // Tests for MainActivity
 
@@ -173,10 +178,16 @@ public class InputTriggersFragmentEspressoTest {
 
     @Test
     public void testTypeOfPainIsVisible(){
+        String type = "dull";
         onView(withId(R.id.typeOfPainSpinner))
                 .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()))
-                .check(matches(isClickable()));
+                .check(matches(isClickable()))
+                .perform(click());
+        onData(allOf(is(instanceOf(String.class)),
+                is(type))).perform(click());
+        onView(withId(R.id.typeOfPainSpinner))
+                .check(matches(withSpinnerText(containsString(type))));
         onView(withId(R.id.typeOfPainTextView))
                 .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
@@ -184,10 +195,16 @@ public class InputTriggersFragmentEspressoTest {
 
     @Test
     public void testAreasOfPainIsVisible(){
+        String area = "eye";
         onView(withId(R.id.areasOfPainSpinner))
                 .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()))
-                .check(matches(isClickable()));
+                .check(matches(isClickable()))
+                .perform(click());
+        onData(allOf(is(instanceOf(String.class)),
+                is(area))).perform(click());
+        onView(withId(R.id.areasOfPainSpinner))
+                .check(matches(withSpinnerText(containsString(area))));
         onView(withId(R.id.areaOfPainTextView))
                 .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
@@ -195,10 +212,16 @@ public class InputTriggersFragmentEspressoTest {
 
     @Test
     public void testTypeOfMedsIsVisible(){
+        String medication = "Excedrin";
         onView(withId(R.id.typeOfMedsSpinner))
                 .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()))
-                .check(matches(isClickable()));
+                .check(matches(isClickable()))
+                .perform(click());
+        onData(allOf(is(instanceOf(String.class)),
+                is(medication))).perform(click());
+        onView(withId(R.id.typeOfMedsSpinner))
+                .check(matches(withSpinnerText(containsString(medication))));
         onView(withId(R.id.typeOfMedsTextView))
                 .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
