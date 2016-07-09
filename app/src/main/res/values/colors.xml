@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#303030</color>
-    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#aafeff</color>
-    <color name="textColor">#FFFFFF</color>
+    <color name="textColor">#ffffff</color>
+    <color name="summer">#ecdb96</color>
+    <color name="winter">#a9edf5</color>
+    <color name="fall">#ffa49d</color>
+    <color name="spring">#d1f7a1</color>
 </resources>

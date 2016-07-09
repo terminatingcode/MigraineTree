@@ -1,14 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_marginTop="?android:attr/actionBarSize"
-             tools:context="com.terminatingcode.android.migrainetree.CalendarFragment">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="?attr/actionBarSize"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
 
-    <CalendarView
-        android:layout_width="wrap_content"
+    <com.terminatingcode.android.migrainetree.CalendarView
+        xmlns:calendarNS="http://schemas.android.com/apk/res/com.terminatingcode.android.migrainetree"
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/calendarView"
-        android:layout_gravity="center"/>
+        calendarNS:dateFormat="MMMM yyyy"/>
 
-</FrameLayout>
+</LinearLayout>
