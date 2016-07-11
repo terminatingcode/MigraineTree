@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +27,8 @@ import java.util.Locale;
  * Code sourced from https://github.com/ahmed-alamir/CalendarView
  * Created by a7med on 28/06/2015.
  * Modifications include replacing depreciated methods such as
- * Date class replaced by Calendar class
- * Removed season based color headers
+ * Date class methods replaced by Calendar class where applicable
+ * getResources.getColor() replaced by ContextCompat.getColor()
  */
 public class CalendarView extends LinearLayout
 {
@@ -55,6 +56,7 @@ public class CalendarView extends LinearLayout
     private ImageView btnNext;
     private TextView txtDate;
     private GridView grid;
+    private HashSet<Calendar> events;
 
     // seasons' rainbow
     int[] rainbow = new int[] {
@@ -156,6 +158,7 @@ public class CalendarView extends LinearLayout
             @Override
             public boolean onItemLongClick(AdapterView<?> view, View cell, int position, long id)
             {
+
                 // handle long-press
                 if (eventHandler == null)
                     return false;
@@ -171,13 +174,13 @@ public class CalendarView extends LinearLayout
      */
     public void updateCalendar()
     {
-        updateCalendar(null);
+        updateCalendar(events);
     }
 
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar(HashSet<Date> events)
+    public void updateCalendar(HashSet<Calendar> events)
     {
         ArrayList<Date> cells = new ArrayList<>();
         Calendar calendar = (Calendar)currentDate.clone();
@@ -208,22 +211,20 @@ public class CalendarView extends LinearLayout
         int season = monthSeason[month];
         int color = rainbow[season];
 
-        header.setBackgroundColor(getResources().getColor(color));
+        header.setBackgroundColor(ContextCompat.getColor(getContext(), color));
     }
 
 
     private class CalendarAdapter extends ArrayAdapter<Date>
     {
-        // days with events
-        private HashSet<Date> eventDays;
 
         // for view inflation
         private LayoutInflater inflater;
 
-        public CalendarAdapter(Context context, ArrayList<Date> days, HashSet<Date> eventDays)
+        public CalendarAdapter(Context context, ArrayList<Date> days, HashSet<Calendar> eventDays)
         {
             super(context, R.layout.custom_calendar_day, days);
-            this.eventDays = eventDays;
+            events = eventDays;
             inflater = LayoutInflater.from(context);
         }
 
@@ -232,12 +233,14 @@ public class CalendarView extends LinearLayout
         {
             // day in question
             Date date = getItem(position);
-            int day = date.getDate();
-            int month = date.getMonth();
-            int year = date.getYear();
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            int month = c.get(Calendar.MONTH);
+            int year = c.get(Calendar.YEAR) - 1900;
 
             // today
-            Date today = new Date();
+            Calendar today = Calendar.getInstance();
 
             // inflate item if it does not exist yet
             if (view == null)
@@ -245,16 +248,16 @@ public class CalendarView extends LinearLayout
 
             // if this day has an event, specify event image
             view.setBackgroundResource(0);
-            if (eventDays != null)
+            if (events != null)
             {
-                for (Date eventDate : eventDays)
+                for (Calendar event : events)
                 {
-                    if (eventDate.getDate() == day &&
-                            eventDate.getMonth() == month &&
-                            eventDate.getYear() == year)
+                    if (event.get(Calendar.DAY_OF_MONTH) == day &&
+                            event.get(Calendar.MONTH) == month &&
+                            (event.get(Calendar.YEAR) - 1900) == year)
                     {
                         // mark this day for event
-                        view.setBackgroundResource(R.drawable.menstrual_day);
+                        view.setBackgroundResource(R.drawable.ic_menstrual_day);
                         break;
                     }
                 }
@@ -264,12 +267,12 @@ public class CalendarView extends LinearLayout
             ((TextView)view).setTypeface(null, Typeface.NORMAL);
             ((TextView)view).setTextColor(Color.WHITE);
 
-            if (month != today.getMonth() || year != today.getYear())
+            if (month != today.get(Calendar.MONTH) || year != today.get(Calendar.YEAR) - 1900)
             {
                 // if this day is outside current month, grey it out
                 ((TextView)view).setTextColor(Color.GRAY);
             }
-            else if (day == today.getDate())
+            else if (day == today.get(Calendar.DAY_OF_MONTH))
             {
                 // if it is today, set it to blue/bold
                 ((TextView)view).setTypeface(null, Typeface.BOLD);
@@ -277,7 +280,7 @@ public class CalendarView extends LinearLayout
             }
 
             // set text
-            ((TextView)view).setText(String.valueOf(date.getDate()));
+            ((TextView)view).setText(String.valueOf(day));
 
             return view;
         }

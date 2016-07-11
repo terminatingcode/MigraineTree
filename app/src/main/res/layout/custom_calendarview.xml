@@ -37,8 +37,7 @@
             android:layout_toStartOf="@+id/calendar_next_button"
             android:gravity="center"
             android:textAppearance="@android:style/TextAppearance.Large"
-            android:textColor="@color/textColor"
-            android:text="Month"/>
+            android:textColor="@color/textColor"/>
 
         <!-- next button -->
         <ImageView
@@ -65,56 +64,56 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimaryDark"
-            android:text="SUN"/>
+            android:text="@string/sunday"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimaryDark"
-            android:text="MON"/>
+            android:text="@string/monday"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimaryDark"
-            android:text="TUE"/>
+            android:text="@string/tuesday"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimaryDark"
-            android:text="WED"/>
+            android:text="@string/wednesday"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimaryDark"
-            android:text="THU"/>
+            android:text="@string/thursday"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimaryDark"
-            android:text="FRI"/>
+            android:text="@string/friday"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimaryDark"
-            android:text="SAT"/>
+            android:text="@string/saturday"/>
 
     </LinearLayout>
 
     <!-- days view -->
     <GridView
         android:id="@+id/calendar_grid"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="340dp"
         android:numColumns="7"/>
 </LinearLayout>

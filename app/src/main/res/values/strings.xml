@@ -48,6 +48,13 @@
     <string name="confusion">Confusion or mental fog</string>
     <string name="meds_taken">Medication taken:</string>
     <string name="source_of_pain">Source of pain:</string>
+    <string name="sunday">SUN</string>
+    <string name="monday">MON</string>
+    <string name="tuesday">TUE</string>
+    <string name="wednesday">WED</string>
+    <string name="thursday">THU</string>
+    <string name="friday">FRI</string>
+    <string name="saturday">SAT</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>
