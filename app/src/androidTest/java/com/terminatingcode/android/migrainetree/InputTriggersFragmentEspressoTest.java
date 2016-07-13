@@ -1,11 +1,14 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.app.Fragment;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,6 +38,8 @@ import static org.hamcrest.core.IsNot.not;
 public class InputTriggersFragmentEspressoTest {
 
     private Fragment mFragment;
+    private SharedPreferences mSharedPreferences;
+    private String location = "testLocation";
 
     @Rule
     public ActivityTestRule<MainActivity> mMainActivityActivityTestRule
@@ -42,6 +47,9 @@ public class InputTriggersFragmentEspressoTest {
 
     @Before
     public void setUp(){
+        mSharedPreferences = mMainActivityActivityTestRule.getActivity()
+                .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
+        mSharedPreferences.edit().putString(Constants.LOCATION_NAME, location).commit();
         mFragment = new InputTriggersFragment();
         mMainActivityActivityTestRule
                 .getActivity()
@@ -186,6 +194,22 @@ public class InputTriggersFragmentEspressoTest {
     }
 
     @Test
+    public void testLocationTextViewNoLocationSet(){
+        mSharedPreferences.edit().clear().commit();
+        onView(withId(R.id.locationTextView))
+                .perform(ViewActions.scrollTo())
+                .check(matches(withText(Constants.CITY_NOT_SET)));
+    }
+
+    @Test
+    public void testLocationTextViewDisplaysLocation(){
+        String location = "testLocation";
+        onView(withId(R.id.locationTextView))
+                .perform(ViewActions.scrollTo())
+                .check(matches(withText(location)));
+    }
+
+    @Test
     public void testLocationIsVisible(){
         onView(withId(R.id.newLocationButton))
                 .check(matches(isDisplayed()))
@@ -295,5 +319,20 @@ public class InputTriggersFragmentEspressoTest {
         onView(withText(R.string.dateTimeError))
                 .inRoot(withDecorView(not(mMainActivityActivityTestRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testsToastDisplayedWhenCityNotSet(){
+        onView(withId(R.id.saveRecordButton))
+                .perform(ViewActions.scrollTo())
+                .perform(click());
+        onView(withText(R.string.error_city_not_set))
+                .inRoot(withDecorView(not(mMainActivityActivityTestRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed()));
+    }
+
+    @After
+    public void cleanUp(){
+        mSharedPreferences.edit().clear().commit();
     }
 }

@@ -11,8 +11,10 @@
     <string name="charts">Charts</string>
     <string name="WUAPIKey">2bba77ed8a35a0af</string>
     <string name="WUurl">http://api.wunderground.com/api/</string>
-    <string name="conditions">/conditions/q/</string>
+    <string name="conditions">/conditions</string>
     <string name="geolookup">/geolookup/q</string>
+    <string name="history">/history_</string>
+    <string name="q">/q/</string>
     <string name="json">.json</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="location_prompt">Please enter the city you are located in</string>
@@ -58,6 +60,7 @@
     <string name="hh_mm">HH:mm</string>
     <string name="save_record">Save Record</string>
     <string name="dateTimeError">Please set date and time</string>
+    <string name="error_city_not_set">Please set current city</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>

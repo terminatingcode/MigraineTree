@@ -3,7 +3,6 @@ package com.terminatingcode.android.migrainetree;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,9 +20,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,9 +39,11 @@ public class InputTriggersFragment extends Fragment {
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
     private TextView mCityTextView;
+    private Button mSetNewLocationButton;
     private String date;
     private String time;
     private Button mSaveRecordButton;
+    private SharedPrefsUtils mPrefUtils;
 
 
     public InputTriggersFragment() {
@@ -90,12 +88,18 @@ public class InputTriggersFragment extends Fragment {
             }
         });
         mCityTextView = (TextView) rootView.findViewById(R.id.locationTextView);
-        mSaveRecordButton = (Button) rootView.findViewById(R.id.saveRecordButton);
         SharedPreferences mSharedPreferences = getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
-        SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
-        String city = mSharedPrefsUtils.getSavedCity();
+        mPrefUtils = new SharedPrefsUtils(mSharedPreferences);
+        String city = mPrefUtils.getSavedCity();
         mCityTextView.setText(city);
+        mSetNewLocationButton = (Button) rootView.findViewById(R.id.newLocationButton);
+        mSetNewLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onNewLocationButtonClicked();
+            }
+        });
         //initialise Spinners
         Spinner typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
         ArrayAdapter<CharSequence> typeOfPainAdapter =
@@ -126,6 +130,7 @@ public class InputTriggersFragment extends Fragment {
         updateProgressTextView(R.id.sleepLevelTextView, R.id.sleepSeekBar, rootView);
         updateProgressTextView(R.id.stressLevelTextView, R.id.stressSeekBar, rootView);
         updateProgressTextView(R.id.eyesLevelTextView, R.id.eyesSeekBar, rootView);
+        mSaveRecordButton = (Button) rootView.findViewById(R.id.saveRecordButton);
         mSaveRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,34 +209,10 @@ public class InputTriggersFragment extends Fragment {
 
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onNewLocationButtonClicked() {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction();
         }
-    }
-    @Override
-    public void onStart(){
-        super.onStart();
-        EventBus.getDefault().register(this);
-        Log.d(NAME, "subscribed to EventBus");
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-        Log.d(NAME, "unsubscribed to EventBus");
-    }
-
-    /**
-     * Receives MessageEvents with error information (date, time not set)
-     * and displays it to the user as a Toast
-     * @param error what needs to be fixed to have valid data
-     */
-    @Subscribe
-    public void onErrorMessageEvent(String error){
-        Log.d(NAME, error);
-        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -262,8 +243,7 @@ public class InputTriggersFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction();
     }
 
     /**
@@ -274,6 +254,10 @@ public class InputTriggersFragment extends Fragment {
      * @param time the start time
      */
     public void startWeatherHistoryService(String date, String time){
+        String locationUID = mPrefUtils.getSavedLocationUID();
+        if(locationUID == Constants.CITY_NOT_SET){
+            Toast.makeText(getActivity(), R.string.error_city_not_set, Toast.LENGTH_LONG).show();
+        }
         if(date == null || time == null){
             Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
         }else {

@@ -120,10 +120,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * replaces inputEventFragment with
+     * replaces NewRecordFragment with InputTriggersFragment
      */
     @Override
     public void onNewRecordButtonClicked() {
         fragmentManager.beginTransaction().replace(R.id.content_frame, new InputTriggersFragment()).commit();
+    }
+
+    /**
+     * replaces InputTriggersFragment with SearchCitiesFragment
+     */
+    @Override
+    public void onFragmentInteraction() {
+        fragmentManager.beginTransaction().replace(R.id.content_frame, new SearchCitiesFragment()).commit();
     }
 }

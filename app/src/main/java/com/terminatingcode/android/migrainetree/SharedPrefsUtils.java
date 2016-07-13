@@ -46,4 +46,12 @@ public class SharedPrefsUtils {
         return mSharedPreferences.getString(Constants.LOCATION_NAME, Constants.CITY_NOT_SET);
     }
 
+    /**
+     * Returns location uid used for Weather Underground http calls
+     * @return UID
+     */
+    public String getSavedLocationUID(){
+        return mSharedPreferences.getString(Constants.LOCATIONUID, Constants.CITY_NOT_SET);
+    }
+
 }

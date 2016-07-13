@@ -37,13 +37,32 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/city_not_set"
+        android:id="@+id/locationTextView"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"
+        android:layout_below="@+id/migraineStartTimeTextView"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_new_location"
+        android:id="@+id/newLocationButton"
+        android:layout_below="@+id/migraineStartTimeTextView"
+        android:textSize="12sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/painTextView"
         android:text="@string/pain_at_beginning_of_migraine"
-        android:layout_below="@+id/migraineStartTimeTextView"
+        android:layout_below="@+id/newLocationButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="false"
@@ -217,25 +236,6 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/city_not_set"
-        android:id="@+id/locationTextView"
-        android:textColor="#ffffff"
-        android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/eyesSeekBar"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/set_new_location"
-        android:id="@+id/newLocationButton"
-        android:layout_below="@+id/eyesSeekBar"
-        android:textSize="12sp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -245,7 +245,7 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/newLocationButton"/>
+        android:layout_below="@+id/eyesSeekBar"/>
 
     <Spinner
         android:layout_width="match_parent"

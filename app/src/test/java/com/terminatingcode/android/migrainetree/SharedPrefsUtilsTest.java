@@ -58,10 +58,17 @@ public class SharedPrefsUtilsTest {
     }
 
     @Test
-    public void getSavedCity(){
+    public void testGetSavedCity(){
         mPrefs.edit().putString(Constants.LOCATION_NAME, location).apply();
         String result = mSharedPrefsUtils.getSavedCity();
         assertEquals(location, result);
+    }
+
+    @Test
+    public void testGetLocationUID(){
+        mPrefs.edit().putString(Constants.LOCATIONUID, uid).apply();
+        String result = mSharedPrefsUtils.getSavedLocationUID();
+        assertEquals(uid, result);
     }
 
     @After
