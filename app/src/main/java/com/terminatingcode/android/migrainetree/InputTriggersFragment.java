@@ -33,6 +33,8 @@ public class InputTriggersFragment extends Fragment {
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
     private TextView mCityTextView;
+    private String date;
+    private String time;
 
 
     public InputTriggersFragment() {
@@ -126,7 +128,7 @@ public class InputTriggersFragment extends Fragment {
                 int day = mDatePicker.getDayOfMonth();
                 int month = mDatePicker.getMonth();
                 int year = mDatePicker.getYear();
-                String date = day + "/" + month + "/" + year;
+                date = day + "/" + month + "/" + year;
                 dateTextView.setText(date);
                 mDatePicker.setVisibility(View.GONE);
                 setTime();
@@ -147,8 +149,7 @@ public class InputTriggersFragment extends Fragment {
                 mTimePicker.setVisibility(View.GONE);
                 int hour = mTimePicker.getHour();
                 int minutes = mTimePicker.getMinute();
-                String time =
-                        hour +
+                time =  hour +
                         ":" +
                         minutes;
                 timeTextView.setText(time);

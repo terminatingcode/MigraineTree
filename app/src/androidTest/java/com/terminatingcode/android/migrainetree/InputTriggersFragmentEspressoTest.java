@@ -1,6 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.app.Fragment;
@@ -54,7 +55,7 @@ public class InputTriggersFragmentEspressoTest {
     }
 
     @Test
-    public void testDatePickerIsMadeVisibleByClickingAddButton(){
+    public void testDatePickerIsMadeVisibleByClickingSetButton(){
         onView(withId(R.id.datePicker)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.datePicker)).check(matches(isDisplayed())).check(matches(isClickable()));
@@ -78,6 +79,28 @@ public class InputTriggersFragmentEspressoTest {
         onView(withId(R.id.timePicker)).check(matches(isDisplayed())).check(matches(isClickable()));
         onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.timePicker)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+    }
+
+    @Test
+    public void testDateTextViewChangesTextToDateChosenOnDatePicker(){
+        int year = 2016;
+        int month = 7;
+        int day = 13;
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.datePicker)).perform(PickerActions.setDate(year, month + 1, day));
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.migraineStartDateTextView)).check(matches(withText(day + "/" + month + "/" + year)));
+    }
+
+    @Test
+    public void testTimeTextViewChangesTextToDateChosenOnDatePicker(){
+        int hour = 10;
+        int minutes = 7;
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.timePicker)).perform(PickerActions.setTime(hour, minutes));
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.migraineStartTimeTextView)).check(matches(withText(hour + ":" + minutes)));
     }
 
     @Test
