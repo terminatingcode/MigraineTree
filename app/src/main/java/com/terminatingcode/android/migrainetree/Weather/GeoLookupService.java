@@ -27,7 +27,7 @@ public class GeoLookupService extends IntentService {
     private static final String NAME = "GeoLookupService";
 
     public GeoLookupService() {
-        super("GeoLookupService");
+        super(NAME);
     }
 
 

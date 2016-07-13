@@ -6,4 +6,5 @@
     android:minHeight="35dp"
     android:gravity="center"
     android:textAppearance="@android:style/TextAppearance.Large"
-    android:textColor="@color/textColor"/>
+    android:textColor="@color/textColor"
+    />

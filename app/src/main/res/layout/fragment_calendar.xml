@@ -1,4 +1,4 @@
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,12 +8,10 @@
     android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
-
     <com.terminatingcode.android.migrainetree.CalendarView
         xmlns:calendarNS="http://schemas.android.com/apk/res/com.terminatingcode.android.migrainetree"
         android:id="@+id/calendar_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         calendarNS:dateFormat="MMMM yyyy"/>
-
-</LinearLayout>
+</FrameLayout>

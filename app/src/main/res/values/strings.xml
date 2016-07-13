@@ -23,7 +23,7 @@
     <string name="i_have_a_migraine">I have a migraine!</string>
     <string name="record_new_migraine">Record new Migraine</string>
     <string name="search">search</string>
-    <string name="start_date_dd_mm_yyyy_hh_mm">Start Date: DD/MM/YYYY, HH:MM</string>
+    <string name="start_date_dd_mm_yyyy">Start Date: DD/MM/YYYY</string>
     <string name="set_date_time">set_date_time</string>
     <string name="please_enter_your_current_city">please enter your current city</string>
     <string name="pain_at_beginning_of_migraine">Pain at beginning of migraine:</string>
@@ -55,6 +55,7 @@
     <string name="thursday">THU</string>
     <string name="friday">FRI</string>
     <string name="saturday">SAT</string>
+    <string name="hh_mm">HH:mm</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>

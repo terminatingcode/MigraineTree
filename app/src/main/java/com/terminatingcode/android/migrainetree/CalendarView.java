@@ -158,12 +158,13 @@ public class CalendarView extends LinearLayout
             @Override
             public boolean onItemLongClick(AdapterView<?> view, View cell, int position, long id)
             {
-
+                float x = cell.getX() + 50;
+                float y = cell.getY() + 200;
                 // handle long-press
                 if (eventHandler == null)
                     return false;
 
-                eventHandler.onDayLongPress((Date)view.getItemAtPosition(position));
+                eventHandler.onDayLongPress((Date)view.getItemAtPosition(position), x, y);
                 return true;
             }
         });
@@ -257,7 +258,7 @@ public class CalendarView extends LinearLayout
                             (event.get(Calendar.YEAR) - 1900) == year)
                     {
                         // mark this day for event
-                        view.setBackgroundResource(R.drawable.ic_menstrual_day);
+                        view.setBackgroundResource(R.drawable.menstrual_day);
                         break;
                     }
                 }
@@ -276,7 +277,7 @@ public class CalendarView extends LinearLayout
             {
                 // if it is today, set it to blue/bold
                 ((TextView)view).setTypeface(null, Typeface.BOLD);
-                ((TextView)view).setTextColor(Color.CYAN);
+                ((TextView)view).setTextColor(Color.YELLOW);
             }
 
             // set text
@@ -300,6 +301,6 @@ public class CalendarView extends LinearLayout
      */
     public interface EventHandler
     {
-        void onDayLongPress(Date date);
+        void onDayLongPress(Date date, float x, float y);
     }
 }

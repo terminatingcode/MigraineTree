@@ -54,25 +54,18 @@ public class InputTriggersFragmentEspressoTest {
     }
 
     @Test
-    public void testStartButtonIsVisibleAndClickable(){
-        onView(withId(R.id.start_date_button))
-                .check(matches(isDisplayed()))
-                .check(matches(isClickable()));
-    }
-
-    @Test
-    public void testDatePickerSetButtonAreMadeVisibleByClickingStartButton(){
+    public void testDatePickerIsMadeVisibleByClickingAddButton(){
         onView(withId(R.id.datePicker)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        onView(withId(R.id.set_button)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        onView(withId(R.id.start_date_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.datePicker)).check(matches(isDisplayed())).check(matches(isClickable()));
-        onView(withId(R.id.set_button)).check(matches(isDisplayed())).check(matches(isClickable()));
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.datePicker)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
     @Test
     public void testTimePickerMadeVisibleByClickingSetButton(){
         onView(withId(R.id.timePicker)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        onView(withId(R.id.start_date_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.timePicker)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.timePicker)).check(matches(isDisplayed())).check(matches(isClickable()));
@@ -80,7 +73,7 @@ public class InputTriggersFragmentEspressoTest {
 
     @Test
     public void testTimePickerDisappearsByClickingSetButton(){
-        onView(withId(R.id.start_date_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.timePicker)).check(matches(isDisplayed())).check(matches(isClickable()));
         onView(withId(R.id.set_button)).perform(click());

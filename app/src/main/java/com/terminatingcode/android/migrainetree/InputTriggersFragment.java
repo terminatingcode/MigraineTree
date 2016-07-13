@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -28,8 +27,9 @@ import android.widget.TimePicker;
 public class InputTriggersFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private Button startDateButton;
-    private ImageButton mAddDateTimeButton;
+    private TextView dateTextView;
+    private TextView timeTextView;
+    private ImageButton mSetButton;
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
     private TextView mCityTextView;
@@ -65,11 +65,12 @@ public class InputTriggersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_input_triggers, container, false);
+        dateTextView = (TextView) rootView.findViewById(R.id.migraineStartDateTextView);
+        timeTextView = (TextView) rootView.findViewById(R.id.migraineStartTimeTextView);
         mDatePicker = (DatePicker) rootView.findViewById(R.id.datePicker);
         mTimePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
-        mAddDateTimeButton = (ImageButton) rootView.findViewById(R.id.set_button);
-        startDateButton = (Button) rootView.findViewById(R.id.start_date_button);
-        startDateButton.setOnClickListener(new View.OnClickListener() {
+        mSetButton = (ImageButton) rootView.findViewById(R.id.set_button);
+        mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDate();
@@ -119,41 +120,38 @@ public class InputTriggersFragment extends Fragment {
      */
     private void setDate() {
         mDatePicker.setVisibility(View.VISIBLE);
-        mAddDateTimeButton.setVisibility(View.VISIBLE);
-        mAddDateTimeButton.setOnClickListener(new View.OnClickListener() {
+        mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int day = mDatePicker.getDayOfMonth();
                 int month = mDatePicker.getMonth();
                 int year = mDatePicker.getYear();
                 String date = day + "/" + month + "/" + year;
-                startDateButton.setText(date);
+                dateTextView.setText(date);
                 mDatePicker.setVisibility(View.GONE);
-                setTime(date);
+                setTime();
 
             }
         });
     }
 
     /**
-     * Updates the startDateButton text to be the date plus the
+     * Updates the startDateButton text to be the
      * time specified by the user
-     * @param date the date chosen by the user
      */
-    private void setTime(final String date) {
+    private void setTime() {
         mTimePicker.setVisibility(View.VISIBLE);
-        mAddDateTimeButton.setOnClickListener(new View.OnClickListener() {
+        mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mTimePicker.setVisibility(View.GONE);
                 int hour = mTimePicker.getHour();
                 int minutes = mTimePicker.getMinute();
-                String fullDate = date +
-                        " " +
+                String time =
                         hour +
                         ":" +
                         minutes;
-                startDateButton.setText(fullDate);
+                timeTextView.setText(time);
             }
         });
     }

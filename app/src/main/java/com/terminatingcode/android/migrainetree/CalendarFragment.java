@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -35,7 +34,6 @@ public class CalendarFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private HashSet<Calendar> events;
-    private FrameLayout editDateBubble;
 
     private OnFragmentInteractionListener mListener;
 
@@ -77,16 +75,14 @@ public class CalendarFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         //get events from content provider
         events = new HashSet<>();
-        editDateBubble = (FrameLayout) rootView.findViewById(R.id.modify_menstrual_event_bubble);
         final CalendarView cv = ((CalendarView) rootView.findViewById(R.id.calendar_view));
         cv.updateCalendar(events);
         // assign event handler
         cv.setEventHandler(new CalendarView.EventHandler()
         {
             @Override
-            public void onDayLongPress(Date date)
+            public void onDayLongPress(Date date, float x, float y)
             {
-                // show button
                 DateFormat df = SimpleDateFormat.getDateInstance();
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
