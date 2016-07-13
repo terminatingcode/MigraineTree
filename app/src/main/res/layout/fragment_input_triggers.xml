@@ -397,6 +397,14 @@
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@id/saveRecordButton"
+        android:text="@string/save_record"
+        android:clickable="true"
+        android:layout_below="@id/confusionCheckBox"/>
+
 
     <DatePicker
         android:layout_width="wrap_content"

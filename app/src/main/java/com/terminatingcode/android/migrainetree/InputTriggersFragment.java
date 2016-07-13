@@ -1,20 +1,29 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,16 +34,18 @@ import android.widget.TimePicker;
  * create an instance of this fragment.
  */
 public class InputTriggersFragment extends Fragment {
+    private static final String NAME  = "InputTriggersFragment";
 
     private OnFragmentInteractionListener mListener;
-    private TextView dateTextView;
-    private TextView timeTextView;
+    private TextView mDateTextView;
+    private TextView mTimeTextView;
     private ImageButton mSetButton;
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
     private TextView mCityTextView;
     private String date;
     private String time;
+    private Button mSaveRecordButton;
 
 
     public InputTriggersFragment() {
@@ -67,8 +78,8 @@ public class InputTriggersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_input_triggers, container, false);
-        dateTextView = (TextView) rootView.findViewById(R.id.migraineStartDateTextView);
-        timeTextView = (TextView) rootView.findViewById(R.id.migraineStartTimeTextView);
+        mDateTextView = (TextView) rootView.findViewById(R.id.migraineStartDateTextView);
+        mTimeTextView = (TextView) rootView.findViewById(R.id.migraineStartTimeTextView);
         mDatePicker = (DatePicker) rootView.findViewById(R.id.datePicker);
         mTimePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
         mSetButton = (ImageButton) rootView.findViewById(R.id.set_button);
@@ -79,6 +90,7 @@ public class InputTriggersFragment extends Fragment {
             }
         });
         mCityTextView = (TextView) rootView.findViewById(R.id.locationTextView);
+        mSaveRecordButton = (Button) rootView.findViewById(R.id.saveRecordButton);
         SharedPreferences mSharedPreferences = getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
@@ -114,6 +126,13 @@ public class InputTriggersFragment extends Fragment {
         updateProgressTextView(R.id.sleepLevelTextView, R.id.sleepSeekBar, rootView);
         updateProgressTextView(R.id.stressLevelTextView, R.id.stressSeekBar, rootView);
         updateProgressTextView(R.id.eyesLevelTextView, R.id.eyesSeekBar, rootView);
+        mSaveRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(NAME, "click");
+                startWeatherHistoryService(date, time);
+            }
+        });
         return rootView;
     }
 
@@ -129,7 +148,7 @@ public class InputTriggersFragment extends Fragment {
                 int month = mDatePicker.getMonth();
                 int year = mDatePicker.getYear();
                 date = day + "/" + month + "/" + year;
-                dateTextView.setText(date);
+                mDateTextView.setText(date);
                 mDatePicker.setVisibility(View.GONE);
                 setTime();
 
@@ -152,7 +171,7 @@ public class InputTriggersFragment extends Fragment {
                 time =  hour +
                         ":" +
                         minutes;
-                timeTextView.setText(time);
+                mTimeTextView.setText(time);
             }
         });
     }
@@ -190,6 +209,30 @@ public class InputTriggersFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+    @Override
+    public void onStart(){
+        super.onStart();
+        EventBus.getDefault().register(this);
+        Log.d(NAME, "subscribed to EventBus");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+        Log.d(NAME, "unsubscribed to EventBus");
+    }
+
+    /**
+     * Receives MessageEvents with error information (date, time not set)
+     * and displays it to the user as a Toast
+     * @param error what needs to be fixed to have valid data
+     */
+    @Subscribe
+    public void onErrorMessageEvent(String error){
+        Log.d(NAME, error);
+        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -221,5 +264,23 @@ public class InputTriggersFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    /**
+     * starts WeatherHistoryService to parse past 24 hours
+     * will not start if date or time not set
+     * displays a toast to notify user if null
+     * @param date the start date
+     * @param time the start time
+     */
+    public void startWeatherHistoryService(String date, String time){
+        if(date == null || time == null){
+            Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
+        }else {
+            Log.d(NAME, "starting intent with date = " + date);
+            Intent intent = new Intent(getActivity(), WeatherHistoryService.class);
+            intent.setAction(date);
+            getActivity().startService(intent);
+        }
     }
 }

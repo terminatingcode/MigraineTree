@@ -14,6 +14,7 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -23,6 +24,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsNot.not;
 
 // Tests for MainActivity
 
@@ -283,5 +285,15 @@ public class InputTriggersFragmentEspressoTest {
                 .check(matches(isDisplayed()))
                 .check(matches(isClickable()))
                 .check(matches(ViewMatchers.isNotChecked()));
+    }
+
+    @Test
+    public void testsToastDisplayedWhenDateNotSet(){
+        onView(withId(R.id.saveRecordButton))
+                .perform(ViewActions.scrollTo())
+                .perform(click());
+        onView(withText(R.string.dateTimeError))
+                .inRoot(withDecorView(not(mMainActivityActivityTestRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed()));
     }
 }

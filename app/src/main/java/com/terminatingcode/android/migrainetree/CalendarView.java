@@ -204,7 +204,7 @@ public class CalendarView extends LinearLayout
         grid.setAdapter(new CalendarAdapter(getContext(), cells, events));
 
         // update title
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.UK);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
         txtDate.setText(sdf.format(currentDate.getTime()));
 
         // set header color according to current season

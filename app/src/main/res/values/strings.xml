@@ -56,6 +56,8 @@
     <string name="friday">FRI</string>
     <string name="saturday">SAT</string>
     <string name="hh_mm">HH:mm</string>
+    <string name="save_record">Save Record</string>
+    <string name="dateTimeError">Please set date and time</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>
