@@ -29,8 +29,19 @@
                   android:screenOrientation="portrait">
         </activity>
 
+        <provider
+            android:authorities="com.terminatingcode.android.migrainetree.Calendar.provider"
+            android:name=".SQL.MenstrualRecordsProvider"
+            android:exported="false">
+        </provider>
+
         <service
             android:name=".Weather.GeoLookupService"
+            android:exported="false">
+        </service>
+
+        <service
+            android:name=".Weather.WeatherHistoryService"
             android:exported="false">
         </service>
     </application>

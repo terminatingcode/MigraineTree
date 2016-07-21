@@ -29,7 +29,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
 
-// Tests for MainActivity
 
 /**
  * Instrumentation Test for InputTriggerFragment

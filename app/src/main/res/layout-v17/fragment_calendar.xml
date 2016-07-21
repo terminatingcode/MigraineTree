@@ -21,14 +21,12 @@
         android:paddingBottom="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/menstrual_day_imageview"
         android:layout_toEndOf="@+id/menstrual_day_imageview"
         android:textColor="@color/textColor"
         android:textSize="24sp"
         android:text="@string/keep_track_of_menstruation_by_pressing_on_the_day"
         android:textAlignment="center"
-        android:id="@+id/menstrual_calendar_textview"
-        />
+        android:id="@+id/menstrual_calendar_textview"/>
 
 
 

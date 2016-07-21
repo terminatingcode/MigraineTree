@@ -61,6 +61,8 @@
     <string name="save_record">Save Record</string>
     <string name="dateTimeError">Please set date and time</string>
     <string name="error_city_not_set">Please set current city</string>
+    <string name="keep_track_of_menstruation_by_pressing_on_the_day">Keep track of menstruation by pressing on the day</string>
+    <string name="red_drop">red drop</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>

@@ -1,13 +1,17 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.terminatingcode.android.migrainetree.SQL.MenstrualRecordsProvider;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -74,7 +78,7 @@ public class CalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         //get events from content provider
-        events = new HashSet<>();
+        events = getDates();
         final CalendarView cv = ((CalendarView) rootView.findViewById(R.id.calendar_view));
         cv.updateCalendar(events);
         // assign event handler
@@ -134,5 +138,23 @@ public class CalendarFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public HashSet<Calendar> getDates(){
+       CursorLoader cursorLoader = new CursorLoader(getContext(), MenstrualRecordsProvider.CONTENT_URI, null, null, null, null);
+        Cursor c = cursorLoader.loadInBackground();
+        HashSet<Calendar> events = new HashSet<>();
+        if(c != null) {
+            int num = c.getCount();
+            c.moveToFirst();
+            for(int i = 0; i < num; i++){
+                Calendar calendar = Calendar.getInstance();
+                int milliseconds = c.getInt(i);
+                calendar.setTimeInMillis(milliseconds);
+                events.add(calendar);
+            }
+            c.close();
+        }
+        return events;
     }
 }
