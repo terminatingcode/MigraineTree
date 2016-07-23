@@ -30,8 +30,8 @@
         </activity>
 
         <provider
-            android:authorities="com.terminatingcode.android.migrainetree.Calendar.provider"
-            android:name=".SQL.MenstrualRecordsProvider"
+            android:authorities="com.terminatingcode.android.migrainetree.provider"
+            android:name=".SQL.LocalContentProvider"
             android:exported="false">
         </provider>
 

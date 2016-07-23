@@ -12,7 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.terminatingcode.android.migrainetree.SQL.MenstrualRecordsProvider;
+import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
+import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -122,21 +123,21 @@ public class CalendarFragment extends Fragment {
         Long milliseconds = calendar.getTimeInMillis();
         int dayInCycle = calculateDayInCycle(calendar, events);
         storedEvents.put(
-                MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE,
+                MenstrualRecord.DATE,
                 milliseconds);
-        storedEvents.put(MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_DAY_IN_CYCLE,
+        storedEvents.put(MenstrualRecord.DAY_IN_CYCLE,
                 dayInCycle);
         Context context = getContext();
-        Uri rowInserted = context.getContentResolver().insert(MenstrualRecordsProvider.CONTENT_URI, storedEvents);
+        Uri rowInserted = context.getContentResolver().insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, storedEvents);
         Log.d(NAME, "# row inserted: " + rowInserted);
     }
 
     private void deleteDateInProvider(Calendar calendar){
         Long milliseconds = calendar.getTimeInMillis();
-        String selection = MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE
+        String selection = MenstrualRecord.DATE
                 + " = " + milliseconds;
         Context context = getContext();
-        int rowsDeleted = context.getContentResolver().delete(MenstrualRecordsProvider.CONTENT_URI, selection, null);
+        int rowsDeleted = context.getContentResolver().delete(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, selection, null);
         Log.d(NAME, "# rows deleted: " + rowsDeleted);
     }
 
@@ -190,18 +191,18 @@ public class CalendarFragment extends Fragment {
     }
 
     public HashSet<Calendar> getDates(){
-        String[] projection = {MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE};
+        String[] projection = {MenstrualRecord.DATE};
 
         Cursor cursor = null;
         HashSet<Calendar> events = new HashSet<>();
         try {
             cursor = getContext().getApplicationContext()
-                    .getContentResolver().query(MenstrualRecordsProvider.CONTENT_URI, projection, null, null, null);
+                    .getContentResolver().query(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, projection, null, null, null);
             if (cursor != null) {
                 cursor.moveToFirst();
                 do {
                     Calendar calendar = Calendar.getInstance();
-                    int datesIndex = cursor.getColumnIndex(MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE);
+                    int datesIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
                     Long milliseconds = cursor.getLong(datesIndex);
                     calendar.setTimeInMillis(milliseconds);
                     Log.d(NAME, calendar.toString());
