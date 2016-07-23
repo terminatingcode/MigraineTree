@@ -8,6 +8,7 @@ import android.test.mock.MockContentResolver;
 
 import com.terminatingcode.android.migrainetree.SQL.MenstrualRecordsProvider;
 
+import org.junit.After;
 import org.junit.Before;
 
 import java.util.Arrays;
@@ -21,7 +22,7 @@ import java.util.Arrays;
 public class MenstrualRecordsProviderTest extends ProviderTestCase2<MenstrualRecordsProvider> {
 
     private MockContentResolver mResolver;
-    private Uri TEST_URI = Uri.parse("content://com.apt1.code.provider/menstrualRecords");
+    private Uri URI = MenstrualRecordsProvider.CONTENT_URI;
 
     public MenstrualRecordsProviderTest() {
         super(MenstrualRecordsProvider.class, MenstrualRecordsProvider.AUTHORITY);
@@ -36,7 +37,7 @@ public class MenstrualRecordsProviderTest extends ProviderTestCase2<MenstrualRec
     public void testsDatabaseIsCreated(){
         Cursor cursor = null;
         try{
-            cursor= mResolver.query(TEST_URI, null, null, null, null);
+            cursor= mResolver.query(URI, null, null, null, null);
             assertNotNull(cursor);
             assertFalse(cursor.moveToNext());
         }finally{
@@ -48,7 +49,7 @@ public class MenstrualRecordsProviderTest extends ProviderTestCase2<MenstrualRec
         Cursor cursor = null;
         try{
             int numOfColumns = MenstrualRecordsProvider.ALL_COLUMNS.length;
-            cursor= mResolver.query(TEST_URI, null, null, null, null);
+            cursor= mResolver.query(URI, null, null, null, null);
             String[] columns = new String[numOfColumns];
             System.arraycopy(MenstrualRecordsProvider.ALL_COLUMNS, 0, columns, 0, numOfColumns);
             Arrays.sort(columns);
@@ -60,13 +61,13 @@ public class MenstrualRecordsProviderTest extends ProviderTestCase2<MenstrualRec
         }
     }
 
-    public void testsDatabaseInsert(){
+    public void testsDatabaseInsertDelete(){
         Long expectedDate = 1466668560000L;
         int expectedDay = 1;
         ContentValues values = new ContentValues();
         values.put(MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE, expectedDate);
         values.put(MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_DAY_IN_CYCLE, expectedDay);
-        Uri insertedUri = mResolver.insert(TEST_URI, values);
+        Uri insertedUri = mResolver.insert(URI, values);
         assertNotNull(insertedUri);
 
         Cursor cursor = null;
@@ -124,5 +125,10 @@ public class MenstrualRecordsProviderTest extends ProviderTestCase2<MenstrualRec
         expected = new String[]{testId, "1", "2"};
         result = MenstrualRecordsProvider.fixSelectionArgs(testArgs, testId);
         assertTrue(Arrays.equals(expected, result));
+    }
+
+    @After
+    public void tearDown(){
+        mResolver.delete(URI, null, null);
     }
 }

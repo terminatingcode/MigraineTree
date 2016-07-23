@@ -6,6 +6,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 /**
  * Instrumentation Test for CalendarFragment
  * Created by Sarah on 7/21/2016.
@@ -33,5 +38,10 @@ public class CalendarFragmentTest {
         mFragment.isVisible();
     }
 
+    @Test
+    public void testCalendarIsVisible(){
+        onView(withId(R.id.calendar_view))
+                .check(matches(isDisplayed()));
+    }
 
 }

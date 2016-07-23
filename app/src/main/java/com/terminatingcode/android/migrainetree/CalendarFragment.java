@@ -1,11 +1,12 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.CursorLoader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import java.util.HashSet;
  * create an instance of this fragment.
  */
 public class CalendarFragment extends Fragment {
+    private static final String NAME = "CalendarFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -88,17 +90,64 @@ public class CalendarFragment extends Fragment {
             public void onDayLongPress(Date date, float x, float y)
             {
                 DateFormat df = SimpleDateFormat.getDateInstance();
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+
+                //sanitize time values
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
                 //add or remove date from events
-                if(events.contains(c)) events.remove(c);
-                else events.add(c);
-                cv.updateCalendar();
+                if(events.contains(calendar)) {
+                    deleteDateInProvider(calendar);
+                    events = getDates();
+                    cv.updateCalendar(events);
+                }else{
+                    addDateToProvider(calendar, events);
+                    events = getDates();
+                    cv.updateCalendar(events);
+                }
                 Toast.makeText(getActivity(), df.format(date), Toast.LENGTH_SHORT).show();
             }
         });
 
         return rootView;
+    }
+
+    private void addDateToProvider(Calendar calendar, HashSet<Calendar> events) {
+        ContentValues storedEvents = new ContentValues();
+
+        Long milliseconds = calendar.getTimeInMillis();
+        int dayInCycle = calculateDayInCycle(calendar, events);
+        storedEvents.put(
+                MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE,
+                milliseconds);
+        storedEvents.put(MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_DAY_IN_CYCLE,
+                dayInCycle);
+        Context context = getContext();
+        Uri rowInserted = context.getContentResolver().insert(MenstrualRecordsProvider.CONTENT_URI, storedEvents);
+        Log.d(NAME, "# row inserted: " + rowInserted);
+    }
+
+    private void deleteDateInProvider(Calendar calendar){
+        Long milliseconds = calendar.getTimeInMillis();
+        String selection = MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE
+                + " = " + milliseconds;
+        Context context = getContext();
+        int rowsDeleted = context.getContentResolver().delete(MenstrualRecordsProvider.CONTENT_URI, selection, null);
+        Log.d(NAME, "# rows deleted: " + rowsDeleted);
+    }
+
+    public static int calculateDayInCycle(Calendar calendar, HashSet<Calendar> events){
+        int dayInCycle = 1;
+        //find beginning of cycle
+        while(events.contains(calendar)){
+            calendar.add(Calendar.DATE, -1);
+            if(events.contains(calendar)) dayInCycle ++;
+        }
+        return dayInCycle;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -141,19 +190,28 @@ public class CalendarFragment extends Fragment {
     }
 
     public HashSet<Calendar> getDates(){
-       CursorLoader cursorLoader = new CursorLoader(getContext(), MenstrualRecordsProvider.CONTENT_URI, null, null, null, null);
-        Cursor c = cursorLoader.loadInBackground();
+        String[] projection = {MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE};
+
+        Cursor cursor = null;
         HashSet<Calendar> events = new HashSet<>();
-        if(c != null) {
-            int num = c.getCount();
-            c.moveToFirst();
-            for(int i = 0; i < num; i++){
-                Calendar calendar = Calendar.getInstance();
-                int milliseconds = c.getInt(i);
-                calendar.setTimeInMillis(milliseconds);
-                events.add(calendar);
+        try {
+            cursor = getContext().getApplicationContext()
+                    .getContentResolver().query(MenstrualRecordsProvider.CONTENT_URI, projection, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                do {
+                    Calendar calendar = Calendar.getInstance();
+                    int datesIndex = cursor.getColumnIndex(MenstrualRecordsProvider.MenstrualRecord.COLUMN_NAME_MENSTRUAL_RECORD_DATE);
+                    Long milliseconds = cursor.getLong(datesIndex);
+                    calendar.setTimeInMillis(milliseconds);
+                    Log.d(NAME, calendar.toString());
+                    events.add(calendar);
+                }while(cursor.moveToNext());
             }
-            c.close();
+        }catch(Exception e){
+            Log.d(NAME, e.getMessage());
+        }finally{
+            if(cursor != null) cursor.close();
         }
         return events;
     }
