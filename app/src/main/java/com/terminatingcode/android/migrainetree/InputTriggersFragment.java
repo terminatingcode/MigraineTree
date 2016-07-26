@@ -1,7 +1,6 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
+import java.text.DecimalFormat;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +44,9 @@ public class InputTriggersFragment extends Fragment {
     private String time;
     private Button mSaveRecordButton;
     private SharedPrefsUtils mPrefUtils;
+    private int numSetButtonPressed = 0;
+    private static final int VIEW_DATE_PICKER = 1;
+    private static final int VIEW_TIME_PICKER = 2;
 
 
     public InputTriggersFragment() {
@@ -84,7 +87,19 @@ public class InputTriggersFragment extends Fragment {
         mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDate();
+                numSetButtonPressed++;
+                int stage = numSetButtonPressed % 3;
+                if(stage == VIEW_DATE_PICKER) mDatePicker.setVisibility(View.VISIBLE);
+                else if(stage == VIEW_TIME_PICKER){
+                    setDate();
+                    mDatePicker.setVisibility(View.GONE);
+                    mTimePicker.setVisibility(View.VISIBLE);
+                }
+                else {
+                    setTime();
+                    mTimePicker.setVisibility(View.GONE);
+                }
+
             }
         });
         mCityTextView = (TextView) rootView.findViewById(R.id.locationTextView);
@@ -145,20 +160,11 @@ public class InputTriggersFragment extends Fragment {
      * Update startDateButton text to be the date chosen by the user
      */
     private void setDate() {
-        mDatePicker.setVisibility(View.VISIBLE);
-        mSetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int day = mDatePicker.getDayOfMonth();
-                int month = mDatePicker.getMonth();
-                int year = mDatePicker.getYear();
-                date = day + "/" + month + "/" + year;
-                mDateTextView.setText(date);
-                mDatePicker.setVisibility(View.GONE);
-                setTime();
-
-            }
-        });
+        int day = mDatePicker.getDayOfMonth();
+        int month = mDatePicker.getMonth();
+        int year = mDatePicker.getYear();
+        date = day + "/" + month + "/" + year;
+        mDateTextView.setText(date);
     }
 
     /**
@@ -166,19 +172,13 @@ public class InputTriggersFragment extends Fragment {
      * time specified by the user
      */
     private void setTime() {
-        mTimePicker.setVisibility(View.VISIBLE);
-        mSetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTimePicker.setVisibility(View.GONE);
-                int hour = mTimePicker.getHour();
-                int minutes = mTimePicker.getMinute();
-                time =  hour +
-                        ":" +
-                        minutes;
-                mTimeTextView.setText(time);
-            }
-        });
+        final DecimalFormat decimalFormat = new DecimalFormat("00");
+        String hour = decimalFormat.format(mTimePicker.getHour());
+        String minutes = decimalFormat.format(mTimePicker.getMinute());
+        time =  hour +
+                ":" +
+                minutes;
+        mTimeTextView.setText(time);
     }
 
     /**
@@ -208,10 +208,12 @@ public class InputTriggersFragment extends Fragment {
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
+    /**
+     * signals to MainActivity to replace this fragment with SearchCitiesFragment
+     */
     public void onNewLocationButtonClicked() {
         if (mListener != null) {
-            mListener.onFragmentInteraction();
+            mListener.onSetLocationPressed();
         }
     }
 
@@ -243,7 +245,9 @@ public class InputTriggersFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+        void onSetLocationPressed();
+        void onSaveRecordPressed(String date, String locationUID);
+
     }
 
     /**
@@ -255,16 +259,22 @@ public class InputTriggersFragment extends Fragment {
      */
     public void startWeatherHistoryService(String date, String time){
         String locationUID = mPrefUtils.getSavedLocationUID();
-        if(locationUID == Constants.CITY_NOT_SET){
+        if(Objects.equals(locationUID, Constants.CITY_NOT_SET)){
             Toast.makeText(getActivity(), R.string.error_city_not_set, Toast.LENGTH_LONG).show();
         }
         if(date == null || time == null){
             Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
         }else {
-            Log.d(NAME, "starting intent with date = " + date);
-            Intent intent = new Intent(getActivity(), WeatherHistoryService.class);
-            intent.setAction(date);
-            getActivity().startService(intent);
+            onSaveRecordPressed(date + time, locationUID);
+        }
+    }
+
+    /**
+     * signals to MainActivity to add ProcessRecordFragment to stack
+     */
+    public void onSaveRecordPressed(String dateTime, String locationUID) {
+        if (mListener != null) {
+            mListener.onSaveRecordPressed(dateTime, locationUID);
         }
     }
 }

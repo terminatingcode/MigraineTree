@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
@@ -29,6 +30,7 @@ public class HistoryWeatherParserTest {
     private JSONArray mJsonHours;
     private JSONObject mJsonHour;
     private Weather24Hour mWeather24Hour;
+    private Calendar mCalendar;
     private String testQuery = "{\"response\": {" +
             "\"version\":\"0.1\"," +
             "\"termsofService\":\"http://www.wunderground.com/weather/api/d/terms.html\"," +
@@ -104,6 +106,9 @@ public class HistoryWeatherParserTest {
         mJSONObject = new JSONObject(testQuery);
         mJSONObjectHistory = mJSONObject.getJSONObject("history");
         Long milliseconds = 1466668560000L;
+        Long migraineStart = 1466726390000L;
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(migraineStart);
         mStartHour = new Date(milliseconds);
         mJsonHours = mJSONObjectHistory.getJSONArray("observations");
         mJsonHour = mJsonHours.getJSONObject(0);
@@ -114,17 +119,17 @@ public class HistoryWeatherParserTest {
 
     @Test (expected = JSONException.class)
     public void nullJSONObjectParseThrowsJSONException() throws JSONException, ParseException {
-        mHistoryWeatherParser.parse(null, new Weather24Hour());
+        mHistoryWeatherParser.parse(null, new Weather24Hour(), mCalendar);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void nullJSONObjectParseThrowsIllegalArgumentException() throws JSONException, ParseException {
-        mHistoryWeatherParser.parse(mJSONObjectHistory, null);
+        mHistoryWeatherParser.parse(mJSONObjectHistory, null, mCalendar);
     }
     
     @Test
     public void parsePopulatesWeather24Hour() throws JSONException, ParseException {
-        mHistoryWeatherParser.parse(mJSONObject, mWeather24Hour);
+        mHistoryWeatherParser.parse(mJSONObject, mWeather24Hour, mCalendar);
         int expected = 2;
         int result = mWeather24Hour.getHours().size();
         assertEquals(expected, result);
@@ -132,12 +137,12 @@ public class HistoryWeatherParserTest {
 
     @Test (expected = JSONException.class)
     public void nullJSONObjectParseHourThrowsException() throws JSONException, ParseException {
-        mHistoryWeatherParser.parseHour(null);
+        mHistoryWeatherParser.parseHour(null, mCalendar);
     }
 
     @Test
     public void parseHourReturnsWeatherHour() throws JSONException, ParseException {
-        WeatherHour mWeatherHour = mHistoryWeatherParser.parseHour(mJsonHour);
+        WeatherHour mWeatherHour = mHistoryWeatherParser.parseHour(mJsonHour, mCalendar);
         assertEquals(mMockHour, mWeatherHour);
     }
 
@@ -155,7 +160,6 @@ public class HistoryWeatherParserTest {
         mockHour.setDewpt(10.0);
         mockHour.setHum(83);
         mockHour.setWspd(20.4);
-        mockHour.setWgust(-9999.0);
         mockHour.setWdir(280);
         mockHour.setVis(16.1);
         mockHour.setPressure(1016.9);

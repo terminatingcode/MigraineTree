@@ -1,7 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
 /**
- * Interface to hold constant values for SharedPreferences
+ * Interface to hold constant values
  * Created by Sarah on 6/27/2016.
  */
 public interface Constants {
@@ -10,6 +10,8 @@ public interface Constants {
     String LOCATION_NAME = "locationName";
     String LOCATION_UNDEFINED = "locationUndefined";
     String CITY_NOT_SET = "city not set";
+    String DATE_KEY = "dateKey";
+
 
     String NETWORK_PREFIX = "network.";
 

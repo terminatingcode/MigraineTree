@@ -5,38 +5,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-<RelativeLayout
+<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/black">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/migraineStartDateTextView"
-        android:text="@string/start_date_dd_mm_yyyy"
-        android:textColor="@color/textColor"
-        android:textSize="24sp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/migraineStartTimeTextView"
-        android:text="@string/hh_mm"
-        android:textColor="@color/textColor"
-        android:textSize="24sp"
-        android:layout_below="@+id/migraineStartDateTextView"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/set_button"
-        android:clickable="true"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="@string/set_date_time"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"/>
-
+                android:background="@color/colorPrimary"
+                android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,33 +17,84 @@
         android:id="@+id/locationTextView"
         android:textColor="#ffffff"
         android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/migraineStartTimeTextView"/>
+        android:textSize="24sp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_new_location"
         android:id="@+id/newLocationButton"
-        android:layout_below="@+id/migraineStartTimeTextView"
-        android:textSize="12sp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:textSize="12sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/migraine_started"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/migraineStartDateTextView"
+            android:text="@string/dd_mm_yyyy"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/migraineStartTimeTextView"
+            android:text="@string/hh_mm"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/set_button"
+            android:clickable="true"
+            android:src="@android:drawable/ic_input_add"
+            android:contentDescription="@string/set_date_time"/>
+    </LinearLayout>
+
+
+
+    <DatePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/datePicker"
+        android:visibility="gone"
+        android:clickable="true"
+        android:background="#303030"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timePicker"
+        android:visibility="gone"
+        android:clickable="true"
+        android:background="#303030"/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/painTextView"
         android:text="@string/pain_at_beginning_of_migraine"
-        android:layout_below="@+id/newLocationButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
         android:clickable="false"
         android:enabled="false"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        />
+        android:textSize="24sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -80,17 +104,12 @@
         android:textColor="@color/textColor"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_below="@+id/migraineStartTimeTextView"/>
+        android:layout_gravity="center_horizontal"/>
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:id="@+id/painSeekBar"
-        android:layout_below="@+id/painTextView"
         android:progress="0"
         android:max="10"
         android:background="#494949"
@@ -105,9 +124,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/painSeekBar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -118,9 +134,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/auraCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -131,9 +144,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/eatenCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <TextView
@@ -142,10 +152,7 @@
         android:text="@string/hours_of_quality_sleep"
         android:id="@+id/sleepTextView"
         android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:layout_below="@+id/waterCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:textSize="24sp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -154,16 +161,13 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp"
-        android:layout_below="@+id/waterCheckBox"/>
+        android:layout_gravity="center_horizontal"/>
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:id="@+id/sleepSeekBar"
-        android:layout_below="@+id/sleepTextView"
         android:progress="0"
         android:max="24"
         android:background="#494949"
@@ -176,10 +180,7 @@
         android:id="@+id/stressTextView"
         android:textColor="#ffffff"
         android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/sleepSeekBar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:textSize="24sp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -188,16 +189,13 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp"
-        android:layout_below="@+id/sleepSeekBar"/>
+        android:layout_gravity="center_horizontal"/>
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:id="@+id/stressSeekBar"
-        android:layout_below="@+id/stressTextView"
         android:progress="0"
         android:max="10"
         android:background="#494949"
@@ -210,8 +208,7 @@
         android:id="@+id/eyesTextView"
         android:textColor="#ffffff"
         android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/stressSeekBar"/>
+        android:textSize="24sp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -220,16 +217,13 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp"
-        android:layout_below="@+id/stressSeekBar"/>
+        android:layout_gravity="center_horizontal"/>
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:id="@+id/eyesSeekBar"
-        android:layout_below="@+id/eyesTextView"
         android:progress="0"
         android:max="10"
         android:background="#494949"
@@ -244,16 +238,12 @@
         android:id="@+id/typeOfPainTextView"
         android:textColor="#ffffff"
         android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/eyesSeekBar"/>
+        android:textSize="24sp"/>
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/typeOfPainSpinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/typeOfPainTextView"
         android:theme="@android:style/ThemeOverlay.Material.Dark"/>
 
     <TextView
@@ -263,16 +253,12 @@
         android:id="@+id/areaOfPainTextView"
         android:textColor="#ffffff"
         android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/typeOfPainSpinner"/>
+        android:textSize="24sp"/>
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/areasOfPainSpinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/areaOfPainTextView"
         android:theme="@android:style/ThemeOverlay.Material.Dark"/>
 
     <TextView
@@ -282,16 +268,12 @@
         android:id="@+id/typeOfMedsTextView"
         android:textColor="#ffffff"
         android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/areasOfPainSpinner"/>
+        android:textSize="24sp"/>
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/typeOfMedsSpinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/typeOfMedsTextView"
         android:theme="@android:style/ThemeOverlay.Material.Dark"/>
 
 
@@ -302,8 +284,7 @@
         android:id="@+id/symptomsTextView"
         android:textColor="#ffffff"
         android:clickable="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/typeOfMedsSpinner"/>
+        android:textSize="24sp"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -313,9 +294,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/symptomsTextView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -326,9 +304,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/nauseaCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -339,9 +314,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/sensitivityLightCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -352,9 +324,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/sensitivityNoiseCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -365,9 +334,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/sensitivitySmellCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -378,9 +344,6 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/nasalCongestionCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
     <CheckBox
@@ -391,41 +354,42 @@
         android:textColor="#ffffff"
         android:clickable="true"
         android:textSize="24sp"
-        android:layout_below="@+id/earsCheckBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:buttonTint="#ffffff"
         tools:targetApi="lollipop"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@id/saveRecordButton"
-        android:text="@string/save_record"
-        android:clickable="true"
-        android:layout_below="@id/confusionCheckBox"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/day_in_cycle"
+                android:id="@+id/menstruationTextView"
+                android:textColor="#ffffff"
+                android:clickable="true"
+                android:textSize="24sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zero"
+                android:id="@+id/cycleDayTextView"
+                android:textColor="#ffffff"
+                android:clickable="true"
+                android:textSize="24sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
 
 
-    <DatePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/datePicker"
-        android:layout_below="@+id/set_button"
-        android:visibility="gone"
-        android:clickable="true"
-        android:background="#303030"
-        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+        </LinearLayout>
 
-    <TimePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/timePicker"
-        android:layout_below="@+id/set_button"
-        android:visibility="gone"
-        android:clickable="true"
-        android:background="#303030"/>
-
-
-
-</RelativeLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@id/saveRecordButton"
+            android:text="@string/save_record"
+            android:clickable="true"/>
+    </LinearLayout>
 </ScrollView>

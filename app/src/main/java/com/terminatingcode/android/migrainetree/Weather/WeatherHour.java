@@ -13,7 +13,6 @@ public class WeatherHour {
     private double dewpt;
     private double hum;
     private double wspd;
-    private double wgust;
     private double wdir;
     private double vis;
     private double pressure;
@@ -65,14 +64,6 @@ public class WeatherHour {
 
     public void setWspd(double wspd) {
         this.wspd = wspd;
-    }
-
-    public double getWgust() {
-        return wgust;
-    }
-
-    public void setWgust(double wgust) {
-        this.wgust = wgust;
     }
 
     public double getWdir() {
@@ -179,7 +170,6 @@ public class WeatherHour {
                 ", dewpt=" + dewpt +
                 ", hum=" + hum +
                 ", wspd=" + wspd +
-                ", wgust=" + wgust +
                 ", wdir=" + wdir +
                 ", vis=" + vis +
                 ", pressure=" + pressure +
@@ -206,7 +196,6 @@ public class WeatherHour {
         if (Double.compare(that.dewpt, dewpt) != 0) return false;
         if (Double.compare(that.hum, hum) != 0) return false;
         if (Double.compare(that.wspd, wspd) != 0) return false;
-        if (Double.compare(that.wgust, wgust) != 0) return false;
         if (Double.compare(that.wdir, wdir) != 0) return false;
         if (Double.compare(that.vis, vis) != 0) return false;
         if (Double.compare(that.pressure, pressure) != 0) return false;
@@ -235,8 +224,6 @@ public class WeatherHour {
         temp1 = Double.doubleToLongBits(hum);
         result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
         temp1 = Double.doubleToLongBits(wspd);
-        result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
-        temp1 = Double.doubleToLongBits(wgust);
         result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));
         temp1 = Double.doubleToLongBits(wdir);
         result = 31 * result + (int) (temp1 ^ (temp1 >>> 32));

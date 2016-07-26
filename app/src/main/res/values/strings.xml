@@ -25,7 +25,7 @@
     <string name="i_have_a_migraine">I have a migraine!</string>
     <string name="record_new_migraine">Record new Migraine</string>
     <string name="search">search</string>
-    <string name="start_date_dd_mm_yyyy">Start Date: DD/MM/YYYY</string>
+    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
     <string name="set_date_time">set_date_time</string>
     <string name="please_enter_your_current_city">please enter your current city</string>
     <string name="pain_at_beginning_of_migraine">Pain at beginning of migraine:</string>
@@ -63,6 +63,9 @@
     <string name="error_city_not_set">Please set current city</string>
     <string name="keep_track_of_menstruation_by_pressing_on_the_day">Keep track of menstruation by pressing on the day</string>
     <string name="red_drop">red drop</string>
+    <string name="day_in_cycle">Day in cycle:</string>
+    <string name="confirm">Confirm</string>
+    <string name="migraine_started">migraine started:</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>

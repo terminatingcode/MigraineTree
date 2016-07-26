@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity
         NewRecordFragment.OnFragmentInteractionListener,
         CalendarFragment.OnFragmentInteractionListener,
         ChartsFragment.OnFragmentInteractionListener,
-        InputTriggersFragment.OnFragmentInteractionListener{
+        InputTriggersFragment.OnFragmentInteractionListener,
+        ProcessRecordFragment.OnFragmentInteractionListener{
 
     private SharedPreferences mSharedPreferences;
     private FragmentManager fragmentManager;
@@ -131,7 +132,13 @@ public class MainActivity extends AppCompatActivity
      * replaces InputTriggersFragment with SearchCitiesFragment
      */
     @Override
-    public void onFragmentInteraction() {
+    public void onSetLocationPressed() {
         fragmentManager.beginTransaction().replace(R.id.content_frame, new SearchCitiesFragment()).commit();
+    }
+
+    @Override
+    public void onSaveRecordPressed(String date, String locationUID) {
+        ProcessRecordFragment processRecordFragment = ProcessRecordFragment.newInstance(date, locationUID);
+        fragmentManager.beginTransaction().add(R.id.content_frame, processRecordFragment).commit();
     }
 }

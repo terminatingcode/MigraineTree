@@ -212,6 +212,38 @@ public class LocalContentProviderTest extends ProviderTestCase2<LocalContentProv
                     MigraineRecord.CITY);
             String resultCity = cursor.getString(cityColumnId);
             assertEquals(city, resultCity);
+
+
+            //test update
+            int endHourIndex = cursor.getColumnIndex(MigraineRecord.END_HOUR);
+            Long initialEndHour = cursor.getLong(endHourIndex);
+            assertEquals(endHour, initialEndHour);
+
+            int painAtPeakIndex = cursor.getColumnIndex(MigraineRecord.PAIN_AT_PEAK);
+            int initialPainAtPeak = cursor.getInt(painAtPeakIndex);
+            assertEquals(paintAtPeak, initialPainAtPeak);
+
+            Long updatedEndHour = 1466669990000L;
+            int updatedPaintAtPeak = 7;
+            ContentValues updatedValues = new ContentValues();
+            updatedValues.put(MigraineRecord.END_HOUR, updatedEndHour);
+            updatedValues.put(MigraineRecord.PAIN_AT_PEAK, updatedPaintAtPeak);
+
+            int updated = mResolver.update(MigraineUri,updatedValues, null, null);
+            int expected = 1;
+            assertEquals(expected, updated);
+
+            cursor = mResolver.query(MigraineUri, null, null, null, null);
+            assertNotNull(cursor);
+            assertTrue(cursor.moveToNext());
+
+            int updatedEndHourIndex = cursor.getColumnIndex(MigraineRecord.END_HOUR);
+            Long resultUpdatedEndHour = cursor.getLong(updatedEndHourIndex);
+            assertEquals(updatedEndHour, resultUpdatedEndHour);
+
+            int updatedPainIndex = cursor.getColumnIndex(MigraineRecord.PAIN_AT_PEAK);
+            int resultUpdatedPain = cursor.getInt(updatedPainIndex);
+            assertEquals(updatedPaintAtPeak, resultUpdatedPain);
         }finally{
             if(cursor != null) cursor.close();
         }

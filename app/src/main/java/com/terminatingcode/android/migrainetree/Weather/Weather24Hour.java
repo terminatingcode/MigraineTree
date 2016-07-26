@@ -30,6 +30,7 @@ public class Weather24Hour {
     public List<WeatherHour> getHours() {
         return mHours;
     }
+    public int getSize(){ return mHours.size();}
 
     /**
      * Calculates the change in values
