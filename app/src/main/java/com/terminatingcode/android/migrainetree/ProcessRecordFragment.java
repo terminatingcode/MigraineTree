@@ -1,7 +1,6 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
+import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
+import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 
 /**
@@ -30,9 +32,9 @@ public class ProcessRecordFragment extends Fragment {
     private static final String NAME = "ProcessRecordFragment";
     private static final String ARG_DATE = "param1";
     private static final String ARG_LOCATION = "param2";
-    private TextView weatherDataTextView;
-    private String date;
-    private String locationUID;
+    private TextView tempChangeTextView;
+    private TextView humChangeTextView;
+    private TextView apChangeTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,15 +46,11 @@ public class ProcessRecordFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param date the start date of the migraine
-     * @param locationUID the current location id
      * @return A new instance of fragment ProcessRecordFragment.
      */
-    public static ProcessRecordFragment newInstance(String date, String locationUID) {
+    public static ProcessRecordFragment newInstance() {
         ProcessRecordFragment fragment = new ProcessRecordFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_DATE, date);
-        args.putString(ARG_LOCATION, locationUID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,8 +59,6 @@ public class ProcessRecordFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            date = getArguments().getString(ARG_DATE);
-            locationUID = getArguments().getString(ARG_LOCATION);
         }
     }
 
@@ -70,7 +66,9 @@ public class ProcessRecordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_process_record, container, false);
-        weatherDataTextView = (TextView) rootView.findViewById(R.id.weatherDataTextView);
+        tempChangeTextView = (TextView) rootView.findViewById(R.id.tempChangeTextView);
+        humChangeTextView = (TextView) rootView.findViewById(R.id.humChangeTextView);
+        apChangeTextView = (TextView) rootView.findViewById(R.id.apChangeTextView);
         return rootView;
     }
 
@@ -102,11 +100,6 @@ public class ProcessRecordFragment extends Fragment {
         super.onStart();
         EventBus.getDefault().register(this);
         Log.d(NAME, "subscribed to EventBus");
-        Log.d(NAME, "starting intent with date = " + date);
-        Intent intent = new Intent(getActivity(), WeatherHistoryService.class);
-        intent.putExtra(Constants.DATE_KEY, date);
-        intent.putExtra(Constants.LOCATIONUID, locationUID);
-        getActivity().startService(intent);
     }
 
     @Override
@@ -118,9 +111,20 @@ public class ProcessRecordFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(MessageEvent event){
-        int size = event.mWeather24Hour.getSize();
-        Log.d(NAME, "weather hours: " + size);
-        weatherDataTextView.setText("hours: " + size);
+        Weather24Hour mWeather24Hour = event.mWeather24Hour;
+        if(mWeather24Hour.getSize() == 24){
+            mWeather24Hour.calculateChanges();
+            String tempChange = String.valueOf(mWeather24Hour.getTempChange12Hrs());
+            String humChange = String.valueOf(mWeather24Hour.getHumChange12Hrs());
+            String apChange = String.valueOf(mWeather24Hour.getApChange12Hrs());
+            tempChangeTextView.append(tempChange);
+            humChangeTextView.append(humChange);
+            apChangeTextView.append(apChange);
+            List<WeatherHour> hours = mWeather24Hour.getHours();
+            for(WeatherHour hour : hours){
+                Log.d(NAME, hour.toString());
+            }
+        }
     }
 
     /**

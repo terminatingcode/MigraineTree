@@ -1,16 +1,46 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".ProcessRecordFragment"
-             android:background="@color/colorPrimary">
-
-    <TextView
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".ProcessRecordFragment"
+              android:background="@color/colorPrimary"
+              android:orientation="vertical">
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/weatherDataTextView"
-        android:textColor="@color/textColor"
-        android:textSize="24sp"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/weatherDataTextView"
+            android:text="@string/weather_changes_in_the_past_24_hours"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:drawableEnd="@drawable/ic_cloud"
+            android:drawableRight="@drawable/ic_cloud"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tempChangeTextView"
+            android:text="@string/temperature"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/humChangeTextView"
+            android:text="@string/humidity"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/apChangeTextView"
+            android:text="@string/air_pressure"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
+    </TableLayout>
 
     <Button
         android:layout_width="wrap_content"
@@ -19,4 +49,4 @@
         android:id="@+id/confirmButton"
         android:layout_gravity="center_horizontal|bottom"/>
 
-</FrameLayout>
+</LinearLayout>

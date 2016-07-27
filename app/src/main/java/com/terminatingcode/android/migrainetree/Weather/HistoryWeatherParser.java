@@ -1,5 +1,7 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,87 +61,88 @@ public class HistoryWeatherParser {
         Date date = parseDate(jsonObject.getJSONObject(utcdate));
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date.getTime());
-        if(startTime.after(calendar)) {
+        if (startTime.after(calendar) && (calendar.get(Calendar.MINUTE) == 0)) {
             WeatherHour hour = new WeatherHour();
             hour.setHourStart(date);
+            Log.d("service", calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE));
             try {
                 hour.setTemp(jsonObject.getDouble(temperature));
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 hour.setTemp(defaultDouble);
             }
-            try{
+            try {
                 hour.setDewpt(jsonObject.getDouble(dewPoint));
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 hour.setDewpt(defaultDouble);
             }
             try {
                 hour.setHum(jsonObject.getDouble(humidity));
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 hour.setHum(defaultDouble);
             }
             try {
                 hour.setWspd(jsonObject.getDouble(windSpeed));
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setWspd(defaultDouble);
             }
-            try{
+            try {
                 hour.setWdir(jsonObject.getDouble(windDirection));
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setWdir(defaultDouble);
             }
-            try{
+            try {
                 hour.setVis(jsonObject.getDouble(visibility));
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setVis(defaultDouble);
             }
-            try{
+            try {
                 hour.setPressure(jsonObject.getDouble(airPressure));
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setPressure(defaultDouble);
             }
-            try{
+            try {
                 hour.setWindchill(jsonObject.getDouble(windChill));
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setWindchill(defaultDouble);
             }
-            try{
+            try {
                 hour.setHeatindex(jsonObject.getDouble(heatIndex));
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setHeatindex(defaultDouble);
             }
-            try{
+            try {
                 hour.setPreci(jsonObject.getDouble(precipitation));
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setPreci(defaultDouble);
             }
             try {
                 hour.setFog(jsonObject.getInt(fog) == 1);
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setFog(false);
             }
             try {
                 hour.setRain(jsonObject.getInt(rain) == 1);
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 hour.setRain(false);
             }
             try {
                 hour.setSnow(jsonObject.getInt(snow) == 1);
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 hour.setSnow(false);
             }
-            try{
+            try {
                 hour.setHail(jsonObject.getInt(hail) == 1);
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 hour.setHail(false);
             }
             try {
                 hour.setThunder(jsonObject.getInt(thunder) == 1);
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 hour.setThunder(false);
             }
             try {
                 hour.setTornado(jsonObject.getInt(tornado) == 1);
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 hour.setTornado(false);
             }
             return hour;

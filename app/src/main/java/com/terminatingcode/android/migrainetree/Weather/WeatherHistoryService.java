@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,7 +32,7 @@ import java.util.Locale;
 public class WeatherHistoryService extends IntentService {
     private static final String NAME = "WeatherHistoryService";
     private static Weather24Hour sWeather24Hour;
-    private static boolean success = true;
+    private static int success;
 
     public WeatherHistoryService() {
         super(NAME);
@@ -45,14 +46,17 @@ public class WeatherHistoryService extends IntentService {
             final String locationUID = intent.getStringExtra(Constants.LOCATIONUID);
             final String date = intent.getStringExtra(Constants.DATE_KEY);
             getWeatherHistory(date, locationUID);
+        }else{
+            Log.e(NAME, "intent null for WeatherHistoryService!");
         }
-        setIntentRedelivery(false);
+        setIntentRedelivery(true);
     }
 
     public void getWeatherHistory(String dateString, String locationID){
         SimpleDateFormat oldDateFormat = new SimpleDateFormat("dd/MM/yyyyhh:mm", Locale.getDefault());
         SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         String newDateString;
+        success = 0;
         Date date = null;
         Calendar calendar = Calendar.getInstance();
         try {
@@ -66,12 +70,24 @@ public class WeatherHistoryService extends IntentService {
         sWeather24Hour = new Weather24Hour();
         Log.d(NAME, "starting request with " + newDateString);
         makeHTTPRequest(locationID, newDateString, calendar);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        date = calendar.getTime();
-        newDateString = newDateFormat.format(date);
+        while(success < 1){}
+        newDateString = minusDay(calendar, newDateFormat);
         makeHTTPRequest(locationID, newDateString, calendar);
-        while(sWeather24Hour.getSize() <23 && success){/*wait on response or else fail*/}
+        while(success < 2){}
+        if(sWeather24Hour.getSize() < 23){
+            newDateString = minusDay(calendar, newDateFormat);
+            makeHTTPRequest(locationID, newDateString, calendar);
+            while(success < 3){}
+        }
         EventBus.getDefault().post(new MessageEvent(sWeather24Hour));
+        Log.d(NAME, "finished service: " + sWeather24Hour.getSize());
+    }
+
+    private String minusDay(Calendar calendar, DateFormat dateFormat){
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date date = calendar.getTime();
+        String newDateString = dateFormat.format(date);
+        return newDateString;
     }
 
     private void makeHTTPRequest(String locationID, String date, final Calendar calendar) {
@@ -96,6 +112,7 @@ public class WeatherHistoryService extends IntentService {
                             Log.d(NAME, "received response " + response);
                             Weather24Hour updated24WeatherHour = hwp.parse(response, sWeather24Hour, calendar);
                             addHours(updated24WeatherHour);
+                            success++;
                         } catch (JSONException e) {
                             Log.d(NAME, "JSONException " + e);
                         } catch (ParseException e) {
@@ -107,7 +124,6 @@ public class WeatherHistoryService extends IntentService {
                     @Override
                     public void onErrorResponse(VolleyError error){
                         Log.d(NAME, "Error in JsonObjectRequest");
-                        success = false;
                     }
                 });
         queue.addToRequestQueue(jsonObjectRequest);

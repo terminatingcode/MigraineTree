@@ -11,9 +11,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor.HeartRateMonitor;
 
 public class MainActivity extends AppCompatActivity
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity
         ProcessRecordFragment.OnFragmentInteractionListener,
         UserSettingsFragment.OnFragmentInteractionListener{
 
+    private static final String NAME = "MainActivity";
     private SharedPreferences mSharedPreferences;
     private FragmentManager fragmentManager;
     private boolean enableCalendar;
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -155,12 +160,28 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onSetLocationPressed() {
-        fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, new UserSettingsFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
+    /**
+     * starts WeatherHistoryService and adds processRecordFragment to frame
+     * @param date the start date of migraine record
+     * @param locationUID the current user's location Weather Underground id
+     */
     @Override
     public void onSaveRecordPressed(String date, String locationUID) {
-        ProcessRecordFragment processRecordFragment = ProcessRecordFragment.newInstance(date, locationUID);
-        fragmentManager.beginTransaction().add(R.id.content_frame, processRecordFragment).commit();
+        Log.d(NAME, "starting intent with date = " + date);
+        Intent intent = new Intent(this, WeatherHistoryService.class);
+        intent.putExtra(Constants.DATE_KEY, date);
+        intent.putExtra(Constants.LOCATIONUID, locationUID);
+        startService(intent);
+        ProcessRecordFragment processRecordFragment = new ProcessRecordFragment();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, processRecordFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

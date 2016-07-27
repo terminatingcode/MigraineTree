@@ -261,8 +261,7 @@ public class InputTriggersFragment extends Fragment {
         String locationUID = mPrefUtils.getSavedLocationUID();
         if(Objects.equals(locationUID, Constants.CITY_NOT_SET)){
             Toast.makeText(getActivity(), R.string.error_city_not_set, Toast.LENGTH_LONG).show();
-        }
-        if(date == null || time == null){
+        }else if(date == null || time == null){
             Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
         }else {
             onSaveRecordPressed(date + time, locationUID);

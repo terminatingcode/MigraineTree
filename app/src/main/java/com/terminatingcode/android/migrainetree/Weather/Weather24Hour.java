@@ -1,6 +1,8 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -38,7 +40,14 @@ public class Weather24Hour {
      * @throws RuntimeException when method called and 24 hours have not been added
      */
     public void calculateChanges() throws RuntimeException{
+        //make sure hours are sorted by date
         if(mHours.size() == 24){
+            Collections.sort(mHours, new Comparator<WeatherHour>() {
+                @Override
+                public int compare(WeatherHour lhs, WeatherHour rhs) {
+                    return lhs.getHourStart().compareTo(rhs.getHourStart());
+                }
+            });
             WeatherHour one = mHours.get(23);
             WeatherHour twelve = mHours.get(11);
             WeatherHour twentyFour = mHours.get(0);
