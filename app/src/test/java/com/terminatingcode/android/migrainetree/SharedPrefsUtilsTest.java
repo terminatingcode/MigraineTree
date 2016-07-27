@@ -29,6 +29,7 @@ public class SharedPrefsUtilsTest {
     private SharedPreferences mPrefs;
     private final String location = "location";
     private final String uid = "testUID";
+    private final boolean menstrualPref = false;
 
     @Before
     public void setUp(){
@@ -69,6 +70,20 @@ public class SharedPrefsUtilsTest {
         mPrefs.edit().putString(Constants.LOCATIONUID, uid).apply();
         String result = mSharedPrefsUtils.getSavedLocationUID();
         assertEquals(uid, result);
+    }
+
+    @Test
+    public void testSaveMenstrualDataPrefs(){
+        mSharedPrefsUtils.saveMenstrualDataPrefs(menstrualPref);
+        boolean resultpref = mPrefs.getBoolean(Constants.SAVE_MENSTRUAL_DATA, true);
+        assertEquals(menstrualPref, resultpref);
+    }
+
+    @Test
+    public void testGetMenstrualPref(){
+        mPrefs.edit().putBoolean(Constants.SAVE_MENSTRUAL_DATA, menstrualPref).commit();
+        boolean result = mSharedPrefsUtils.getsavedMenstrualPref();
+        assertEquals(menstrualPref, result);
     }
 
     @After

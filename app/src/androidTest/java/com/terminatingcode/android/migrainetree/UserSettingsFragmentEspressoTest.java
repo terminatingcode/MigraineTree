@@ -9,15 +9,16 @@ import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
- * Instrumentation Test for SearchCitiesFragment
+ * Instrumentation Test for UserSettingsFragment
  * Created by Sarah on 7/3/2016.
  */
-public class SearchCitiesFragmentEspressoTest {
+public class UserSettingsFragmentEspressoTest {
 
     private Fragment mFragment;
 
@@ -27,12 +28,12 @@ public class SearchCitiesFragmentEspressoTest {
 
     @Before
     public void setUp(){
-        mFragment = new SearchCitiesFragment();
+        mFragment = new UserSettingsFragment();
         mMainActivityActivityTestRule
                 .getActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content_frame, mFragment, "testSearchCities")
+                .add(R.id.content_frame, mFragment, "testUserSettings")
                 .commit();
     }
 
@@ -43,7 +44,7 @@ public class SearchCitiesFragmentEspressoTest {
 
     @Test
     public void testStartButtonIsVisibleAndClickable(){
-        onView(withId(R.id.searchButton))
+        onView(withId(R.id.searchCitiesButton))
                 .check(matches(isDisplayed()))
                 .check(matches(isClickable()));
     }
@@ -55,5 +56,14 @@ public class SearchCitiesFragmentEspressoTest {
 
         onView(withId(R.id.location))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testMenstrualPrefCheckboxIsVisibleAndChecked(){
+        onView(withId(R.id.useMenstrualDataCheckBox))
+                .check(matches(isDisplayed()))
+                .check(matches(isClickable()))
+                .check(matches(isChecked()));
+
     }
 }

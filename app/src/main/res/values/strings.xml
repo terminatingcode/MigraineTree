@@ -66,6 +66,7 @@
     <string name="day_in_cycle">Day in cycle:</string>
     <string name="confirm">Confirm</string>
     <string name="migraine_started">migraine started:</string>
+    <string name="track_hormones">Track Hormones</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>

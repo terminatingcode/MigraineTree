@@ -105,11 +105,12 @@ public class InputTriggersFragmentEspressoTest {
     public void testTimeTextViewChangesTextToDateChosenOnDatePicker(){
         int hour = 10;
         int minutes = 7;
+        String expected = "10:07";
         onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.timePicker)).perform(PickerActions.setTime(hour, minutes));
         onView(withId(R.id.set_button)).perform(click());
-        onView(withId(R.id.migraineStartTimeTextView)).check(matches(withText(hour + ":" + minutes)));
+        onView(withId(R.id.migraineStartTimeTextView)).check(matches(withText(expected)));
     }
 
     @Test
@@ -163,33 +164,47 @@ public class InputTriggersFragmentEspressoTest {
     @Test
     public void testStressLevelIsVisible(){
         onView(withId(R.id.stressTextView))
+                .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
         onView(withId(R.id.stressLevelTextView))
+                .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
         onView(withId(R.id.stressSeekBar))
+                .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void testStressSeekBarUpdatesTextView(){
-        onView(withId(R.id.stressSeekBar)).perform(EspressoActions.setProgress(10));
-        onView(allOf(withId(R.id.stressLevelTextView), withText("10"))).check(matches(isDisplayed()));
+        onView(withId(R.id.stressSeekBar))
+                .perform(ViewActions.scrollTo())
+                .perform(EspressoActions.setProgress(10));
+        onView(allOf(withId(R.id.stressLevelTextView), withText("10")))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
     }
 
     @Test
     public void testEyeStrainLevelIsVisible(){
         onView(withId(R.id.eyesTextView))
+                .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
         onView(withId(R.id.eyesLevelTextView))
+                .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
         onView(withId(R.id.eyesSeekBar))
+                .perform(ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void testEyeStrainSeekBarUpdatesTextView(){
-        onView(withId(R.id.eyesSeekBar)).perform(EspressoActions.setProgress(10));
-        onView(allOf(withId(R.id.eyesLevelTextView), withText("10"))).check(matches(isDisplayed()));
+        onView(withId(R.id.eyesSeekBar))
+                .perform(ViewActions.scrollTo())
+                .perform(EspressoActions.setProgress(10));
+        onView(allOf(withId(R.id.eyesLevelTextView), withText("10")))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
     }
 
     @Test

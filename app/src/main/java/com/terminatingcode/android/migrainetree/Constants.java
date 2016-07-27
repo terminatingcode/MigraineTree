@@ -11,7 +11,8 @@ public interface Constants {
     String LOCATION_UNDEFINED = "locationUndefined";
     String CITY_NOT_SET = "city not set";
     String DATE_KEY = "dateKey";
-
+    String SAVE_MENSTRUAL_DATA = "menstrualData";
+    boolean DEFAULT_SAVE_MENSTRUAL_DATA = true;
 
     String NETWORK_PREFIX = "network.";
 

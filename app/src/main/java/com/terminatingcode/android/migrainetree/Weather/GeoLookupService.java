@@ -43,7 +43,7 @@ public class GeoLookupService extends IntentService {
     /**
      * Makes a geolookup JsonRequest to Weather Underground
      * Once received, calls on GeoLookupParser and sends it to
-     * SearchCitiesFragment to update UI
+     * UserSettingsFragment to update UI
      * @param location user inputted location
      */
     private void geoLookup(String location) {

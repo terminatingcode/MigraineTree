@@ -209,7 +209,7 @@ public class InputTriggersFragment extends Fragment {
 
 
     /**
-     * signals to MainActivity to replace this fragment with SearchCitiesFragment
+     * signals to MainActivity to replace this fragment with UserSettingsFragment
      */
     public void onNewLocationButtonClicked() {
         if (mListener != null) {

@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.terminatingcode.android.migrainetree.Weather.GeoLookupArrayAdapter;
@@ -26,13 +27,14 @@ import org.greenrobot.eventbus.Subscribe;
 /**
  *
  */
-public class SearchCitiesFragment extends Fragment {
-    private static final String NAME = "SearchCitiesFragment";
+public class UserSettingsFragment extends Fragment {
+    private static final String NAME = "UserSettingsFragment";
     private static GeoLookupArrayAdapter mAdapter;
     private SharedPreferences mSharedPreferences;
     private AutoCompleteTextView mAutoCompleteTextView;
     private TextView cityTextView;
     private Button searchButton;
+    private CheckBox menstrualDataEnabledCheckbox;
 
 
     @Override
@@ -43,14 +45,15 @@ public class SearchCitiesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_search_cities, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         mAutoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.location);
         cityTextView = (TextView) rootView.findViewById(R.id.displayCity);
-        searchButton = (Button) rootView.findViewById(R.id.searchButton);
+        searchButton = (Button) rootView.findViewById(R.id.searchCitiesButton);
+        menstrualDataEnabledCheckbox = (CheckBox) rootView.findViewById(R.id.useMenstrualDataCheckBox);
         //set cityTextView
         mSharedPreferences = getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
-        SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
+        final SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
         String city = mSharedPrefsUtils.getSavedCity();
         cityTextView.setText(city);
         //create auto-complete
@@ -87,10 +90,18 @@ public class SearchCitiesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String citySelected = (String) parent.getItemAtPosition(position);
-                SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
                 String cityUID = CitiesMapSingleton.newInstance().getUID(citySelected);
                 mSharedPrefsUtils.saveSelectedCity(citySelected, cityUID);
                 cityTextView.setText(citySelected);
+            }
+        });
+
+        //if user disables menstrual data, save to sharedPreferences and alert mainActivity
+        menstrualDataEnabledCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean preference = menstrualDataEnabledCheckbox.isChecked();
+                mSharedPrefsUtils.saveMenstrualDataPrefs(preference);
             }
         });
         return rootView;

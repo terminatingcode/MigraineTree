@@ -11,28 +11,28 @@ import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 
 /**
- * Unit Test for SearchCitiesFragment
+ * Unit Test for UserSettingsFragment
  * Created by Sarah on 7/5/2016.
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk=21)
-public class SearchCitiesFragmentUnitTest {
+public class UserSettingsFragmentUnitTest {
 
-    private SearchCitiesFragment mSearchCitiesFragment;
+    private UserSettingsFragment mUserSettingsFragment;
     private MainActivity mActivity;
 
 
     @Before
     public void setUp() throws Exception {
         mActivity = Robolectric.setupActivity(MainActivity.class);
-        mSearchCitiesFragment = new SearchCitiesFragment();
-        SupportFragmentTestUtil.startFragment(mSearchCitiesFragment);
+        mUserSettingsFragment = new UserSettingsFragment();
+        SupportFragmentTestUtil.startFragment(mUserSettingsFragment);
     }
 
     @Test
     public void testValuesNotNull() {
         Assert.assertNotNull(mActivity);
-        Assert.assertNotNull(mSearchCitiesFragment);
+        Assert.assertNotNull(mUserSettingsFragment);
     }
 
     @Test

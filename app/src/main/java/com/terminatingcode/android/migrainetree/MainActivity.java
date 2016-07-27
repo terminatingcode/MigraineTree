@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         SharedPrefsUtils sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
         boolean locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
         if(locationNeedsToBeSet){
-            fragmentManager.beginTransaction().add(R.id.content_frame, new SearchCitiesFragment()).commit();
+            fragmentManager.beginTransaction().add(R.id.content_frame, new UserSettingsFragment()).commit();
         }else{
             fragmentManager.beginTransaction().add(R.id.content_frame, new NewRecordFragment()).commit();
         }
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_weather) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new NewRecordFragment()).commit();
         } else if (id == R.id.nav_set_location) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new SearchCitiesFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(this, HeartRateMonitor.class);
             startActivity(intent);
@@ -129,11 +129,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * replaces InputTriggersFragment with SearchCitiesFragment
+     * replaces InputTriggersFragment with UserSettingsFragment
      */
     @Override
     public void onSetLocationPressed() {
-        fragmentManager.beginTransaction().replace(R.id.content_frame, new SearchCitiesFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
     }
 
     @Override

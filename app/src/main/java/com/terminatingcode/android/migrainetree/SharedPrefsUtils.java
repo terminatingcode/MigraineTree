@@ -39,6 +39,14 @@ public class SharedPrefsUtils {
     }
 
     /**
+     * saves user preference to save menstrual data used in the calendar
+     * @param preference true if saved, false if not
+     */
+    public void saveMenstrualDataPrefs(boolean preference){
+        mSharedPreferences.edit().putBoolean(Constants.SAVE_MENSTRUAL_DATA, preference).apply();
+    }
+
+    /**
      * Returns city saved by user previously in SharedPreferences
      * @return city saved
      */
@@ -54,4 +62,13 @@ public class SharedPrefsUtils {
         return mSharedPreferences.getString(Constants.LOCATIONUID, Constants.CITY_NOT_SET);
     }
 
+    /**
+     * returns the user preference to save menstrual data
+     * default is true
+     * @return the user preference
+     */
+    public boolean getsavedMenstrualPref(){
+        return mSharedPreferences.getBoolean(Constants.SAVE_MENSTRUAL_DATA,
+                Constants.DEFAULT_SAVE_MENSTRUAL_DATA);
+    }
 }
