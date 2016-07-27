@@ -22,18 +22,28 @@ public class MainActivity extends AppCompatActivity
         CalendarFragment.OnFragmentInteractionListener,
         ChartsFragment.OnFragmentInteractionListener,
         InputTriggersFragment.OnFragmentInteractionListener,
-        ProcessRecordFragment.OnFragmentInteractionListener{
+        ProcessRecordFragment.OnFragmentInteractionListener,
+        UserSettingsFragment.OnFragmentInteractionListener{
 
     private SharedPreferences mSharedPreferences;
     private FragmentManager fragmentManager;
+    private boolean enableCalendar;
+    private boolean locationNeedsToBeSet;
+    private SharedPrefsUtils sharedPrefsUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
+        sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
+        chooseStartScreenBasedOnLocationStored();
+        initializeNavigationDrawer();
+    }
+
+    public void initializeNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -42,14 +52,17 @@ public class MainActivity extends AppCompatActivity
         }
         toggle.syncState();
 
+        enableCalendar = sharedPrefsUtils.getsavedMenstrualPref();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
+            navigationView.getMenu().findItem(R.id.nav_calendar).setVisible(enableCalendar);
             navigationView.setNavigationItemSelectedListener(this);
         }
+    }
+
+    private void chooseStartScreenBasedOnLocationStored() {
         fragmentManager = getSupportFragmentManager();
-        mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
-        SharedPrefsUtils sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
-        boolean locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
+        locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
         if(locationNeedsToBeSet){
             fragmentManager.beginTransaction().add(R.id.content_frame, new UserSettingsFragment()).commit();
         }else{
@@ -118,6 +131,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * recreates the NavigationDrawer if user preferences changed
+     * sets the menstrual calendar to visible/invisible
+     */
+    @Override
+    public void onPreferenceChanged(){
+        initializeNavigationDrawer();
     }
 
     /**

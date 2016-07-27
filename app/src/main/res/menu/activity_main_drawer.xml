@@ -12,8 +12,8 @@
             android:title="@string/charts"/>
         <item
             android:id="@+id/nav_weather"
-            android:icon="@drawable/ic_menu_weather"
-            android:title="@string/weather"/>
+            android:icon="@drawable/ic_menu_add_record"
+            android:title="@string/newRecord"/>
         <item
             android:id="@+id/nav_set_location"
             android:icon="@drawable/ic_menu_manage"
@@ -24,7 +24,7 @@
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_favorite_white_48dp"
                 android:title="Share"/>
             <item
                 android:id="@+id/nav_send"
