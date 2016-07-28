@@ -1,6 +1,6 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Object holds summary of hourly weather information
@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by Sarah on 6/24/2016.
  */
 public class WeatherHour {
-    private Date hourStart;
+    private Calendar hourStart;
     private double temp;
     private double dewpt;
     private double hum;
@@ -26,11 +26,11 @@ public class WeatherHour {
     private boolean thunder;
     private boolean tornado;
 
-    public Date getHourStart() {
+    public Calendar getHourStart() {
         return hourStart;
     }
 
-    public void setHourStart(Date hourStart) {
+    public void setHourStart(Calendar hourStart) {
         this.hourStart = hourStart;
     }
 

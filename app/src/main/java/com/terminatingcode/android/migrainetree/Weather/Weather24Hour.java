@@ -45,6 +45,19 @@ public class Weather24Hour {
         }
     }
 
+    /**
+     * WeatherUnderground sometimes returns duplicates for hours
+     * @param hour the hour just parsed
+     * @return if the list of hours already contains that hour
+     */
+    public boolean contains(WeatherHour hour){
+        for(WeatherHour weatherHour : mHours){
+            if(weatherHour.getHourStart().compareTo(hour.getHourStart()) == 0)
+                return true;
+        }
+        return false;
+    }
+
     public List<WeatherHour> getHours() {
         return mHours;
     }
@@ -64,9 +77,15 @@ public class Weather24Hour {
                     return lhs.getHourStart().compareTo(rhs.getHourStart());
                 }
             });
+            for(WeatherHour hour : mHours){
+                Log.d(NAME, hour.getHourStart().get(Calendar.DAY_OF_MONTH) + ", " + hour.getHourStart().get(Calendar.HOUR_OF_DAY));
+            }
             WeatherHour one = mHours.get(23);
+            Log.d(NAME, "one: " + one.getHourStart().get(Calendar.DAY_OF_MONTH) + one.getHourStart().get(Calendar.HOUR_OF_DAY));
             WeatherHour twelve = mHours.get(11);
+            Log.d(NAME, "twelve: " + twelve.getHourStart().get(Calendar.DAY_OF_MONTH) + twelve.getHourStart().get(Calendar.HOUR_OF_DAY));
             WeatherHour twentyFour = mHours.get(0);
+            Log.d(NAME, "24: " + twentyFour.getHourStart().get(Calendar.DAY_OF_MONTH) + twentyFour.getHourStart().get(Calendar.HOUR_OF_DAY));
             mApChange24Hrs = one.getPressure() - twentyFour.getPressure();
             mApChange12Hrs = one.getPressure() - twelve.getPressure();
             mHumChange24Hrs = one.getHum() - twentyFour.getHum();

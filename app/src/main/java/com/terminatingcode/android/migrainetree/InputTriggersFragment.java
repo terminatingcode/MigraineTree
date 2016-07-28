@@ -161,7 +161,7 @@ public class InputTriggersFragment extends Fragment {
      */
     private void setDate() {
         int day = mDatePicker.getDayOfMonth();
-        int month = mDatePicker.getMonth();
+        int month = mDatePicker.getMonth() + 1;
         int year = mDatePicker.getYear();
         date = day + "/" + month + "/" + year;
         mDateTextView.setText(date);

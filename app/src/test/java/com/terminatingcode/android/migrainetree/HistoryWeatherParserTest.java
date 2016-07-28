@@ -26,7 +26,7 @@ public class HistoryWeatherParserTest {
     private  JSONObject mJSONObject;
     private JSONObject mJSONObjectHistory;
     private WeatherHour mMockHour;
-    private Date mStartHour;
+    private Calendar mStartHour;
     private JSONArray mJsonHours;
     private JSONObject mJsonHour;
     private Weather24Hour mWeather24Hour;
@@ -109,7 +109,8 @@ public class HistoryWeatherParserTest {
         Long migraineStart = 1466726390000L;
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(migraineStart);
-        mStartHour = new Date(milliseconds);
+        mStartHour  = Calendar.getInstance();
+        mStartHour.setTimeInMillis(milliseconds);
         mJsonHours = mJSONObjectHistory.getJSONArray("observations");
         mJsonHour = mJsonHours.getJSONObject(0);
         mMockHour = initialiseMockWeatherHour();
@@ -150,7 +151,9 @@ public class HistoryWeatherParserTest {
     @Test
     public void parseDateReturnsDate() throws JSONException, ParseException {
         JSONObject date = mJsonHour.getJSONObject("utcdate");
-        Date result = mHistoryWeatherParser.parseDate(date);
+        Date parseDate = mHistoryWeatherParser.parseDate(date);
+        Calendar result = Calendar.getInstance();
+        result.setTime(parseDate);
         assertEquals(mStartHour, result);
     }
 

@@ -1,31 +1,83 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context=".ProcessRecordFragment"
-              android:background="@color/colorPrimary"
-              android:orientation="vertical">
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".ProcessRecordFragment"
+             android:background="@color/colorPrimary"
+             android:orientation="vertical"
+             android:padding="2dp"
+             android:stretchColumns="1">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/weatherDataTextView"
-            android:text="@string/weather_changes_in_the_past_24_hours"
+            android:text="@string/weather_changes"
             android:textColor="@color/textColor"
             android:textSize="24sp"
             android:drawableEnd="@drawable/ic_cloud"
             android:drawableRight="@drawable/ic_cloud"/>
+    <View
+        android:layout_height="2dip"
+        android:background="#FF909090" />
 
-
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/weatherChangeHeaderTableRow">
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:text="@string/_12_hours"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:text="@string/_24_hours"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/temperatureTableRow"
+        android:paddingBottom="2dp">
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tempChangeTextView"
             android:text="@string/temperature"
             android:textColor="@color/textColor"
             android:textSize="24sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/temp12ChangeTextView"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/temp24ChangeTextView"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/humTableRow"
+        android:paddingBottom="2dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,13 +86,54 @@
             android:textColor="@color/textColor"
             android:textSize="24sp"/>
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hum12ChangeTextView"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hum24ChangeTextView"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/apTableRow"
+        android:paddingBottom="2dp">
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/apChangeTextView"
             android:text="@string/air_pressure"
             android:textColor="@color/textColor"
             android:textSize="24sp"/>
-    </TableLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ap12ChangeTextView"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ap24ChangeTextView"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+    </TableRow>
+
+    <View
+        android:layout_height="2dip"
+        android:background="#FF909090" />
 
     <Button
         android:layout_width="wrap_content"
@@ -49,4 +142,4 @@
         android:id="@+id/confirmButton"
         android:layout_gravity="center_horizontal|bottom"/>
 
-</LinearLayout>
+</TableLayout>

@@ -6,7 +6,7 @@ import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -79,8 +79,9 @@ public class Weather24HourTest {
 
     private WeatherHour initialiseMockWeatherHour(double x, long milliseconds){
         WeatherHour mockHour = new WeatherHour();
-        Date date = new Date(milliseconds);
-        mockHour.setHourStart(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+        mockHour.setHourStart(calendar);
         mockHour.setTemp(x);
         mockHour.setHum(x);
         mockHour.setWspd(x);

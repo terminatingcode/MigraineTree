@@ -30,6 +30,7 @@ import java.util.Locale;
 public class WeatherHistoryService extends IntentService {
     private static final String NAME = "WeatherHistoryService";
     private static Weather24Hour sWeather24Hour;
+    private static int run;
 
     public WeatherHistoryService() {
         super(NAME);
@@ -66,7 +67,9 @@ public class WeatherHistoryService extends IntentService {
         sWeather24Hour = new Weather24Hour();
         sWeather24Hour.setMigraineStart(calendar);
         Log.d(NAME, "starting request with " + newDateString);
+        run = 0;
         makeHTTPRequest(locationID, newDateString);
+        while(run < 1){}
         newDateString = minusDay(calendar, newDateFormat);
         makeHTTPRequest(locationID, newDateString);
     }
@@ -75,9 +78,8 @@ public class WeatherHistoryService extends IntentService {
         Calendar copy = Calendar.getInstance();
         copy.setTimeInMillis(calendar.getTimeInMillis());
         copy.add(Calendar.DAY_OF_MONTH, -1);
-        Date date = calendar.getTime();
-        String newDateString = dateFormat.format(date);
-        return newDateString;
+        Date date = copy.getTime();
+        return dateFormat.format(date);
     }
 
     private void makeHTTPRequest(String locationID, String date) {
@@ -100,6 +102,7 @@ public class WeatherHistoryService extends IntentService {
                     public void onResponse(JSONObject response) {
                         try {
                             Log.d(NAME, "received response " + response);
+                            run++;
                             Weather24Hour updated24WeatherHour = hwp.parse(response, sWeather24Hour);
                             addHours(updated24WeatherHour);
                         } catch (JSONException e) {
@@ -112,7 +115,8 @@ public class WeatherHistoryService extends IntentService {
 
                     @Override
                     public void onErrorResponse(VolleyError error){
-                        Log.d(NAME, "Error in JsonObjectRequest");
+                        run++;
+                        Log.d(NAME, "Error in JsonObjectRequest: " + error.getMessage());
                     }
                 });
         queue.addToRequestQueue(jsonObjectRequest);

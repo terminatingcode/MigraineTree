@@ -1,5 +1,7 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,8 +51,14 @@ public class HistoryWeatherParser {
         JSONArray observations = historyResults.getJSONArray("observations");
         for (int i = observations.length() - 1; i >= 0; i--) {
             JSONObject hour = observations.getJSONObject(i);
-            WeatherHour weatherHour = parseHour(hour, weather24Hour.getMigraineStart());
-            if(weatherHour != null) weather24Hour.addHour(weatherHour);
+            if(weather24Hour.getSize() < 24) {
+                WeatherHour weatherHour = parseHour(hour, weather24Hour.getMigraineStart());
+                if(weatherHour != null && !weather24Hour.contains(weatherHour)) {
+                    weather24Hour.addHour(weatherHour);
+                    Log.d(NAME, weatherHour.getHourStart().get(Calendar.DAY_OF_MONTH) + ", "
+                            + weatherHour.getHourStart().get(Calendar.HOUR_OF_DAY) + ":"  + weatherHour.getHourStart().get(Calendar.MINUTE));
+                }
+            }
         }
         return weather24Hour;
     }
@@ -64,7 +72,7 @@ public class HistoryWeatherParser {
         boolean isBeforeMigraineStarted = startTime.getTimeInMillis() > calendar.getTimeInMillis();
         if ( isBeforeMigraineStarted && isOnTheHour) {
             WeatherHour hour = new WeatherHour();
-            hour.setHourStart(date);
+            hour.setHourStart(calendar);
             try {
                 hour.setTemp(jsonObject.getDouble(temperature));
             } catch (JSONException e) {

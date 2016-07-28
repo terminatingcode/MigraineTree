@@ -11,13 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
-import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 
 /**
@@ -32,9 +29,12 @@ public class ProcessRecordFragment extends Fragment {
     private static final String NAME = "ProcessRecordFragment";
     private static final String ARG_DATE = "param1";
     private static final String ARG_LOCATION = "param2";
-    private TextView tempChangeTextView;
-    private TextView humChangeTextView;
-    private TextView apChangeTextView;
+    private TextView temp12ChangeTextView;
+    private TextView temp24ChangeTextView;
+    private TextView hum12ChangeTextView;
+    private TextView hum24ChangeTextView;
+    private TextView ap12ChangeTextView;
+    private TextView ap24ChangeTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,9 +66,12 @@ public class ProcessRecordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_process_record, container, false);
-        tempChangeTextView = (TextView) rootView.findViewById(R.id.tempChangeTextView);
-        humChangeTextView = (TextView) rootView.findViewById(R.id.humChangeTextView);
-        apChangeTextView = (TextView) rootView.findViewById(R.id.apChangeTextView);
+        temp12ChangeTextView = (TextView) rootView.findViewById(R.id.temp12ChangeTextView);
+        temp24ChangeTextView = (TextView) rootView.findViewById(R.id.temp24ChangeTextView);
+        hum12ChangeTextView = (TextView) rootView.findViewById(R.id.hum12ChangeTextView);
+        hum24ChangeTextView = (TextView) rootView.findViewById(R.id.hum24ChangeTextView);
+        ap12ChangeTextView = (TextView) rootView.findViewById(R.id.ap12ChangeTextView);
+        ap24ChangeTextView = (TextView) rootView.findViewById(R.id.ap24ChangeTextView);
         return rootView;
     }
 
@@ -114,16 +117,18 @@ public class ProcessRecordFragment extends Fragment {
         Weather24Hour mWeather24Hour = event.mWeather24Hour;
         if(mWeather24Hour.getSize() == 24){
             mWeather24Hour.calculateChanges();
-            String tempChange = String.valueOf(mWeather24Hour.getTempChange12Hrs());
-            String humChange = String.valueOf(mWeather24Hour.getHumChange12Hrs());
-            String apChange = String.valueOf(mWeather24Hour.getApChange12Hrs());
-            tempChangeTextView.append(tempChange);
-            humChangeTextView.append(humChange);
-            apChangeTextView.append(apChange);
-            List<WeatherHour> hours = mWeather24Hour.getHours();
-            for(WeatherHour hour : hours){
-                Log.d(NAME, hour.toString());
-            }
+            String temp12Change = String.valueOf(mWeather24Hour.getTempChange12Hrs());
+            String temp24Change = String.valueOf(mWeather24Hour.getTempChange24Hrs());
+            String hum12Change = String.valueOf(mWeather24Hour.getHumChange12Hrs());
+            String hum24Change = String.valueOf(mWeather24Hour.getHumChange24Hrs());
+            String ap12Change = String.valueOf(mWeather24Hour.getApChange12Hrs());
+            String ap24Change = String.valueOf(mWeather24Hour.getApChange24Hrs());
+            temp12ChangeTextView.setText(temp12Change);
+            temp24ChangeTextView.setText(temp24Change);
+            hum12ChangeTextView.setText(hum12Change);
+            hum24ChangeTextView.setText(hum24Change);
+            ap12ChangeTextView.setText(ap12Change);
+            ap24ChangeTextView.setText(ap24Change);
         }
     }
 

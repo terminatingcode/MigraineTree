@@ -71,7 +71,9 @@
     <string name="temperature">Temperature:</string>
     <string name="humidity">Humidity:</string>
     <string name="air_pressure">Air Pressure:</string>
-    <string name="weather_changes_in_the_past_24_hours">Weather changes in the past 24 hours:</string>
+    <string name="weather_changes">Weather changes:</string>
+    <string name="_12_hours">12 hours</string>
+    <string name="_24_hours">24 hours</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>
