@@ -6,6 +6,8 @@ import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -48,9 +50,9 @@ public class Weather24HourTest {
 
     @Test
     public void testCalculateChanges(){
-        WeatherHour mockHourMinus24Hours =  initialiseMockWeatherHour(10.0);
-        WeatherHour mockHourMinus12Hours = initialiseMockWeatherHour(-5.0);
-        WeatherHour mockHourOfMigraine = initialiseMockWeatherHour(20.0);
+        WeatherHour mockHourMinus24Hours =  initialiseMockWeatherHour(10.0, 1468972800000L);
+        WeatherHour mockHourMinus12Hours = initialiseMockWeatherHour(-5.0, 1468976400000L);
+        WeatherHour mockHourOfMigraine = initialiseMockWeatherHour(20.0, 1468980000000L);
         for(int i = 0; i < 8; i++){
             mWeather24Hour.addHour(mockHourMinus24Hours);
         }
@@ -75,8 +77,10 @@ public class Weather24HourTest {
 
     }
 
-    private WeatherHour initialiseMockWeatherHour(double x){
+    private WeatherHour initialiseMockWeatherHour(double x, long milliseconds){
         WeatherHour mockHour = new WeatherHour();
+        Date date = new Date(milliseconds);
+        mockHour.setHourStart(date);
         mockHour.setTemp(x);
         mockHour.setHum(x);
         mockHour.setWspd(x);

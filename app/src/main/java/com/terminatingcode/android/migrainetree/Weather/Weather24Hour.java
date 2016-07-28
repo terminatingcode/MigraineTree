@@ -1,6 +1,13 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
+import android.util.Log;
+
+import com.terminatingcode.android.migrainetree.MessageEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +18,10 @@ import java.util.List;
  */
 public class Weather24Hour {
 
+    private static final String NAME = "Weather24Hour";
+    private Calendar migraineStart;
     private List<WeatherHour> mHours;
+    private boolean full;
     private double mApChange24Hrs;
     private double mApChange12Hrs;
     private double mHumChange24Hrs;
@@ -26,7 +36,13 @@ public class Weather24Hour {
     }
 
     public void addHour(WeatherHour hour){
-        if(mHours.size() != 24) mHours.add(hour);
+        if(mHours.size() == 23){
+            mHours.add(hour);
+            EventBus.getDefault().post(new MessageEvent(this));
+            Log.d(NAME, "finished service: " + mHours.size());
+        }else if(mHours.size() != 24){
+            mHours.add(hour);
+        }
     }
 
     public List<WeatherHour> getHours() {
@@ -64,6 +80,13 @@ public class Weather24Hour {
         }
     }
 
+    public Calendar getMigraineStart() {
+        return migraineStart;
+    }
+
+    public void setMigraineStart(Calendar migraineStart) {
+        this.migraineStart = migraineStart;
+    }
     public double getApChange24Hrs() {
         return mApChange24Hrs;
     }

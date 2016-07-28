@@ -1,7 +1,5 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +16,7 @@ import java.util.TimeZone;
  * Created by Sarah on 6/23/2016.
  */
 public class HistoryWeatherParser {
+    private static final String NAME = "HistoryWeatherParser";
     private static final String temperature = "tempm";
     private static final String dewPoint = "dewptm";
     private static final String humidity = "hum";
@@ -42,7 +41,7 @@ public class HistoryWeatherParser {
     private static final String minutes = "min";
     private static final double defaultDouble = 999.99;
 
-    public Weather24Hour parse(JSONObject jsonObject, Weather24Hour weather24Hour, Calendar startTime)
+    public Weather24Hour parse(JSONObject jsonObject, Weather24Hour weather24Hour)
             throws JSONException, ParseException, IllegalArgumentException {
         if(jsonObject == null) throw new JSONException("null JsonObject");
         if(weather24Hour == null) throw new IllegalArgumentException("weather24Hour not initialised");
@@ -50,7 +49,7 @@ public class HistoryWeatherParser {
         JSONArray observations = historyResults.getJSONArray("observations");
         for (int i = observations.length() - 1; i >= 0; i--) {
             JSONObject hour = observations.getJSONObject(i);
-            WeatherHour weatherHour = parseHour(hour, startTime);
+            WeatherHour weatherHour = parseHour(hour, weather24Hour.getMigraineStart());
             if(weatherHour != null) weather24Hour.addHour(weatherHour);
         }
         return weather24Hour;
@@ -61,10 +60,11 @@ public class HistoryWeatherParser {
         Date date = parseDate(jsonObject.getJSONObject(utcdate));
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date.getTime());
-        if (startTime.after(calendar) && (calendar.get(Calendar.MINUTE) == 0)) {
+        boolean isOnTheHour = calendar.get(Calendar.MINUTE) == 0;
+        boolean isBeforeMigraineStarted = startTime.getTimeInMillis() > calendar.getTimeInMillis();
+        if ( isBeforeMigraineStarted && isOnTheHour) {
             WeatherHour hour = new WeatherHour();
             hour.setHourStart(date);
-            Log.d("service", calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE));
             try {
                 hour.setTemp(jsonObject.getDouble(temperature));
             } catch (JSONException e) {
