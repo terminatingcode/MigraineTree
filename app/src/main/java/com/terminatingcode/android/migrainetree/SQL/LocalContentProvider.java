@@ -40,8 +40,7 @@ public final class LocalContentProvider extends ContentProvider{
     public static final String CREATE_MENSTRUAL_TABLE = "CREATE TABLE "
             + MenstrualRecord.TABLE_NAME + " ("
             + MenstrualRecord._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + MenstrualRecord.DATE + " INTEGER NOT NULL, "
-            + MenstrualRecord.DAY_IN_CYCLE + " INTEGER NOT NULL);";
+            + MenstrualRecord.DATE + " INTEGER NOT NULL);";
     public static final String DELETE_MENSTRUAL_TABLE =
             "DROP TABLE IF EXISTS " + MenstrualRecord.TABLE_NAME;
 
@@ -53,7 +52,7 @@ public final class LocalContentProvider extends ContentProvider{
             + MigraineRecord.START_HOUR + " > 0), "
             + MigraineRecord.END_HOUR + " INTEGER DEFAULT 9999999999999 CHECK("
             + MigraineRecord.END_HOUR + " > " + MigraineRecord.START_HOUR + "), "
-            + MigraineRecord.CITY + " TEXT DEFAULT \'CITY NOT SET\', "
+            + MigraineRecord.CITY + " TEXT NOT NULL, "
             + MigraineRecord.PAIN_AT_ONSET + " INTEGER CHECK("
             + MigraineRecord.PAIN_AT_ONSET + " >= 0), "
             + MigraineRecord.PAIN_AT_PEAK + " INTEGER DEFAULT 0, "

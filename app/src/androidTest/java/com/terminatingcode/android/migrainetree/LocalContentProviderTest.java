@@ -61,8 +61,7 @@ public class LocalContentProviderTest extends ProviderTestCase2<LocalContentProv
     public void testsAllMenstrualColumnsReturned(){
         final String[] ALL_MENSTRUAL_COLUMNS = new String[]{
                 MenstrualRecord._ID,
-                MenstrualRecord.DATE,
-                MenstrualRecord.DAY_IN_CYCLE};
+                MenstrualRecord.DATE};
         Cursor cursor = null;
         try{
             int numOfColumns = ALL_MENSTRUAL_COLUMNS.length;
@@ -105,10 +104,8 @@ public class LocalContentProviderTest extends ProviderTestCase2<LocalContentProv
 
     public void testsMenstrualDatabaseInsertDelete(){
         Long expectedDate = 1466668560000L;
-        int expectedDay = 1;
         ContentValues values = new ContentValues();
         values.put(MenstrualRecord.DATE, expectedDate);
-        values.put(MenstrualRecord.DAY_IN_CYCLE, expectedDay);
         Uri insertedUri = mResolver.insert(MenstrualUri, values);
         assertNotNull(insertedUri);
 
@@ -123,11 +120,6 @@ public class LocalContentProviderTest extends ProviderTestCase2<LocalContentProv
                     MenstrualRecord.DATE);
             Long resultDate = cursor.getLong(dateColumnId);
             assertEquals(expectedDate, resultDate);
-
-            int dayColumnId = cursor.getColumnIndex(
-                    MenstrualRecord.DAY_IN_CYCLE);
-            int resultDay = cursor.getInt(dayColumnId);
-            assertEquals(expectedDay, resultDay);
         }finally{
             if(cursor != null) cursor.close();
         }
@@ -203,13 +195,11 @@ public class LocalContentProviderTest extends ProviderTestCase2<LocalContentProv
             assertNotNull(cursor);
             assertTrue(cursor.moveToNext());
 
-            int dateColumnId = cursor.getColumnIndex(
-                    MigraineRecord.START_HOUR);
+            int dateColumnId = cursor.getColumnIndex(MigraineRecord.START_HOUR);
             Long resultDate = cursor.getLong(dateColumnId);
             assertEquals(startHour, resultDate);
 
-            int cityColumnId = cursor.getColumnIndex(
-                    MigraineRecord.CITY);
+            int cityColumnId = cursor.getColumnIndex(MigraineRecord.CITY);
             String resultCity = cursor.getString(cityColumnId);
             assertEquals(city, resultCity);
 

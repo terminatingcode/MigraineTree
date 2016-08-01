@@ -13,6 +13,8 @@ public interface Constants {
     String DATE_KEY = "dateKey";
     String SAVE_MENSTRUAL_DATA = "menstrualData";
     boolean DEFAULT_SAVE_MENSTRUAL_DATA = true;
+    Long DEFAULT_NO_DATA = -999L;
+    String INSERTED_URI = "insertedUri";
 
     String NETWORK_PREFIX = "network.";
 

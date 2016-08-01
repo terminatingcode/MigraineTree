@@ -9,5 +9,4 @@ import android.provider.BaseColumns;
 public class MenstrualRecord implements BaseColumns {
     public static final String TABLE_NAME = "menstrualRecords";
     public static final String DATE = "menstrualRecordDate";
-    public static final String DAY_IN_CYCLE = "dayInCycle";
 }

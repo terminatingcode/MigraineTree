@@ -1,7 +1,5 @@
 package com.terminatingcode.android.migrainetree.Weather;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,8 +53,6 @@ public class HistoryWeatherParser {
                 WeatherHour weatherHour = parseHour(hour, weather24Hour.getMigraineStart());
                 if(weatherHour != null && !weather24Hour.contains(weatherHour)) {
                     weather24Hour.addHour(weatherHour);
-                    Log.d(NAME, weatherHour.getHourStart().get(Calendar.DAY_OF_MONTH) + ", "
-                            + weatherHour.getHourStart().get(Calendar.HOUR_OF_DAY) + ":"  + weatherHour.getHourStart().get(Calendar.MINUTE));
                 }
             }
         }

@@ -48,7 +48,7 @@
     <string name="sensitivity_to_smell">Sensitivity to smell</string>
     <string name="ringing_or_popped_ears">Ringing or popped ears</string>
     <string name="confusion">Confusion or mental fog</string>
-    <string name="meds_taken">Medication taken:</string>
+    <string name="medication">Medication:</string>
     <string name="source_of_pain">Source of pain:</string>
     <string name="sunday">SUN</string>
     <string name="monday">MON</string>
@@ -65,15 +65,23 @@
     <string name="red_drop">red drop</string>
     <string name="day_in_cycle">Day in cycle:</string>
     <string name="confirm">Confirm</string>
-    <string name="migraine_started">migraine started:</string>
+    <string name="migraine_started">Migraine\nstarted:</string>
     <string name="track_hormones">Track Hormones</string>
     <string name="my_email">sconno05@dcs.bbk.ac.uk</string>
     <string name="temperature">Temperature:</string>
     <string name="humidity">Humidity:</string>
     <string name="air_pressure">Air Pressure:</string>
     <string name="weather_changes">Weather changes:</string>
-    <string name="_12_hours">12 hours</string>
-    <string name="_24_hours">24 hours</string>
+    <string name="_12_h">12 h</string>
+    <string name="_24_h">24 h</string>
+    <string name="pain_at_start">Pain at start: </string>
+    <string name="aura">Aura: </string>
+    <string name="eaten">Eaten: </string>
+    <string name="water">Water: </string>
+    <string name="sleep">Sleep:</string>
+    <string name="stress">Stress:</string>
+    <string name="eye_strain">Eye strain:</string>
+    <string name="update_calendar">Update calendar</string>
     <string-array name="pain_types_array">
         <item>throbbing</item>
         <item>stabbing</item>

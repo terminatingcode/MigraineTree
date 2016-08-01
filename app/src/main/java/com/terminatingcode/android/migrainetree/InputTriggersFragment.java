@@ -1,15 +1,19 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -18,7 +22,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
+import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
+import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
+
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -40,13 +53,35 @@ public class InputTriggersFragment extends Fragment {
     private TimePicker mTimePicker;
     private TextView mCityTextView;
     private Button mSetNewLocationButton;
+    private TextView painTextView;
+    private CheckBox auraCheckbox;
+    private CheckBox eatenCheckbox;
+    private CheckBox waterCheckbox;
+    private TextView sleepTextView;
+    private TextView stressTextView;
+    private TextView eyeStrainTextView;
+    private Spinner typeOfPainSpinner;
+    private Spinner areaOfPainSpinner;
+    private Spinner typeOfMedsSpinner;
+    private CheckBox nauseaCheckBox;
+    private CheckBox sensitivityLightCheckBox;
+    private CheckBox sensitivityNoiseCheckBox;
+    private CheckBox sensitivitySmellCheckBox;
+    private CheckBox nasalCongestionCheckBox;
+    private CheckBox earsCheckBox;
+    private CheckBox confusionCheckBox;
+    private TextView cycleDayTextView;
     private String date;
     private String time;
+    private Button updateCalendarButton;
+    private View menstrualDataLayout;
     private Button mSaveRecordButton;
     private SharedPrefsUtils mPrefUtils;
+    private String city;
     private int numSetButtonPressed = 0;
     private static final int VIEW_DATE_PICKER = 1;
     private static final int VIEW_TIME_PICKER = 2;
+    private static final int MILLISECONDS_IN_DAY = 24*60*60*1000;
 
 
     public InputTriggersFragment() {
@@ -82,6 +117,9 @@ public class InputTriggersFragment extends Fragment {
         mDateTextView = (TextView) rootView.findViewById(R.id.migraineStartDateTextView);
         mTimeTextView = (TextView) rootView.findViewById(R.id.migraineStartTimeTextView);
         mDatePicker = (DatePicker) rootView.findViewById(R.id.datePicker);
+        Calendar calendar = Calendar.getInstance();
+        long milliseconds = calendar.getTimeInMillis();
+        mDatePicker.setMaxDate(milliseconds);
         mTimePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
         mSetButton = (ImageButton) rootView.findViewById(R.id.set_button);
         mSetButton.setOnClickListener(new View.OnClickListener() {
@@ -102,12 +140,16 @@ public class InputTriggersFragment extends Fragment {
 
             }
         });
+        //display saved city
         mCityTextView = (TextView) rootView.findViewById(R.id.locationTextView);
         SharedPreferences mSharedPreferences = getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         mPrefUtils = new SharedPrefsUtils(mSharedPreferences);
-        String city = mPrefUtils.getSavedCity();
+        city = mPrefUtils.getSavedCity();
         mCityTextView.setText(city);
+        //disapear menstrual data if saved preference is to not track
+        initializeMenstrualData(rootView);
+        //signal to mainactivity to switch fragments when new location button clicked
         mSetNewLocationButton = (Button) rootView.findViewById(R.id.newLocationButton);
         mSetNewLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +157,19 @@ public class InputTriggersFragment extends Fragment {
                 onNewLocationButtonClicked();
             }
         });
+        //initialise checkboxes
+        auraCheckbox = (CheckBox) rootView.findViewById(R.id.auraCheckBox);
+        eatenCheckbox = (CheckBox) rootView.findViewById(R.id.eatenCheckBox);
+        waterCheckbox = (CheckBox) rootView.findViewById(R.id.waterCheckBox);
+        nauseaCheckBox = (CheckBox) rootView.findViewById(R.id.nauseaCheckBox);
+        sensitivityLightCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivityLightCheckBox);
+        sensitivityNoiseCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivityNoiseCheckBox);
+        sensitivitySmellCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivitySmellCheckBox);
+        nasalCongestionCheckBox = (CheckBox) rootView.findViewById(R.id.nasalCongestionCheckBox);
+        earsCheckBox = (CheckBox) rootView.findViewById(R.id.earsCheckBox);
+        confusionCheckBox = (CheckBox) rootView.findViewById(R.id.confusionCheckBox);
         //initialise Spinners
-        Spinner typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
+        typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
         ArrayAdapter<CharSequence> typeOfPainAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -124,7 +177,7 @@ public class InputTriggersFragment extends Fragment {
                                 android.R.layout.simple_spinner_dropdown_item);
         typeOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeOfPainSpinner.setAdapter(typeOfPainAdapter);
-        Spinner areaOfPainSpinner = (Spinner) rootView.findViewById(R.id.areasOfPainSpinner);
+        areaOfPainSpinner = (Spinner) rootView.findViewById(R.id.areasOfPainSpinner);
         ArrayAdapter<CharSequence> areasOfPainAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -132,7 +185,7 @@ public class InputTriggersFragment extends Fragment {
                                 android.R.layout.simple_spinner_dropdown_item);
         areasOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         areaOfPainSpinner.setAdapter(areasOfPainAdapter);
-        Spinner typeOfMedsSpinner = (Spinner) rootView.findViewById(R.id.typeOfMedsSpinner);
+        typeOfMedsSpinner = (Spinner) rootView.findViewById(R.id.typeOfMedsSpinner);
         ArrayAdapter<CharSequence> typeOfMedsAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -141,19 +194,65 @@ public class InputTriggersFragment extends Fragment {
         typeOfMedsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeOfMedsSpinner.setAdapter(typeOfMedsAdapter);
         //have TextViews change with SeekBar
-        updateProgressTextView(R.id.painLevelTextView, R.id.painSeekBar, rootView);
-        updateProgressTextView(R.id.sleepLevelTextView, R.id.sleepSeekBar, rootView);
-        updateProgressTextView(R.id.stressLevelTextView, R.id.stressSeekBar, rootView);
-        updateProgressTextView(R.id.eyesLevelTextView, R.id.eyesSeekBar, rootView);
+        painTextView = (TextView) rootView.findViewById(R.id.painLevelTextView);
+        sleepTextView = (TextView) rootView.findViewById(R.id.sleepLevelTextView);
+        stressTextView = (TextView) rootView.findViewById(R.id.stressLevelTextView);
+        eyeStrainTextView = (TextView) rootView.findViewById(R.id.eyesLevelTextView);
+        updateProgressTextView(painTextView, R.id.painSeekBar, rootView);
+        updateProgressTextView(sleepTextView, R.id.sleepSeekBar, rootView);
+        updateProgressTextView(stressTextView, R.id.stressSeekBar, rootView);
+        updateProgressTextView(eyeStrainTextView, R.id.eyesSeekBar, rootView);
+        updateCalendarButton = (Button) rootView.findViewById(R.id.switchToMenstrualCalendarButton);
+        updateCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onUpdateCalendarButtonClicked();
+            }
+        });
         mSaveRecordButton = (Button) rootView.findViewById(R.id.saveRecordButton);
         mSaveRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(NAME, "click");
                 startWeatherHistoryService(date, time);
             }
         });
         return rootView;
+    }
+
+    /**
+     * fetch user preference to track menstrual data,
+     * if true, query MenstrualRecords and return most recent cycle day
+     * if false, disappear the menstrual data view
+     * @param rootView the fragment view
+     */
+    private void initializeMenstrualData(View rootView) {
+        boolean trackingMenstrualData = mPrefUtils.getsavedMenstrualPref();
+        menstrualDataLayout = rootView.findViewById(R.id.menstrualDataLayout);
+        cycleDayTextView = (TextView) rootView.findViewById(R.id.cycleDayTextView);
+        if(!trackingMenstrualData){
+            menstrualDataLayout.setVisibility(View.GONE);
+        }else{
+            ContentResolver mResolver = getActivity().getContentResolver();
+            String sortOrder = MenstrualRecord.DATE + " DESC";
+            Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, null, null, null, sortOrder);
+            int difference = 0;
+            try{
+                cursor.moveToFirst();
+                int dateIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
+                int menstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
+                Calendar calendar = Calendar.getInstance();
+                int currentDay = (int) (calendar.getTimeInMillis() / MILLISECONDS_IN_DAY);
+                difference = currentDay - menstrualDate;
+                while(cursor.moveToNext()) {
+                    int previousMenstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
+                    if(previousMenstrualDate - menstrualDate > 1) break;
+                    else difference++;
+                }
+            }finally {
+                if(cursor != null) cursor.close();
+            }
+            cycleDayTextView.setText(String.valueOf(difference));
+        }
     }
 
     /**
@@ -183,13 +282,12 @@ public class InputTriggersFragment extends Fragment {
 
     /**
      * Tracks changes to the SeekBar and updates TextView with progress
-     * @param textViewId the TextView to be updated
+     * @param textView the TextView to be updated
      * @param seekBarId the SeekBar to be tracked
      * @param view the root view of the Fragment
      */
-    public void updateProgressTextView(int textViewId, int seekBarId, View view){
+    public void updateProgressTextView(final TextView textView, int seekBarId, View view){
         SeekBar seekbar = (SeekBar) view.findViewById(seekBarId);
-        final TextView textView = (TextView) view.findViewById(textViewId);
         if(seekbar != null){
             seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -214,6 +312,15 @@ public class InputTriggersFragment extends Fragment {
     public void onNewLocationButtonClicked() {
         if (mListener != null) {
             mListener.onSetLocationPressed();
+        }
+    }
+
+    /**
+     * signals to MainActivity to replace this fragment with CalendarFragment
+     */
+    public void onUpdateCalendarButtonClicked() {
+        if (mListener != null) {
+            mListener.onUpdateCalendarButtonPressed();
         }
     }
 
@@ -246,8 +353,8 @@ public class InputTriggersFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onSetLocationPressed();
-        void onSaveRecordPressed(String date, String locationUID);
-
+        void onUpdateCalendarButtonPressed();
+        void onSaveRecordButtonPressed(String date, String locationUID, Uri uri);
     }
 
     /**
@@ -273,7 +380,68 @@ public class InputTriggersFragment extends Fragment {
      */
     public void onSaveRecordPressed(String dateTime, String locationUID) {
         if (mListener != null) {
-            mListener.onSaveRecordPressed(dateTime, locationUID);
+            Uri insertedUri = saveMigraineData();
+            mListener.onSaveRecordButtonPressed(dateTime, locationUID, insertedUri);
         }
+    }
+
+    public Uri saveMigraineData(){
+        long startHour = Constants.DEFAULT_NO_DATA;
+        try {
+            startHour = convertStringToInt();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
+        }
+        int painAtOnset = Integer.valueOf(painTextView.getText().toString());
+        boolean aura = auraCheckbox.isChecked();
+        boolean eaten = eatenCheckbox.isChecked();
+        boolean water = waterCheckbox.isChecked();
+        int sleep = Integer.valueOf(sleepTextView.getText().toString());
+        int stress = Integer.valueOf(stressTextView.getText().toString());
+        int eyeStrain = Integer.valueOf(eyeStrainTextView.getText().toString());
+        String painType = typeOfPainSpinner.getSelectedItem().toString();
+        String painSource = areaOfPainSpinner.getSelectedItem().toString();
+        String medication = typeOfMedsSpinner.getSelectedItem().toString();
+        boolean nausea = nauseaCheckBox.isChecked();
+        boolean light = sensitivityLightCheckBox.isChecked();
+        boolean noise = sensitivityNoiseCheckBox.isChecked();
+        boolean smell = sensitivitySmellCheckBox.isChecked();
+        boolean congestion = nasalCongestionCheckBox.isChecked();
+        boolean ears = earsCheckBox.isChecked();
+        boolean confusion = confusionCheckBox.isChecked();
+        int cycleDay = Integer.valueOf(cycleDayTextView.getText().toString());
+
+        ContentValues values = new ContentValues();
+        values.put(MigraineRecord.START_HOUR, startHour);
+        values.put(MigraineRecord.CITY, city);
+        values.put(MigraineRecord.PAIN_AT_ONSET, painAtOnset);
+        values.put(MigraineRecord.AURA, aura);
+        values.put(MigraineRecord.EATEN, eaten);
+        values.put(MigraineRecord.WATER, water);
+        values.put(MigraineRecord.SLEEP, sleep);
+        values.put(MigraineRecord.STRESS, stress);
+        values.put(MigraineRecord.EYE_STRAIN, eyeStrain);
+        values.put(MigraineRecord.PAIN_TYPE, painType);
+        values.put(MigraineRecord.PAIN_SOURCE, painSource);
+        values.put(MigraineRecord.MEDICATION, medication);
+        values.put(MigraineRecord.NAUSEA, nausea);
+        values.put(MigraineRecord.SENSITIVITY_TO_LIGHT, light);
+        values.put(MigraineRecord.SENSITIVITY_TO_NOISE, noise);
+        values.put(MigraineRecord.SENSITIVITY_TO_SMELL, smell);
+        values.put(MigraineRecord.CONGESTION, congestion);
+        values.put(MigraineRecord.EARS, ears);
+        values.put(MigraineRecord.CONFUSION, confusion);
+        values.put(MigraineRecord.MENSTRUAL_DAY, cycleDay);
+
+        ContentResolver mResolver = getActivity().getContentResolver();
+        return mResolver.insert(LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, values);
+    }
+
+    public long convertStringToInt() throws ParseException {
+        String dateTime = date + time;
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyyhh:mm", Locale.getDefault());
+        Date date = df.parse(dateTime);
+        return date.getTime();
     }
 }

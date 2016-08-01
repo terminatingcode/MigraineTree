@@ -8,7 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.terminatingcode.android.migrainetree.MessageEvent;
+import com.terminatingcode.android.migrainetree.EventMessages.CitiesMessageEvent;
 import com.terminatingcode.android.migrainetree.MyRequestQueue;
 import com.terminatingcode.android.migrainetree.R;
 
@@ -69,7 +69,7 @@ public class GeoLookupService extends IntentService {
                         try {
                             Log.d(NAME, "received response " + response);
                             String[] cities = glp.parse(response);
-                            EventBus.getDefault().post(new MessageEvent(cities));
+                            EventBus.getDefault().post(new CitiesMessageEvent(cities));
                         } catch (JSONException e) {
                             Log.d(NAME, "JSONException " + e);
                         }

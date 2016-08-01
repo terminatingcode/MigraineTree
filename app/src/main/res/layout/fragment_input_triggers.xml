@@ -264,7 +264,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/meds_taken"
+        android:text="@string/medication"
         android:id="@+id/typeOfMedsTextView"
         android:textColor="#ffffff"
         android:clickable="true"
@@ -361,7 +361,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/menstrualDataLayout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -371,16 +372,24 @@
                 android:textColor="#ffffff"
                 android:clickable="true"
                 android:textSize="24sp"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/zero"
                 android:id="@+id/cycleDayTextView"
-                android:textColor="#ffffff"
+                android:textColor="@color/textColor"
                 android:clickable="true"
                 android:textSize="24sp"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/update_calendar"
+                android:id="@+id/switchToMenstrualCalendarButton"/>
 
 
         </LinearLayout>

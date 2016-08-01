@@ -29,6 +29,7 @@ import java.util.Locale;
  */
 public class WeatherHistoryService extends IntentService {
     private static final String NAME = "WeatherHistoryService";
+    private static final String ERROR = "error";
     private static Weather24Hour sWeather24Hour;
     private static int run;
 

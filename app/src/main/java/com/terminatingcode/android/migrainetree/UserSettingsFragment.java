@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.terminatingcode.android.migrainetree.EventMessages.CitiesMessageEvent;
 import com.terminatingcode.android.migrainetree.Weather.GeoLookupArrayAdapter;
 import com.terminatingcode.android.migrainetree.Weather.GeoLookupService;
 
@@ -135,7 +136,7 @@ public class UserSettingsFragment extends Fragment {
      * @param event The cities received by the JsonRequest
      */
     @Subscribe
-    public void onMessageEventSetCities(MessageEvent event){
+    public void onMessageEventSetCities(CitiesMessageEvent event){
         Log.d(NAME, event.cities[0]);
         if(mAdapter != null){
             for (String CITY : event.cities) {

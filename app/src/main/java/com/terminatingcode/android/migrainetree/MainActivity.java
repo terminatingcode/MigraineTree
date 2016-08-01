@@ -167,21 +167,37 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * replaces InputTriggersFragment with CalendarFragment
+     */
+    @Override
+    public void onUpdateCalendarButtonPressed() {
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, new CalendarFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    /**
      * starts WeatherHistoryService and adds processRecordFragment to frame
      * @param date the start date of migraine record
      * @param locationUID the current user's location Weather Underground id
      */
     @Override
-    public void onSaveRecordPressed(String date, String locationUID) {
+    public void onSaveRecordButtonPressed(String date, String locationUID, Uri uri) {
         Log.d(NAME, "starting intent with date = " + date);
         Intent intent = new Intent(this, WeatherHistoryService.class);
         intent.putExtra(Constants.DATE_KEY, date);
         intent.putExtra(Constants.LOCATIONUID, locationUID);
         startService(intent);
-        ProcessRecordFragment processRecordFragment = new ProcessRecordFragment();
+        ProcessRecordFragment processRecordFragment = ProcessRecordFragment.newInstance(uri);
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, processRecordFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onRecordConfirmed() {
+
     }
 }

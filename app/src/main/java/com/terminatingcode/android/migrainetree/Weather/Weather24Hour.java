@@ -2,7 +2,7 @@ package com.terminatingcode.android.migrainetree.Weather;
 
 import android.util.Log;
 
-import com.terminatingcode.android.migrainetree.MessageEvent;
+import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,7 +21,6 @@ public class Weather24Hour {
     private static final String NAME = "Weather24Hour";
     private Calendar migraineStart;
     private List<WeatherHour> mHours;
-    private boolean full;
     private double mApChange24Hrs;
     private double mApChange12Hrs;
     private double mHumChange24Hrs;
@@ -38,7 +37,7 @@ public class Weather24Hour {
     public void addHour(WeatherHour hour){
         if(mHours.size() == 23){
             mHours.add(hour);
-            EventBus.getDefault().post(new MessageEvent(this));
+            EventBus.getDefault().post(new Weather24HourMessageEvent(this));
             Log.d(NAME, "finished service: " + mHours.size());
         }else if(mHours.size() != 24){
             mHours.add(hour);
@@ -169,5 +168,4 @@ public class Weather24Hour {
     public void setWspdChange12Hrs(double wspdChange12Hrs) {
         this.mWspdChange12Hrs = wspdChange12Hrs;
     }
-
 }

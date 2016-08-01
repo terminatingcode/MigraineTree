@@ -121,12 +121,7 @@ public class CalendarFragment extends Fragment {
         ContentValues storedEvents = new ContentValues();
 
         Long milliseconds = calendar.getTimeInMillis();
-        int dayInCycle = calculateDayInCycle(calendar, events);
-        storedEvents.put(
-                MenstrualRecord.DATE,
-                milliseconds);
-        storedEvents.put(MenstrualRecord.DAY_IN_CYCLE,
-                dayInCycle);
+        storedEvents.put(MenstrualRecord.DATE, milliseconds);
         Context context = getContext();
         Uri rowInserted = context.getContentResolver().insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, storedEvents);
         Log.d(NAME, "# row inserted: " + rowInserted);
@@ -139,16 +134,6 @@ public class CalendarFragment extends Fragment {
         Context context = getContext();
         int rowsDeleted = context.getContentResolver().delete(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, selection, null);
         Log.d(NAME, "# rows deleted: " + rowsDeleted);
-    }
-
-    public static int calculateDayInCycle(Calendar calendar, HashSet<Calendar> events){
-        int dayInCycle = 1;
-        //find beginning of cycle
-        while(events.contains(calendar)){
-            calendar.add(Calendar.DATE, -1);
-            if(events.contains(calendar)) dayInCycle ++;
-        }
-        return dayInCycle;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
