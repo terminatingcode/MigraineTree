@@ -11,9 +11,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessageEvent;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
@@ -23,7 +29,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -63,6 +71,19 @@ public class ProcessRecordFragment extends Fragment {
     private TextView symptomsTextView;
     private TextView cycleDayTextView;
     private Switch migraineDoneSwitch;
+    private LinearLayout migraineDoneView;
+    private TextView peakPainLevelTextView;
+    private SeekBar peakPainSeekbar;
+    private TextView endTimeTextView;
+    private TextView endDateTextView;
+    private ImageButton setTimeDateButton;
+    private DatePicker endDatePicker;
+    private TimePicker endTimePicker;
+    private int numSetButtonPressed = 0;
+    private static final int VIEW_DATE_PICKER = 1;
+    private static final int VIEW_TIME_PICKER = 2;
+    private String date;
+    private String time;
     private MigraineRecordObject mMigraineRecordObject;
     private OnFragmentInteractionListener mListener;
 
@@ -120,7 +141,98 @@ public class ProcessRecordFragment extends Fragment {
         symptomsTextView = (TextView) rootView.findViewById(R.id.symptomsEntered);
         cycleDayTextView = (TextView) rootView.findViewById(R.id.cycleDayEntered);
         migraineDoneSwitch = (Switch) rootView.findViewById(R.id.switch1);
+        migraineDoneView = (LinearLayout) rootView.findViewById(R.id.migraineDoneView);
+        peakPainLevelTextView = (TextView) rootView.findViewById(R.id.painPeakLevelTextView);
+        peakPainSeekbar = (SeekBar) rootView.findViewById(R.id.painPeakSeekBar);
+        endTimeTextView = (TextView) rootView.findViewById(R.id.migraineEndTimeTextView);
+        endDateTextView = (TextView) rootView.findViewById(R.id.migraineEndDateTextView);
+        setTimeDateButton = (ImageButton) rootView.findViewById(R.id.end_set_button);
+        endDatePicker = (DatePicker) rootView.findViewById(R.id.endDatePicker);
+        endTimePicker = (TimePicker) rootView.findViewById(R.id.endTimePicker);
+        migraineDoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked) disappearMigraineDoneView();
+                else makeMigraineDoneVisible();
+            }
+        });
         return rootView;
+    }
+
+    private void makeMigraineDoneVisible() {
+        migraineDoneView.setVisibility(View.VISIBLE);
+        setUpDateTime();
+        if(peakPainSeekbar != null){
+            peakPainSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    String s = String.valueOf(progress);
+                    peakPainLevelTextView.setText(s);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+        }
+    }
+
+    private void setUpDateTime() {
+        Calendar calendar = Calendar.getInstance();
+        long milliseconds = calendar.getTimeInMillis();
+        endDatePicker.setMaxDate(milliseconds);
+        setTimeDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                numSetButtonPressed++;
+                int stage = numSetButtonPressed % 3;
+                if(stage == VIEW_DATE_PICKER) endDatePicker.setVisibility(View.VISIBLE);
+                else if(stage == VIEW_TIME_PICKER){
+                    setDate();
+                    endDatePicker.setVisibility(View.GONE);
+                    endTimePicker.setVisibility(View.VISIBLE);
+                }
+                else {
+                    setTime();
+                    endTimePicker.setVisibility(View.GONE);
+                }
+
+            }
+        });
+    }
+
+    /**
+     * Update startDateButton text to be the date chosen by the user
+     */
+    private void setDate() {
+        int day = endDatePicker.getDayOfMonth();
+        int month = endDatePicker.getMonth() + 1;
+        int year = endDatePicker.getYear();
+        date = day + "/" + month + "/" + year;
+        Log.d(NAME, date);
+        endDateTextView.setText(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day);
+    }
+
+    /**
+     * Updates the startDateButton text to be the
+     * time specified by the user
+     */
+    private void setTime() {
+        final DecimalFormat decimalFormat = new DecimalFormat("00");
+        String hour = decimalFormat.format(endTimePicker.getHour());
+        String minutes = decimalFormat.format(endTimePicker.getMinute());
+        time =  hour +
+                ":" +
+                minutes;
+        endTimeTextView.setText(time);
+    }
+
+    private void disappearMigraineDoneView() {
+        migraineDoneView.setVisibility(View.GONE);
     }
 
     /**

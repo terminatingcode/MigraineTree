@@ -419,14 +419,105 @@
         android:layout_height="wrap_content"
         android:text="@string/migraine"
         android:id="@+id/switch1"
-        android:textOn="DONE"
-        android:textOff="NOT DONE"
+        android:textOn="@string/done"
+        android:textOff="@string/notDone"
         android:textColor="@color/textColor"
         android:showText="true"
         android:textSize="24sp"
         android:thumb="@android:drawable/editbox_background_normal"
         android:checked="true"
         android:switchPadding="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/migraineDoneView">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pain_at_peak_of_migraine"
+            android:clickable="false"
+            android:enabled="false"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zero"
+            android:id="@+id/painPeakLevelTextView"
+            android:textColor="@color/textColor"
+            android:clickable="true"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"/>
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:id="@+id/painPeakSeekBar"
+            android:progress="0"
+            android:max="10"
+            android:background="#494949"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/migraine_ended"
+            android:paddingTop="2dp"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/migraineEndDateTextView"
+                android:text="@string/dd_mm_yyyy"
+                android:textColor="@color/textColor"
+                android:textSize="24sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/migraineEndTimeTextView"
+                android:text="@string/hh_mm"
+                android:textColor="@color/textColor"
+                android:textSize="24sp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/end_set_button"
+                android:clickable="true"
+                android:src="@android:drawable/ic_input_add"
+                android:contentDescription="@string/set_date_time"/>
+        </LinearLayout>
+
+
+
+        <DatePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/endDatePicker"
+            android:clickable="true"
+            android:background="#303030"
+            android:visibility="gone"
+            android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+
+        <TimePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/endTimePicker"
+            android:clickable="true"
+            android:visibility="gone"
+            android:background="#303030"/>
+        </LinearLayout>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
