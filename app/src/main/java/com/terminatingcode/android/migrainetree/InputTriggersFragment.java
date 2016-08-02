@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -237,15 +238,17 @@ public class InputTriggersFragment extends Fragment {
             Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, null, null, null, sortOrder);
             int difference = 0;
             try{
-                cursor.moveToFirst();
-                int dateIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
-                int menstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
-                int currentDay = (int) (migraineDate / MILLISECONDS_IN_DAY);
-                difference = currentDay - menstrualDate;
-                while(cursor.moveToNext()) {
-                    int previousMenstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
-                    if(previousMenstrualDate - menstrualDate > 1) break;
-                    else difference++;
+                if(cursor != null  && cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    int dateIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
+                    int menstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
+                    int currentDay = (int) (migraineDate / MILLISECONDS_IN_DAY);
+                    difference = currentDay - menstrualDate;
+                    while (cursor.moveToNext()) {
+                        int previousMenstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
+                        if (previousMenstrualDate - menstrualDate > 1) break;
+                        else difference++;
+                    }
                 }
             }finally {
                 if(cursor != null) cursor.close();
@@ -262,6 +265,7 @@ public class InputTriggersFragment extends Fragment {
         int month = mDatePicker.getMonth() + 1;
         int year = mDatePicker.getYear();
         date = day + "/" + month + "/" + year;
+        Log.d(NAME, date);
         mDateTextView.setText(date);
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, day);
