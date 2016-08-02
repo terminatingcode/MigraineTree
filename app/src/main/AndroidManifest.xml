@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.terminatingcode.android.migrainetree"
           xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+    <uses-permission android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.flash"/>
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -28,6 +35,10 @@
                   android:configChanges="keyboardHidden|orientation"
                   android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".amazonaws.UI.MainActivity"
+                  android:configChanges="keyboardHidden|orientation"
+                  android:screenOrientation="portrait">
+        </activity>
 
         <provider
             android:authorities="com.terminatingcode.android.migrainetree.provider"
@@ -44,6 +55,69 @@
             android:name=".Weather.WeatherHistoryService"
             android:exported="false">
         </service>
+
+        <!-- BEGIN - APP CONTENT DELIVERY AND USER DATA STORAGE -->
+
+        <!-- The following services and receivers are used to deal with transfer of
+	     files. If you copy and paste the user data storage or app content delivery
+	     feature from this sample app into your own app, make sure you include
+	     these items, and customize the string identifiers they use in the strings
+	     XML resource file. -->
+
+        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />
+
+        <service android:name="com.terminatingcode.android.migrainetree.amazonaws.downloader.service.DownloadService" />
+
+        <receiver android:name="com.terminatingcode.android.migrainetree.amazonaws.downloader.service.NetworkStateListener"
+                  android:exported="false"
+                  android:enabled="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="com.terminatingcode.android.migrainetree.amazonaws.downloader.query.DownloadQueueProvider"
+            android:authorities="@string/download_queue_provider_authority"
+            android:enabled="true"
+            android:exported="false">
+        </provider>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/content_file_provider_authority"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/content_delivery_paths" />
+        </provider>
+
+        <!-- END - APP CONTENT DELIVERY AND USER DATA STORAGE -->
+
+
+        <!-- BEGIN - PUSH NOTIFICATIONS WITH GOOGLE CLOUD MESSAGING (GCM) -->
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="@string/google_cloud_messaging_package" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.terminatingcode.android.migrainetree.amazonaws.UI.PushListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <!-- END - PUSH NOTIFICATIONS WITH GOOGLE CLOUD MESSAGING (GCM) -->
+
     </application>
 
 </manifest>

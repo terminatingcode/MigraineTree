@@ -117,11 +117,35 @@ public class InputTriggersFragment extends Fragment {
         mDateTextView = (TextView) rootView.findViewById(R.id.migraineStartDateTextView);
         mTimeTextView = (TextView) rootView.findViewById(R.id.migraineStartTimeTextView);
         mDatePicker = (DatePicker) rootView.findViewById(R.id.datePicker);
+        mTimePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
+        mSetButton = (ImageButton) rootView.findViewById(R.id.set_button);
+        mCityTextView = (TextView) rootView.findViewById(R.id.locationTextView);
+        mSetNewLocationButton = (Button) rootView.findViewById(R.id.newLocationButton);
+        auraCheckbox = (CheckBox) rootView.findViewById(R.id.auraCheckBox);
+        eatenCheckbox = (CheckBox) rootView.findViewById(R.id.eatenCheckBox);
+        waterCheckbox = (CheckBox) rootView.findViewById(R.id.waterCheckBox);
+        nauseaCheckBox = (CheckBox) rootView.findViewById(R.id.nauseaCheckBox);
+        sensitivityLightCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivityLightCheckBox);
+        sensitivityNoiseCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivityNoiseCheckBox);
+        sensitivitySmellCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivitySmellCheckBox);
+        nasalCongestionCheckBox = (CheckBox) rootView.findViewById(R.id.nasalCongestionCheckBox);
+        earsCheckBox = (CheckBox) rootView.findViewById(R.id.earsCheckBox);
+        confusionCheckBox = (CheckBox) rootView.findViewById(R.id.confusionCheckBox);
+        menstrualDataLayout = rootView.findViewById(R.id.menstrualDataLayout);
+        cycleDayTextView = (TextView) rootView.findViewById(R.id.cycleDayTextView);
+        typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
+        areaOfPainSpinner = (Spinner) rootView.findViewById(R.id.areasOfPainSpinner);
+        typeOfMedsSpinner = (Spinner) rootView.findViewById(R.id.typeOfMedsSpinner);
+        painTextView = (TextView) rootView.findViewById(R.id.painLevelTextView);
+        sleepTextView = (TextView) rootView.findViewById(R.id.sleepLevelTextView);
+        stressTextView = (TextView) rootView.findViewById(R.id.stressLevelTextView);
+        eyeStrainTextView = (TextView) rootView.findViewById(R.id.eyesLevelTextView);
+        updateCalendarButton = (Button) rootView.findViewById(R.id.switchToMenstrualCalendarButton);
+        mSaveRecordButton = (Button) rootView.findViewById(R.id.saveRecordButton);
+
         Calendar calendar = Calendar.getInstance();
         long milliseconds = calendar.getTimeInMillis();
         mDatePicker.setMaxDate(milliseconds);
-        mTimePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
-        mSetButton = (ImageButton) rootView.findViewById(R.id.set_button);
         mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,35 +165,21 @@ public class InputTriggersFragment extends Fragment {
             }
         });
         //display saved city
-        mCityTextView = (TextView) rootView.findViewById(R.id.locationTextView);
         SharedPreferences mSharedPreferences = getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         mPrefUtils = new SharedPrefsUtils(mSharedPreferences);
         city = mPrefUtils.getSavedCity();
         mCityTextView.setText(city);
-        //disapear menstrual data if saved preference is to not track
-        initializeMenstrualData(rootView);
+
         //signal to mainactivity to switch fragments when new location button clicked
-        mSetNewLocationButton = (Button) rootView.findViewById(R.id.newLocationButton);
         mSetNewLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onNewLocationButtonClicked();
             }
         });
-        //initialise checkboxes
-        auraCheckbox = (CheckBox) rootView.findViewById(R.id.auraCheckBox);
-        eatenCheckbox = (CheckBox) rootView.findViewById(R.id.eatenCheckBox);
-        waterCheckbox = (CheckBox) rootView.findViewById(R.id.waterCheckBox);
-        nauseaCheckBox = (CheckBox) rootView.findViewById(R.id.nauseaCheckBox);
-        sensitivityLightCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivityLightCheckBox);
-        sensitivityNoiseCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivityNoiseCheckBox);
-        sensitivitySmellCheckBox = (CheckBox) rootView.findViewById(R.id.sensitivitySmellCheckBox);
-        nasalCongestionCheckBox = (CheckBox) rootView.findViewById(R.id.nasalCongestionCheckBox);
-        earsCheckBox = (CheckBox) rootView.findViewById(R.id.earsCheckBox);
-        confusionCheckBox = (CheckBox) rootView.findViewById(R.id.confusionCheckBox);
+
         //initialise Spinners
-        typeOfPainSpinner = (Spinner) rootView.findViewById(R.id.typeOfPainSpinner);
         ArrayAdapter<CharSequence> typeOfPainAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -177,7 +187,6 @@ public class InputTriggersFragment extends Fragment {
                                 android.R.layout.simple_spinner_dropdown_item);
         typeOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeOfPainSpinner.setAdapter(typeOfPainAdapter);
-        areaOfPainSpinner = (Spinner) rootView.findViewById(R.id.areasOfPainSpinner);
         ArrayAdapter<CharSequence> areasOfPainAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -185,7 +194,6 @@ public class InputTriggersFragment extends Fragment {
                                 android.R.layout.simple_spinner_dropdown_item);
         areasOfPainAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         areaOfPainSpinner.setAdapter(areasOfPainAdapter);
-        typeOfMedsSpinner = (Spinner) rootView.findViewById(R.id.typeOfMedsSpinner);
         ArrayAdapter<CharSequence> typeOfMedsAdapter =
                 ArrayAdapter
                         .createFromResource(getActivity(),
@@ -194,22 +202,17 @@ public class InputTriggersFragment extends Fragment {
         typeOfMedsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeOfMedsSpinner.setAdapter(typeOfMedsAdapter);
         //have TextViews change with SeekBar
-        painTextView = (TextView) rootView.findViewById(R.id.painLevelTextView);
-        sleepTextView = (TextView) rootView.findViewById(R.id.sleepLevelTextView);
-        stressTextView = (TextView) rootView.findViewById(R.id.stressLevelTextView);
-        eyeStrainTextView = (TextView) rootView.findViewById(R.id.eyesLevelTextView);
         updateProgressTextView(painTextView, R.id.painSeekBar, rootView);
         updateProgressTextView(sleepTextView, R.id.sleepSeekBar, rootView);
         updateProgressTextView(stressTextView, R.id.stressSeekBar, rootView);
         updateProgressTextView(eyeStrainTextView, R.id.eyesSeekBar, rootView);
-        updateCalendarButton = (Button) rootView.findViewById(R.id.switchToMenstrualCalendarButton);
         updateCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onUpdateCalendarButtonClicked();
             }
         });
-        mSaveRecordButton = (Button) rootView.findViewById(R.id.saveRecordButton);
+
         mSaveRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,12 +226,9 @@ public class InputTriggersFragment extends Fragment {
      * fetch user preference to track menstrual data,
      * if true, query MenstrualRecords and return most recent cycle day
      * if false, disappear the menstrual data view
-     * @param rootView the fragment view
      */
-    private void initializeMenstrualData(View rootView) {
+    private void initializeMenstrualData(Long migraineDate) {
         boolean trackingMenstrualData = mPrefUtils.getsavedMenstrualPref();
-        menstrualDataLayout = rootView.findViewById(R.id.menstrualDataLayout);
-        cycleDayTextView = (TextView) rootView.findViewById(R.id.cycleDayTextView);
         if(!trackingMenstrualData){
             menstrualDataLayout.setVisibility(View.GONE);
         }else{
@@ -240,8 +240,7 @@ public class InputTriggersFragment extends Fragment {
                 cursor.moveToFirst();
                 int dateIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
                 int menstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
-                Calendar calendar = Calendar.getInstance();
-                int currentDay = (int) (calendar.getTimeInMillis() / MILLISECONDS_IN_DAY);
+                int currentDay = (int) (migraineDate / MILLISECONDS_IN_DAY);
                 difference = currentDay - menstrualDate;
                 while(cursor.moveToNext()) {
                     int previousMenstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
@@ -264,6 +263,9 @@ public class InputTriggersFragment extends Fragment {
         int year = mDatePicker.getYear();
         date = day + "/" + month + "/" + year;
         mDateTextView.setText(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day);
+        initializeMenstrualData(calendar.getTimeInMillis());
     }
 
     /**

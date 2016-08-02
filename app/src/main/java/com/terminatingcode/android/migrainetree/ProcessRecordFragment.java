@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessageEvent;
@@ -60,6 +61,8 @@ public class ProcessRecordFragment extends Fragment {
     private TextView painSourceTextView;
     private TextView medicationTextView;
     private TextView symptomsTextView;
+    private TextView cycleDayTextView;
+    private Switch migraineDoneSwitch;
     private MigraineRecordObject mMigraineRecordObject;
     private OnFragmentInteractionListener mListener;
 
@@ -115,6 +118,8 @@ public class ProcessRecordFragment extends Fragment {
         painSourceTextView = (TextView) rootView.findViewById(R.id.sourceOfPainEntered);
         medicationTextView = (TextView) rootView.findViewById(R.id.medicationEntered);
         symptomsTextView = (TextView) rootView.findViewById(R.id.symptomsEntered);
+        cycleDayTextView = (TextView) rootView.findViewById(R.id.cycleDayEntered);
+        migraineDoneSwitch = (Switch) rootView.findViewById(R.id.switch1);
         return rootView;
     }
 
@@ -225,30 +230,37 @@ public class ProcessRecordFragment extends Fragment {
             int congestionColumnId = cursor.getColumnIndex(MigraineRecord.CONGESTION);
             int earsColumnId = cursor.getColumnIndex(MigraineRecord.EARS);
             int confusionColumnId = cursor.getColumnIndex(MigraineRecord.CONFUSION);
+            int cycleDayColumnId = cursor.getColumnIndex(MigraineRecord.MENSTRUAL_DAY);
 
             String startHour = convertLongToString(cursor.getLong(dateColumnId));
             String city = cursor.getString(cityColumnId);
             String painAtOnset = String.valueOf(cursor.getInt(painAtOnsetColumnId));
-            Drawable checkmark = getActivity().getDrawable(android.R.drawable.checkbox_on_background);
             String sleep = String.valueOf(cursor.getInt(sleepColumnId));
             String stress = String.valueOf(cursor.getInt(stressColumnId));
             String eyeStrain = String.valueOf(cursor.getInt(eyeStrainColumnId));
             String painType = cursor.getString(painTypeColumnId);
             String painSource = cursor.getString(painSourceColumnId);
             String medication = cursor.getString(medicationsColumnId);
+            String cycleDay = String.valueOf(cursor.getInt(cycleDayColumnId));
 
             locationTextView.setText(city);
             if(startHour != null) dateTextView.setText(startHour);
             painTextView.setText(painAtOnset);
+            Drawable checkmark = getActivity().getDrawable(android.R.drawable.checkbox_on_background);
+            Drawable x = getActivity().getDrawable(android.R.drawable.checkbox_off_background);
             if(cursor.getInt(auraColumnId) > 0) auraImageView.setImageDrawable(checkmark);
+            else auraImageView.setImageDrawable(x);
             if(cursor.getInt(eatenColumnId) > 0) eatenImageView.setImageDrawable(checkmark);
+            else eatenImageView.setImageDrawable(x);
             if(cursor.getInt(waterColumnId) > 0) waterImageView.setImageDrawable(checkmark);
+            else waterImageView.setImageDrawable(x);
             sleepTextView.setText(sleep);
             stressTextView.setText(stress);
             eyesTextView.setText(eyeStrain);
             painTypeTextView.setText(painType);
             painSourceTextView.setText(painSource);
             medicationTextView.setText(medication);
+            cycleDayTextView.setText(cycleDay);
 
             StringBuilder sb = new StringBuilder();
             if(cursor.getInt(nauseaColumnId) > 0) sb.append("Nausea\n");

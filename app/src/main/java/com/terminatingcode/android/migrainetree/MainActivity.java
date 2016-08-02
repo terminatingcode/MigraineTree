@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor.HeartRateMonitor;
 
@@ -126,7 +128,9 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, HeartRateMonitor.class);
             startActivity(intent);
         } else if (id == R.id.nav_send) {
-
+            Log.d(NAME, "starting AWS activity");
+            Intent intent = new Intent(this, com.terminatingcode.android.migrainetree.amazonaws.UI.MainActivity.class);
+            startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -199,5 +203,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRecordConfirmed() {
 
+    }
+
+    public void createAWSClient(){
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),    /* get the context for the application */
+                "us-east-1:1e6250e2-8df1-40a7-9766-da9b93628ad0",    /* Identity Pool ID */
+                Regions.US_EAST_1          /* Region for your identity pool--US_EAST_1 or EU_WEST_1*/
+        );
     }
 }
