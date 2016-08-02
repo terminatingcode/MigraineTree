@@ -412,27 +412,21 @@
             <View
                 android:layout_height="2dip"
                 android:background="#FF909090" />
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="2dp">
-
-                <Switch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/migraine"
-                    android:id="@+id/switch1"
-                    android:textOn="DONE"
-                    android:textOff="NOT DONE"
-                    android:textColor="@color/textColor"
-                    android:showText="true"
-                    android:textSize="24sp"
-                    android:thumb="@android:drawable/editbox_background_normal"
-                    android:checked="true"
-                    android:switchPadding="20dp"/>
-            </TableRow>
 
         </TableLayout>
+        <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/migraine"
+        android:id="@+id/switch1"
+        android:textOn="DONE"
+        android:textOff="NOT DONE"
+        android:textColor="@color/textColor"
+        android:showText="true"
+        android:textSize="24sp"
+        android:thumb="@android:drawable/editbox_background_normal"
+        android:checked="true"
+        android:switchPadding="20dp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
