@@ -1,6 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -20,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessageEvent;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
@@ -30,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -79,6 +83,8 @@ public class ProcessRecordFragment extends Fragment {
     private ImageButton setTimeDateButton;
     private DatePicker endDatePicker;
     private TimePicker endTimePicker;
+    private Button confirmButton;
+    private boolean endDataInputted = false;
     private int numSetButtonPressed = 0;
     private static final int VIEW_DATE_PICKER = 1;
     private static final int VIEW_TIME_PICKER = 2;
@@ -149,6 +155,8 @@ public class ProcessRecordFragment extends Fragment {
         setTimeDateButton = (ImageButton) rootView.findViewById(R.id.end_set_button);
         endDatePicker = (DatePicker) rootView.findViewById(R.id.endDatePicker);
         endTimePicker = (TimePicker) rootView.findViewById(R.id.endTimePicker);
+        confirmButton = (Button) rootView.findViewById(R.id.confirmButton);
+        makeMigraineDoneVisible();
         migraineDoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -156,7 +164,45 @@ public class ProcessRecordFragment extends Fragment {
                 else makeMigraineDoneVisible();
             }
         });
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(endDataInputted) {
+                    //update sql then send data to cloud
+                    updateData();
+                }else{
+                    //make a prediction with current data and ensure user comes back to input end data
+                }
+            }
+        });
         return rootView;
+    }
+
+    private void updateData() {
+        if(uri != null){
+            ContentResolver mResolver = getActivity().getContentResolver();
+            ContentValues endValues = new ContentValues();
+            long endHour = Constants.DEFAULT_NO_DATA;
+            try {
+                endHour = convertStringToInt();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
+            }
+            int painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
+            endValues.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
+            endValues.put(MigraineRecord.END_HOUR, endHour);
+            int updated = mResolver.update(uri, endValues, null, null);
+            Log.d(NAME, "updated " + updated + " at " + uri.toString());
+        }
+    }
+
+    public long convertStringToInt() throws ParseException {
+        String dateTime = date + time;
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyyhh:mm", Locale.getDefault());
+        Date date = df.parse(dateTime);
+        return date.getTime();
     }
 
     private void makeMigraineDoneVisible() {
@@ -197,6 +243,7 @@ public class ProcessRecordFragment extends Fragment {
                 else {
                     setTime();
                     endTimePicker.setVisibility(View.GONE);
+                    endDataInputted = true;
                 }
 
             }
@@ -233,6 +280,7 @@ public class ProcessRecordFragment extends Fragment {
 
     private void disappearMigraineDoneView() {
         migraineDoneView.setVisibility(View.GONE);
+        endDataInputted = false;
     }
 
     /**

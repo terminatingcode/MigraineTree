@@ -188,6 +188,9 @@ public final class LocalContentProvider extends ContentProvider{
             case MIGRAINE_RECORDS:
                 count = db.update(MigraineRecord.TABLE_NAME, values, selection, selectionArgs);
                 return count;
+            case MIGRAINE_RECORDS_ID:
+                count = db.update(MigraineRecord.TABLE_NAME, values, selection, selectionArgs);
+                return count;
             default:
                 throw new IllegalArgumentException("invalid URI: " + uri);
         }

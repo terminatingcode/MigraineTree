@@ -219,11 +219,11 @@ public class LocalContentProviderTest extends ProviderTestCase2<LocalContentProv
             updatedValues.put(MigraineRecord.END_HOUR, updatedEndHour);
             updatedValues.put(MigraineRecord.PAIN_AT_PEAK, updatedPaintAtPeak);
 
-            int updated = mResolver.update(MigraineUri,updatedValues, null, null);
+            int updated = mResolver.update(insertedUri,updatedValues, null, null);
             int expected = 1;
             assertEquals(expected, updated);
 
-            cursor = mResolver.query(MigraineUri, null, null, null, null);
+            cursor = mResolver.query(insertedUri, null, null, null, null);
             assertNotNull(cursor);
             assertTrue(cursor.moveToNext());
 
