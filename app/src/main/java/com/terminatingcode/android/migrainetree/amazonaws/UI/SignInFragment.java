@@ -135,7 +135,7 @@ public class SignInFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_sign_in, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sign_in, container, false);
         signInButton = (ImageButton) rootView.findViewById(R.id.g_login_button);
         signInManager = SignInManager.getInstance(getActivity());
 

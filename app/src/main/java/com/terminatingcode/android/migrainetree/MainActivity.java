@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         ProcessRecordFragment.OnFragmentInteractionListener,
         UserSettingsFragment.OnFragmentInteractionListener,
         SignInFragment.OnFragmentInteractionListener,
+        AboutFragment.OnFragmentInteractionListener,
         View.OnClickListener{
 
     private static final String NAME = "MainActivity";
@@ -246,7 +247,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, new AboutFragment()).commit();
             return true;
         }
 
@@ -429,6 +431,11 @@ public class MainActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
     }
 
+    /**
+     * switches from SignInFragment once user signed in succesfully
+     * replaces with UserSettingsFragment if no location set
+     * or NewRecordFragment if all conditions met
+     */
     @Override
     public void switchToHome() {
         fragmentManager = getSupportFragmentManager();
