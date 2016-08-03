@@ -271,5 +271,6 @@
     <string name="notDone">NOT DONE</string>
     <string name="pain_at_peak_of_migraine">Pain at peak of migraine:</string>
     <string name="noMenstrualData">No menstrual data!\\nInput last cycle in the calendar or disable in settings.</string>
-    <string name="main_nav_menu_default_user_text">\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020</string>
+    <string name="main_nav_menu_default_user_text">guest</string>
+    <string name="user_files_demo_dialog_signin_message">Private user file storage is only available to users who are signed-in.\\n\\nWould you like to sign in?</string>
 </resources>

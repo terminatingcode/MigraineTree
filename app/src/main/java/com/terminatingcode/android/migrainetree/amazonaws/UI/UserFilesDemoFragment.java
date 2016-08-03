@@ -1,6 +1,8 @@
 package com.terminatingcode.android.migrainetree.amazonaws.UI;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import com.amazonaws.regions.Regions;
 import com.terminatingcode.android.migrainetree.R;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSConfiguration;
+import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
 
 
 public class UserFilesDemoFragment extends DemoFragmentBase {
@@ -37,7 +40,20 @@ public class UserFilesDemoFragment extends DemoFragmentBase {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
-                        promptSignin();
+                        final boolean isUserSignedIn = AWSMobileClient.defaultMobileClient()
+                                .getIdentityManager()
+                                .isUserSignedIn();
+                        if (isUserSignedIn) {
+                            final String identityId = AWSMobileClient.defaultMobileClient()
+                                    .getIdentityManager()
+                                    .getCredentialsProvider()
+                                    .getCachedIdentityId();
+                            browse(AWSConfiguration.AMAZON_S3_USER_FILES_BUCKET,
+                                    S3_PREFIX_PRIVATE + identityId + "/", AWSConfiguration.AMAZON_S3_USER_FILES_BUCKET_REGION);
+                            return;
+                        } else {
+                            promptSignin();
+                        }
                     }
                 });
     }
@@ -46,7 +62,13 @@ public class UserFilesDemoFragment extends DemoFragmentBase {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle(
                 R.string.main_fragment_title_user_files)
                 .setNegativeButton(android.R.string.cancel, null);
-        builder.setMessage(R.string.user_files_demo_dialog_no_signin_message);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                startActivity(new Intent(getActivity(), SignInFragment.class));
+            }
+        });
+        builder.setMessage(R.string.user_files_demo_dialog_signin_message);
         builder.show();
     }
 
@@ -58,9 +80,9 @@ public class UserFilesDemoFragment extends DemoFragmentBase {
         args.putString(UserFilesBrowserFragment.BUNDLE_ARGS_S3_REGION, region.getName());
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.main_fragment_container, fragment)
-            .addToBackStack(null)
-            .commit();
+                .beginTransaction()
+                .replace(R.id.main_fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
