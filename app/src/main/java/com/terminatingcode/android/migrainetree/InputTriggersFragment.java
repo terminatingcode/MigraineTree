@@ -376,7 +376,9 @@ public class InputTriggersFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.error_city_not_set, Toast.LENGTH_LONG).show();
         }else if(date == null || time == null){
             Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
-        }else {
+        }else if(cycleDayTextView.getText().equals(getActivity().getString(R.string.zero))) {
+            Toast.makeText(getActivity(), R.string.noMenstrualData, Toast.LENGTH_LONG).show();
+        }else{
             onSaveRecordPressed(date + time, locationUID);
         }
     }

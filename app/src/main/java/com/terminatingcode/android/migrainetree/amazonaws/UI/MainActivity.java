@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,11 +27,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
+import com.amazonaws.mobileconnectors.cognito.Record;
 import com.terminatingcode.android.migrainetree.R;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /** Class name for log messages. */
@@ -51,7 +58,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /** The helper class used to toggle the left navigation drawer open and closed. */
     private ActionBarDrawerToggle drawerToggle;
 
+    private Button signOutButton;
+    private Button   signInButton;
 
+    /**
+     * Initializes the Toolbar for use with the activity.
+     */
+    private void setupToolbar(final Bundle savedInstanceState) {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Set up the activity to use this toolbar. As a side effect this sets the Toolbar's title
+        // to the activity's title.
+        setSupportActionBar(toolbar);
+
+        if (savedInstanceState != null) {
+            // Some IDEs such as Android Studio complain about possible NPE without this check.
+            assert getSupportActionBar() != null;
+
+            // Restore the Toolbar's title.
+            getSupportActionBar().setTitle(
+                    savedInstanceState.getCharSequence(BUNDLE_KEY_TOOLBAR_TITLE));
+        }
+    }
+
+    /**
+     * Initializes the sign-in and sign-out buttons.
+     */
+    private void setupSignInButtons() {
+
+        signOutButton = (Button) findViewById(R.id.button_signout);
+        signOutButton.setOnClickListener(this);
+
+        signInButton = (Button) findViewById(R.id.button_signin);
+        signInButton.setOnClickListener(this);
+
+        final boolean isUserSignedIn = identityManager.isUserSignedIn();
+        signOutButton.setVisibility(isUserSignedIn ? View.VISIBLE : View.INVISIBLE);
+        signInButton.setVisibility(!isUserSignedIn ? View.VISIBLE : View.INVISIBLE);
+
+    }
 
     /**
      * Initializes the navigation drawer menu to allow toggling via the toolbar or swipe from the
@@ -63,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Create the navigation drawer.
         navigationDrawer = new NavigationDrawer(this, toolbar, drawerLayout, drawerItems,
-            R.id.main_fragment_container);
+                R.id.main_fragment_container);
 
         // Add navigation drawer menu items.
         // Home isn't a demo, but is fake as a demo.
@@ -75,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (DemoConfiguration.DemoFeature demoFeature : DemoConfiguration.getDemoFeatureList()) {
             navigationDrawer.addDemoFeatureToMenu(demoFeature);
         }
+        setupSignInButtons();
 
         if (savedInstanceState == null) {
             // Add the home fragment to be displayed initially.
@@ -98,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.aws_activity_main);
 
+        setupToolbar(savedInstanceState);
+
         setupNavigationMenu(savedInstanceState);
     }
 
@@ -113,11 +160,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // register notification receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
-            new IntentFilter(PushListenerService.ACTION_SNS_NOTIFICATION));
+                new IntentFilter(PushListenerService.ACTION_SNS_NOTIFICATION));
         // register settings changed receiver.
         LocalBroadcastManager.getInstance(this).registerReceiver(settingsChangedReceiver,
-            new IntentFilter(UserSettings.ACTION_SETTINGS_CHANGED));
-//        updateColor();
+                new IntentFilter(UserSettings.ACTION_SETTINGS_CHANGED));
+        updateColor();
+        syncUserSettings();
     }
 
     @Override
@@ -139,6 +187,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(final View view) {
+        if (view == signOutButton) {
+            // The user is currently signed in with a provider. Sign out of that provider.
+            identityManager.signOut();
+            // Show the sign-in button and hide the sign-out button.
+            signOutButton.setVisibility(View.INVISIBLE);
+            signInButton.setVisibility(View.VISIBLE);
+
+            // Close the navigation drawer.
+            navigationDrawer.closeDrawer();
+            return;
+        }
+        if (view == signInButton) {
+            // Start the sign-in activity. Do not finish this activity to allow the user to navigate back.
+            startActivity(new Intent(this, SignInActivity.class));
+            // Close the navigation drawer.
+            navigationDrawer.closeDrawer();
+            return;
+        }
+
+        // ... add any other button handling code here ...
+
     }
 
     private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
@@ -156,12 +225,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .show();
         }
     };
-    
+
     private final BroadcastReceiver settingsChangedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(LOG_TAG, "Received settings changed local broadcast. Update theme colors.");
-//            updateColor();
+            updateColor();
         }
     };
 
@@ -183,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         final FragmentManager fragmentManager = this.getSupportFragmentManager();
-        
+
         if (navigationDrawer.isDrawerOpen()) {
             navigationDrawer.closeDrawer();
             return;
@@ -196,10 +265,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 final Fragment fragment = Fragment.instantiate(this, fragmentClass.getName());
 
                 fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_fragment_container, fragment, fragmentClass.getSimpleName())
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit();
+                        .beginTransaction()
+                        .replace(R.id.main_fragment_container, fragment, fragmentClass.getSimpleName())
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit();
 
                 // Set the title for the fragment.
                 final ActionBar actionBar = this.getSupportActionBar();
@@ -212,27 +281,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onBackPressed();
     }
 
-//    public void updateColor() {
-//        final UserSettings userSettings = UserSettings.getInstance(getApplicationContext());
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(final Void... params) {
-//                userSettings.loadFromDataset();
-//                return null;
-//            }
-//
-//            @Override
-//    protected void onPostExecute(final Void aVoid) {
-////                toolbar.setTitleTextColor(userSettings.getTitleTextColor());
-////                toolbar.setBackgroundColor(userSettings.getTitleBarColor());
-//        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
-//        if (fragment != null) {
-//            final View fragmentView = fragment.getView();
-//            if (fragmentView != null) {
-//                fragmentView.setBackgroundColor(userSettings.getBackgroudColor());
-//            }
-//        }
-//    }
-//}.execute();
-//        }
+    private void syncUserSettings() {
+        // sync only if user is signed in
+        if (AWSMobileClient.defaultMobileClient().getIdentityManager().isUserSignedIn()) {
+            final UserSettings userSettings = UserSettings.getInstance(getApplicationContext());
+            userSettings.getDataset().synchronize(new DefaultSyncCallback() {
+                @Override
+                public void onSuccess(final Dataset dataset, final List<Record> updatedRecords) {
+                    super.onSuccess(dataset, updatedRecords);
+                    Log.d(LOG_TAG, "successfully synced user settings");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateColor();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    public void updateColor() {
+        final UserSettings userSettings = UserSettings.getInstance(getApplicationContext());
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(final Void... params) {
+                userSettings.loadFromDataset();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(final Void aVoid) {
+                toolbar.setTitleTextColor(userSettings.getTitleTextColor());
+                toolbar.setBackgroundColor(userSettings.getTitleBarColor());
+                final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
+                if (fragment != null) {
+                    final View fragmentView = fragment.getView();
+                    if (fragmentView != null) {
+                        fragmentView.setBackgroundColor(userSettings.getBackgroudColor());
+                    }
+                }
+            }
+        }.execute();
+    }
 }

@@ -9,6 +9,8 @@
     <permission android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE"
                 android:protectionLevel="signature" />
     <uses-permission android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.flash"/>
@@ -38,6 +40,12 @@
         <activity android:name=".amazonaws.UI.MainActivity"
                   android:configChanges="keyboardHidden|orientation"
                   android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".amazonaws.UI.SignInActivity"
+            android:label="@string/title_activity_sign_in"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            >
         </activity>
 
         <provider

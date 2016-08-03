@@ -1,5 +1,8 @@
 package com.terminatingcode.android.migrainetree.amazonaws.UI;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +21,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.terminatingcode.android.migrainetree.R;
+import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
+import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
+import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityProvider;
+
 import static com.terminatingcode.android.migrainetree.R.string.app_name;
 
 
@@ -99,7 +106,21 @@ public class NavigationDrawer {
 
         // Create the navigation drawer toggle helper.
         drawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar,
-            app_name, app_name) {
+                app_name, app_name) {
+
+            @Override
+            public void syncState() {
+                super.syncState();
+                updateUserName(activity);
+                updateUserImage(activity);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                updateUserName(activity);
+                updateUserImage(activity);
+            }
         };
 
         // Set the listener to allow a swipe from the screen edge to bring up the navigation drawer.
@@ -112,6 +133,59 @@ public class NavigationDrawer {
 
         // Switch to display the hamburger icon for the home button.
         drawerToggle.syncState();
+    }
+
+    private void updateUserName(final AppCompatActivity activity) {
+        final IdentityManager identityManager =
+                AWSMobileClient.defaultMobileClient().getIdentityManager();
+        final IdentityProvider identityProvider =
+                identityManager.getCurrentIdentityProvider();
+
+        final TextView userNameView = (TextView) activity.findViewById(R.id.userName);
+
+        if (identityProvider == null) {
+            // Not signed in
+            userNameView.setText(activity.getString(R.string.main_nav_menu_default_user_text));
+            userNameView.setBackgroundColor(activity.getResources().getColor(R.color.nav_drawer_no_user_background));
+            return;
+        }
+
+        final String userName =
+                identityProvider.getUserName();
+
+        if (userName != null) {
+            userNameView.setText(userName);
+            userNameView.setBackgroundColor(
+                    activity.getResources().getColor(R.color.nav_drawer_top_background));
+        }
+    }
+
+    private void updateUserImage(final AppCompatActivity activity) {
+
+        final IdentityManager identityManager =
+                AWSMobileClient.defaultMobileClient().getIdentityManager();
+        final IdentityProvider identityProvider =
+                identityManager.getCurrentIdentityProvider();
+
+        final ImageView imageView =
+                (ImageView)activity.findViewById(R.id.userImage);
+
+        if (identityProvider == null) {
+            // Not signed in
+            if (Build.VERSION.SDK_INT < 22) {
+                imageView.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.mipmap.user));
+            }
+            else {
+                imageView.setImageDrawable(activity.getDrawable(R.mipmap.user));
+            }
+
+            return;
+        }
+
+        final Bitmap userImage = identityManager.getUserImage();
+        if (userImage != null) {
+            imageView.setImageBitmap(userImage);
+        }
     }
 
     public void showHome() {

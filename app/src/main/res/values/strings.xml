@@ -270,4 +270,6 @@
     <string name="done">DONE</string>
     <string name="notDone">NOT DONE</string>
     <string name="pain_at_peak_of_migraine">Pain at peak of migraine:</string>
+    <string name="noMenstrualData">No menstrual data!\\nInput last cycle in the calendar or disable in settings.</string>
+    <string name="main_nav_menu_default_user_text">\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020\\u0020</string>
 </resources>
