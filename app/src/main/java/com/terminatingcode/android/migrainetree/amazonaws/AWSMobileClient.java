@@ -12,20 +12,22 @@ import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.ClientConfiguration;
-import com.terminatingcode.android.migrainetree.amazonaws.content.UserFileManager;
-import com.terminatingcode.android.migrainetree.amazonaws.push.GCMTokenHelper;
-import com.terminatingcode.android.migrainetree.amazonaws.push.PushManager;
-import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.AnalyticsConfig;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.EventClient;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.InitializationException;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.SessionClient;
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.lambdainvoker.LambdaInvokerFactory;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.lambda.AWSLambdaClient;
+import com.terminatingcode.android.migrainetree.amazonaws.content.UserFileManager;
+import com.terminatingcode.android.migrainetree.amazonaws.push.GCMTokenHelper;
+import com.terminatingcode.android.migrainetree.amazonaws.push.PushManager;
+import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 
 /**
  * The AWS Mobile Client bootstraps the application to make calls to AWS 
@@ -46,6 +48,8 @@ public class AWSMobileClient {
     private PushManager pushManager;
     private MobileAnalyticsManager mobileAnalyticsManager;
     private CognitoSyncManager syncManager;
+    private AmazonDynamoDBClient dynamoDBClient;
+    private DynamoDBMapper dynamoDBMapper;
 
     /**
      * Build class used to create the AWS mobile client.
@@ -59,39 +63,39 @@ public class AWSMobileClient {
         private ClientConfiguration clientConfiguration;
         private IdentityManager identityManager;
 
-	/**
-	 * Constructor.
-	 * @param context Android context.
-	 */
+        /**
+         * Constructor.
+         * @param context Android context.
+         */
         public Builder(final Context context) {
             this.applicationContext = context.getApplicationContext();
         };
 
-	/**
-	 * Provides the Amazon Cognito Identity Pool ID.
-	 * @param cognitoIdentityPoolID identity pool ID
-	 * @return builder
-	 */
+        /**
+         * Provides the Amazon Cognito Identity Pool ID.
+         * @param cognitoIdentityPoolID identity pool ID
+         * @return builder
+         */
         public Builder withCognitoIdentityPoolID(final String cognitoIdentityPoolID) {
             this.cognitoIdentityPoolID = cognitoIdentityPoolID;
             return this;
         };
 
-	/**
-	 * Provides the Amazon Cognito service region.
-	 * @param cognitoRegion service region
-	 * @return builder
-	 */
+        /**
+         * Provides the Amazon Cognito service region.
+         * @param cognitoRegion service region
+         * @return builder
+         */
         public Builder withCognitoRegion(final Regions cognitoRegion) {
             this.cognitoRegion = cognitoRegion;
             return this;
         }
 
         /**
-	 * Provides the Amazon Mobile Analytics App ID.
-	 * @param mobileAnalyticsAppID application ID
-	 * @return builder
-	 */
+         * Provides the Amazon Mobile Analytics App ID.
+         * @param mobileAnalyticsAppID application ID
+         * @return builder
+         */
         public Builder withMobileAnalyticsAppID(final String mobileAnalyticsAppID) {
             this.mobileAnalyticsAppID = mobileAnalyticsAppID;
             return this;
@@ -99,9 +103,9 @@ public class AWSMobileClient {
 
         /**
          * Provides the identity manager.
-	 * @param identityManager identity manager
-	 * @return builder
-	 */
+         * @param identityManager identity manager
+         * @return builder
+         */
         public Builder withIdentityManager(final IdentityManager identityManager) {
             this.identityManager = identityManager;
             return this;
@@ -117,18 +121,18 @@ public class AWSMobileClient {
             return this;
         }
 
-	/**
-	 * Creates the AWS mobile client instance and initializes it.
-	 * @return AWS mobile client
-	 */
+        /**
+         * Creates the AWS mobile client instance and initializes it.
+         * @return AWS mobile client
+         */
         public AWSMobileClient build() {
             return
-                new AWSMobileClient(applicationContext,
-                                    cognitoIdentityPoolID,
-                                    cognitoRegion,
-                                    mobileAnalyticsAppID,
-                                    identityManager,
-                                    clientConfiguration);
+                    new AWSMobileClient(applicationContext,
+                            cognitoIdentityPoolID,
+                            cognitoRegion,
+                            mobileAnalyticsAppID,
+                            identityManager,
+                            clientConfiguration);
         }
     }
 
@@ -145,12 +149,12 @@ public class AWSMobileClient {
 
         try {
             this.mobileAnalyticsManager =
-                MobileAnalyticsManager.
-                    getOrCreateInstance(context,
-                                        AWSConfiguration.AMAZON_MOBILE_ANALYTICS_APP_ID,
-                                        AWSConfiguration.AMAZON_MOBILE_ANALYTICS_REGION,
-                                        identityManager.getCredentialsProvider(),
-                                        new AnalyticsConfig(clientConfiguration));
+                    MobileAnalyticsManager.
+                            getOrCreateInstance(context,
+                                    AWSConfiguration.AMAZON_MOBILE_ANALYTICS_APP_ID,
+                                    AWSConfiguration.AMAZON_MOBILE_ANALYTICS_REGION,
+                                    identityManager.getCredentialsProvider(),
+                                    new AnalyticsConfig(clientConfiguration));
         }
         catch (final InitializationException ie) {
             Log.e(LOG_TAG, "Unable to initalize Amazon Mobile Analytics. " + ie.getMessage(), ie);
@@ -158,18 +162,21 @@ public class AWSMobileClient {
 
         this.gcmTokenHelper = new GCMTokenHelper(context, AWSConfiguration.GOOGLE_CLOUD_MESSAGING_SENDER_ID);
         this.pushManager =
-            new PushManager(context,
-                            gcmTokenHelper,
-                            identityManager.getCredentialsProvider(),
-                            AWSConfiguration.AMAZON_SNS_PLATFORM_APPLICATION_ARN,
-                            clientConfiguration,
-                            AWSConfiguration.AMAZON_SNS_DEFAULT_TOPIC_ARN,
-                            AWSConfiguration.AMAZON_SNS_TOPIC_ARNS,
-                            AWSConfiguration.AMAZON_SNS_REGION);
+                new PushManager(context,
+                        gcmTokenHelper,
+                        identityManager.getCredentialsProvider(),
+                        AWSConfiguration.AMAZON_SNS_PLATFORM_APPLICATION_ARN,
+                        clientConfiguration,
+                        AWSConfiguration.AMAZON_SNS_DEFAULT_TOPIC_ARN,
+                        AWSConfiguration.AMAZON_SNS_TOPIC_ARNS,
+                        AWSConfiguration.AMAZON_SNS_REGION);
         gcmTokenHelper.init();
 
         this.syncManager = new CognitoSyncManager(context, AWSConfiguration.AMAZON_COGNITO_REGION,
-            identityManager.getCredentialsProvider(), clientConfiguration);
+                identityManager.getCredentialsProvider(), clientConfiguration);
+        this.dynamoDBClient = new AmazonDynamoDBClient(identityManager.getCredentialsProvider(), clientConfiguration);
+        this.dynamoDBClient.setRegion(Region.getRegion(AWSConfiguration.AMAZON_DYNAMODB_REGION));
+        this.dynamoDBMapper = new DynamoDBMapper(dynamoDBClient);
     }
 
     /**
@@ -226,19 +233,36 @@ public class AWSMobileClient {
             clientConfiguration.setUserAgent(AWSConfiguration.AWS_MOBILEHUB_USER_AGENT);
             final IdentityManager identityManager = new IdentityManager(context, clientConfiguration);
             final AWSMobileClient awsClient =
-                new AWSMobileClient.Builder(context)
-                    .withCognitoRegion(AWSConfiguration.AMAZON_COGNITO_REGION)
-                    .withCognitoIdentityPoolID(AWSConfiguration.AMAZON_COGNITO_IDENTITY_POOL_ID)
-                    .withMobileAnalyticsAppID(AWSConfiguration.AMAZON_MOBILE_ANALYTICS_APP_ID)
-                    .withIdentityManager(identityManager)
-                    .withClientConfiguration(clientConfiguration)
-                    .build();
+                    new AWSMobileClient.Builder(context)
+                            .withCognitoRegion(AWSConfiguration.AMAZON_COGNITO_REGION)
+                            .withCognitoIdentityPoolID(AWSConfiguration.AMAZON_COGNITO_IDENTITY_POOL_ID)
+                            .withMobileAnalyticsAppID(AWSConfiguration.AMAZON_MOBILE_ANALYTICS_APP_ID)
+                            .withIdentityManager(identityManager)
+                            .withClientConfiguration(clientConfiguration)
+                            .build();
 
             AWSMobileClient.setDefaultMobileClient(awsClient);
         }
         Log.d(LOG_TAG, "AWS Mobile Client is OK");
     }
 
+
+    /**
+     * Gets the DynamoDB Client, which allows accessing Amazon DynamoDB tables.
+     * @return the DynamoDB client instance.
+     */
+    public AmazonDynamoDBClient getDynamoDBClient() {
+        return dynamoDBClient;
+    }
+
+    /**
+     * Gets the Dynamo DB Object Mapper, which allows accessing DynamoDB tables using annotated
+     * data object classes to represent your data using POJOs (Plain Old Java Objects).
+     * @return the DynamoDB Object Mapper instance.
+     */
+    public DynamoDBMapper getDynamoDBMapper() {
+        return dynamoDBMapper;
+    }
 
     /**
      * Gets the Amazon Mobile Analytics Manager, which allows you to submit
@@ -261,8 +285,8 @@ public class AWSMobileClient {
 
         try {
             if (mobileAnalyticsManager != null &&
-                (sessionClient = mobileAnalyticsManager.getSessionClient()) != null &&
-                (eventClient = mobileAnalyticsManager.getEventClient()) != null) {
+                    (sessionClient = mobileAnalyticsManager.getSessionClient()) != null &&
+                    (eventClient = mobileAnalyticsManager.getEventClient()) != null) {
                 sessionClient.pauseSession();
                 eventClient.submitEvents();
             }
@@ -281,7 +305,7 @@ public class AWSMobileClient {
 
         try {
             if (mobileAnalyticsManager != null &&
-                (sessionClient = mobileAnalyticsManager.getSessionClient()) != null) {
+                    (sessionClient = mobileAnalyticsManager.getSessionClient()) != null) {
                 sessionClient.resumeSession();
             }
         }
@@ -301,10 +325,10 @@ public class AWSMobileClient {
      */
     public LambdaInvokerFactory getCloudFunctionFactory(final Context context) {
         return
-            new LambdaInvokerFactory(context,
-                                     AWSConfiguration.AMAZON_CLOUD_LOGIC_REGION,
-                                     getIdentityManager().getCredentialsProvider(),
-                                     clientConfiguration);
+                new LambdaInvokerFactory(context,
+                        AWSConfiguration.AMAZON_CLOUD_LOGIC_REGION,
+                        getIdentityManager().getCredentialsProvider(),
+                        clientConfiguration);
     }
 
     /**
@@ -333,12 +357,12 @@ public class AWSMobileClient {
                                       final UserFileManager.BuilderResultHandler resultHandler) {
 
         new UserFileManager.Builder().withContext(context)
-            .withIdentityManager(getIdentityManager())
-            .withS3Bucket(s3Bucket)
-            .withS3ObjectDirPrefix(s3FolderPrefix)
-            .withLocalBasePath(context.getFilesDir().getAbsolutePath())
-            .withClientConfiguration(clientConfiguration)
-            .withRegion(region)
-            .build(resultHandler);
+                .withIdentityManager(getIdentityManager())
+                .withS3Bucket(s3Bucket)
+                .withS3ObjectDirPrefix(s3FolderPrefix)
+                .withLocalBasePath(context.getFilesDir().getAbsolutePath())
+                .withClientConfiguration(clientConfiguration)
+                .withRegion(region)
+                .build(resultHandler);
     }
 }

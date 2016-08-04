@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (view == signInButton) {
             // Start the sign-in activity. Do not finish this activity to allow the user to navigate back.
-            startActivity(new Intent(this, SignInFragment.class));
+            //startActivity(new Intent(this, SignInFragment.class));
             // Close the navigation drawer.
             navigationDrawer.closeDrawer();
             return;

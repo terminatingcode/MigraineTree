@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="saveRecordButton" type="id">saveRecordButton</item>
-
+    <item name="nosql_context_menu_entry_update" type="id"/>
+    <item name="nosql_context_menu_entry_delete" type="id"/>
     <item name="content_context_menu_refresh" type="id"/>
     <item name="content_context_menu_download_recent" type="id"/>
     <item name="content_context_menu_clear_cache" type="id"/>

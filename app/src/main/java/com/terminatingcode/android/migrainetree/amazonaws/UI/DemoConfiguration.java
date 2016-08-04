@@ -3,6 +3,7 @@ package com.terminatingcode.android.migrainetree.amazonaws.UI;
 import android.support.v4.app.Fragment;
 
 import com.terminatingcode.android.migrainetree.R;
+import com.terminatingcode.android.migrainetree.amazonaws.nosql.NoSQLSelectTableDemoFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +54,11 @@ public class DemoConfiguration {
                 R.string.feature_cloud_logic_description, R.string.feature_cloud_logic_powered_by,
                 new DemoItem(R.string.main_fragment_title_cloud_logic, R.mipmap.cloud_logic,
                         R.string.feature_cloud_logic_demo_button, CloudLogicDemoFragment.class));
+        addDemoFeature("nosql_database", R.mipmap.database, R.string.feature_nosql_database_title,
+                R.string.feature_nosql_database_subtitle, R.string.feature_nosql_database_overview,
+                R.string.feature_nosql_database_description, R.string.feature_nosql_database_powered_by,
+                new DemoItem(R.string.main_fragment_title_nosql_database, R.mipmap.database,
+                        R.string.feature_nosql_database_demo_button, NoSQLSelectTableDemoFragment.class));
     }
 
     public static List<DemoFeature> getDemoFeatureList() {

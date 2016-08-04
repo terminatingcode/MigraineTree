@@ -41,12 +41,6 @@
                   android:configChanges="keyboardHidden|orientation"
                   android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name=".amazonaws.UI.SignInFragment"
-            android:label="@string/title_activity_sign_in"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            >
-        </activity>
 
         <provider
             android:authorities="com.terminatingcode.android.migrainetree.provider"

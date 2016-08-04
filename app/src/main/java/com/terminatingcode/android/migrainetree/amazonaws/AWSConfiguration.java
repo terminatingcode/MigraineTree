@@ -58,4 +58,6 @@ public class AWSConfiguration {
             Regions.fromName("us-east-1");
     public static final Regions AMAZON_CLOUD_LOGIC_REGION =
             Regions.fromName("us-east-1");
+    public static final Regions AMAZON_DYNAMODB_REGION =
+            Regions.fromName("us-east-1");
 }

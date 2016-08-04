@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -72,6 +73,7 @@ public class NavigationDrawer {
                 return view;
             }
         };
+
         drawerItems.setAdapter(adapter);
         drawerItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -126,9 +128,9 @@ public class NavigationDrawer {
         drawerLayout.setDrawerListener(drawerToggle);
 
         // Display the home button on the toolbar that will open the navigation drawer.
-//        final ActionBar supportActionBar = containingActivity.getSupportActionBar();
-//        supportActionBar.setDisplayHomeAsUpEnabled(true);
-//        supportActionBar.setHomeButtonEnabled(true);
+        final ActionBar supportActionBar = containingActivity.getSupportActionBar();
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+        supportActionBar.setHomeButtonEnabled(true);
 
         // Switch to display the hamburger icon for the home button.
         drawerToggle.syncState();
@@ -197,8 +199,8 @@ public class NavigationDrawer {
                 .commit();
 
         // Set the title for the fragment.
-//        final ActionBar actionBar = containingActivity.getSupportActionBar();
-//        actionBar.setTitle(R.string.app_name);
+        final ActionBar actionBar = containingActivity.getSupportActionBar();
+        actionBar.setTitle(R.string.app_name);
         closeDrawer();
     }
 
