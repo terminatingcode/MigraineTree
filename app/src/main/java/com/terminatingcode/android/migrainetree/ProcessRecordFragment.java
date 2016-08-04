@@ -171,12 +171,17 @@ public class ProcessRecordFragment extends Fragment {
                 if(endDataInputted) {
                     //update sql then send data to cloud
                     updateData();
+                    createMigraineRecordObject();
                 }else{
                     //make a prediction with current data and ensure user comes back to input end data
                 }
             }
         });
         return rootView;
+    }
+
+    private void createMigraineRecordObject() {
+
     }
 
     private void updateData() {

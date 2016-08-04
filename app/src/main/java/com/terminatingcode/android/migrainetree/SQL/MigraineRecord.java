@@ -30,4 +30,16 @@ public class MigraineRecord implements BaseColumns {
     public static final String EARS = "ears";
     public static final String CONFUSION = "confusion";
     public static final String MENSTRUAL_DAY = "menstrualDay";
+    public static final String CURRENT_TEMP = "currentTemp";
+    public static final String CURRENT_HUM = "currentHum";
+    public static final String CURRENT_AP = "currentAP";
+    public static final String TEMP3HOURS = "Temp3Hours";
+    public static final String HUM3HOURS = "Hum3Hours";
+    public static final String AP3HOURS = "AP3Hours";
+    public static final String TEMP12HOURS = "Temp12Hours";
+    public static final String HUM12HOURS = "Hum12Hours";
+    public static final String AP12HOURS = "AP12Hours";
+    public static final String TEMP24HOURS = "Temp24Hours";
+    public static final String HUM24HOURS = "Hum24Hours";
+    public static final String AP24HOURS = "AP24Hours";
 }

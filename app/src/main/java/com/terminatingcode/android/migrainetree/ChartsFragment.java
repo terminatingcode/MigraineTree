@@ -23,7 +23,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
@@ -149,7 +148,12 @@ public class ChartsFragment extends Fragment {
             triggersBarChart.notifyDataSetChanged();
         } else {
             set1 = new BarDataSet(yVals1, "Triggers");
-            set1.setColors(ColorTemplate.MATERIAL_COLORS);
+            set1.setColors(new int[] {
+                    R.color.aura_only,
+                    R.color.mild,
+                    R.color.moderate,
+                    R.color.severe,
+                    R.color.debilitating}, getActivity());
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);

@@ -78,7 +78,19 @@ public final class LocalContentProvider extends ContentProvider{
             + MigraineRecord.CONGESTION + " BOOLEAN NOT NULL, "
             + MigraineRecord.EARS + " BOOLEAN NOT NULL, "
             + MigraineRecord.CONFUSION + " BOOLEAN NOT NULL, "
-            + MigraineRecord.MENSTRUAL_DAY + " INTEGER);";
+            + MigraineRecord.MENSTRUAL_DAY + " INTEGER, "
+            + MigraineRecord.CURRENT_TEMP + " REAL, "
+            + MigraineRecord.CURRENT_HUM + " REAL, "
+            + MigraineRecord.CURRENT_AP + " REAL, "
+            + MigraineRecord.TEMP3HOURS + " REAL, "
+            + MigraineRecord.HUM3HOURS + " REAL, "
+            + MigraineRecord.AP3HOURS + " REAL, "
+            + MigraineRecord.TEMP12HOURS + " REAL, "
+            + MigraineRecord.HUM12HOURS + " REAL, "
+            + MigraineRecord.AP12HOURS + " REAL, "
+            + MigraineRecord.TEMP24HOURS + " REAL, "
+            + MigraineRecord.HUM24HOURS + " REAL, "
+            + MigraineRecord.AP24HOURS + " REAL);";
     public static final String DELETE_MIGRAINE_TABLE = "DROP TABLE IF EXISTS " + MigraineRecord.TABLE_NAME;
 
     static final UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

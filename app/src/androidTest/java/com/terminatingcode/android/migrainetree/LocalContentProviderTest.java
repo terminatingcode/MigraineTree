@@ -86,7 +86,11 @@ public class LocalContentProviderTest extends ProviderTestCase2<LocalContentProv
                 MigraineRecord.EYE_STRAIN, MigraineRecord.PAIN_TYPE, MigraineRecord.PAIN_SOURCE,
                 MigraineRecord.MEDICATION, MigraineRecord.NAUSEA, MigraineRecord.SENSITIVITY_TO_LIGHT,
                 MigraineRecord.SENSITIVITY_TO_NOISE, MigraineRecord.SENSITIVITY_TO_SMELL,
-                MigraineRecord.CONGESTION, MigraineRecord.EARS, MigraineRecord.CONFUSION, MigraineRecord.MENSTRUAL_DAY};
+                MigraineRecord.CONGESTION, MigraineRecord.EARS, MigraineRecord.CONFUSION,
+                MigraineRecord.MENSTRUAL_DAY, MigraineRecord.CURRENT_TEMP, MigraineRecord.CURRENT_HUM,
+                MigraineRecord.CURRENT_AP, MigraineRecord.TEMP3HOURS, MigraineRecord.HUM3HOURS,
+                MigraineRecord.AP3HOURS, MigraineRecord.TEMP12HOURS, MigraineRecord.HUM12HOURS, MigraineRecord.AP12HOURS,
+                MigraineRecord.TEMP24HOURS, MigraineRecord.HUM24HOURS, MigraineRecord.AP24HOURS};
         Cursor cursor = null;
         try{
             int numOfColumns = ALL_MIGRAINE_COLUMNS.length;
