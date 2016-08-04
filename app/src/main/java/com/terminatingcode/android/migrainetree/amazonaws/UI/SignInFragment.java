@@ -94,15 +94,19 @@ public class SignInFragment extends Fragment {
          */
         @Override
         public void onError(final IdentityProvider provider, final Exception ex) {
-            Log.e(LOG_TAG, String.format("User Sign-in failed for %s : %s",
-                provider.getDisplayName(), ex.getMessage()), ex);
+            if (provider != null) {
+                Log.e(LOG_TAG, String.format("User Sign-in failed for %s : %s",
+                        provider.getDisplayName(), ex.getMessage()), ex);
 
-            final AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(getActivity());
-            errorDialogBuilder.setTitle("Sign-In Error");
-            errorDialogBuilder.setMessage(
-                String.format("Sign-in with %s failed.\n%s", provider.getDisplayName(), ex.getMessage()));
-            errorDialogBuilder.setNeutralButton("Ok", null);
-            errorDialogBuilder.show();
+                final AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(getActivity());
+                errorDialogBuilder.setTitle("Sign-In Error");
+                errorDialogBuilder.setMessage(
+                        String.format("Sign-in with %s failed.\n%s", provider.getDisplayName(), ex.getMessage()));
+                errorDialogBuilder.setNeutralButton("Ok", null);
+                errorDialogBuilder.show();
+            }else{
+                Log.d(LOG_TAG, "Identity provider failed. Most likely due to moving away from fragment");
+            }
         }
     }
 

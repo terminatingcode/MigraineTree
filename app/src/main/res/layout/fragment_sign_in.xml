@@ -20,5 +20,14 @@
         android:layout_marginTop="@dimen/sign_in_button_margin"
         android:layout_marginBottom="@dimen/sign_in_button_margin"
         android:padding="0dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textSize="24sp"
+            android:textColor="@color/textColor"
+            android:text="@string/if_your_connection_is_weak_this_may_take_some_time"
+            />
     </LinearLayout>
 </RelativeLayout>

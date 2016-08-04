@@ -105,7 +105,7 @@ public class DemoInstructionFragment extends DemoFragmentBase {
                         .addToBackStack(null)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit();
-                    activity.getSupportActionBar().setTitle(item.titleResId);
+//                    activity.getSupportActionBar().setTitle(item.titleResId);
                 }
             }
         });

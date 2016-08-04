@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.aws_activity_main);
 
-        setupToolbar(savedInstanceState);
+        //setupToolbar(savedInstanceState);
 
         setupNavigationMenu(savedInstanceState);
     }
@@ -312,8 +312,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             protected void onPostExecute(final Void aVoid) {
-                toolbar.setTitleTextColor(userSettings.getTitleTextColor());
-                toolbar.setBackgroundColor(userSettings.getTitleBarColor());
+//                toolbar.setTitleTextColor(userSettings.getTitleTextColor());
+//                toolbar.setBackgroundColor(userSettings.getTitleBarColor());
                 final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
                 if (fragment != null) {
                     final View fragmentView = fragment.getView();
