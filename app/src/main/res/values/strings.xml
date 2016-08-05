@@ -313,7 +313,8 @@
     <!-- NoSQL Demo Operations Headers -->
     <string name="nosql_operation_header_get">Get</string>
     <string name="nosql_operation_header_primary_queries">Primary Index Queries</string>
-    <string name="nosql_operation_header_secondary_queries">Secondary Index Queries (%s)</string>string>
+    <string name="nosql_operation_header_secondary_queries">Secondary Index Queries (%s)</string>
+    string>
     <string name="nosql_operation_header_scan">Scan</string>string>
     <!-- NoSQL Demo Get Operations -->
     <string name="nosql_operation_get_by_partition_text">Get Item</string>
@@ -374,4 +375,8 @@
     <string name="uploading_data">Uploading your record to the online server</string>
     <string name="uploading_data_dialog_message">Added your record to the database</string>
     <string name="error">Error. Please try again.</string>
+    <string name="complete_your_migraine_record">Please complete your migraine record</string>
+    <string name="notification_title">Migraine Tree</string>
+    <string name="timeError">Your migraine can\'t end before it started!</string>
+
 </resources>

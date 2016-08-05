@@ -15,6 +15,8 @@ public interface Constants {
     boolean DEFAULT_SAVE_MENSTRUAL_DATA = true;
     Long DEFAULT_NO_DATA = -999L;
     String INSERTED_URI = "insertedUri";
+    String START_HOUR = "startHour";
+    int NOTIFICATION_ID = 0;
 
     String NETWORK_PREFIX = "network.";
 

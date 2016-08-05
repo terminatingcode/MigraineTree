@@ -26,4 +26,6 @@
     <color name="moderate">#fff484</color>
     <color name="mild">#ddf371</color>
     <color name="aura_only">#9affe1</color>
+
+    <color name="notification_color">#e7fc7e</color>
 </resources>

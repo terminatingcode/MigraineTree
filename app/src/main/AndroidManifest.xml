@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.terminatingcode.android.migrainetree"
           xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE"
-                android:protectionLevel="signature" />
-    <uses-permission android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+    <permission
+        android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="com.amazon.mysampleapp.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"/>
     <uses-feature android:name="android.hardware.camera.flash"/>
+
     <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
@@ -25,26 +33,28 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".jwetherell_heart_rate_monitor.HeartRateMonitor"
-                  android:configChanges="keyboardHidden|orientation"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".jwetherell_heart_rate_monitor.HeartRateMonitor"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".amazonaws.UI.MainActivity"
-                  android:configChanges="keyboardHidden|orientation"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".amazonaws.UI.MainActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
         </activity>
 
         <provider
-            android:authorities="com.terminatingcode.android.migrainetree.provider"
             android:name=".SQL.LocalContentProvider"
+            android:authorities="com.terminatingcode.android.migrainetree.provider"
             android:exported="false">
         </provider>
 
@@ -52,7 +62,6 @@
             android:name=".Weather.GeoLookupService"
             android:exported="false">
         </service>
-
         <service
             android:name=".Weather.WeatherHistoryService"
             android:exported="false">
@@ -60,31 +69,35 @@
 
         <!-- BEGIN - APP CONTENT DELIVERY AND USER DATA STORAGE -->
 
-        <!-- The following services and receivers are used to deal with transfer of
+
+        <!--
+         The following services and receivers are used to deal with transfer of
 	     files. If you copy and paste the user data storage or app content delivery
 	     feature from this sample app into your own app, make sure you include
 	     these items, and customize the string identifiers they use in the strings
-	     XML resource file. -->
+	     XML resource file.
+        -->
 
-        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true"/>
+        <service android:name=".amazonaws.downloader.service.DownloadService"/>
 
-        <service android:name="com.terminatingcode.android.migrainetree.amazonaws.downloader.service.DownloadService" />
-
-        <receiver android:name="com.terminatingcode.android.migrainetree.amazonaws.downloader.service.NetworkStateListener"
-                  android:exported="false"
-                  android:enabled="false">
+        <receiver
+            android:name=".amazonaws.downloader.service.NetworkStateListener"
+            android:enabled="false"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
 
         <provider
-            android:name="com.terminatingcode.android.migrainetree.amazonaws.downloader.query.DownloadQueueProvider"
+            android:name=".amazonaws.downloader.query.DownloadQueueProvider"
             android:authorities="@string/download_queue_provider_authority"
             android:enabled="true"
             android:exported="false">
         </provider>
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/content_file_provider_authority"
@@ -92,7 +105,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/content_delivery_paths" />
+                android:resource="@xml/content_delivery_paths"/>
         </provider>
 
         <!-- END - APP CONTENT DELIVERY AND USER DATA STORAGE -->
@@ -103,23 +116,26 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="@string/google_cloud_messaging_package" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="@string/google_cloud_messaging_package"/>
             </intent-filter>
         </receiver>
 
         <service
-            android:name="com.terminatingcode.android.migrainetree.amazonaws.UI.PushListenerService"
-            android:exported="false" >
+            android:name=".amazonaws.UI.PushListenerService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
 
         <!-- END - PUSH NOTIFICATIONS WITH GOOGLE CLOUD MESSAGING (GCM) -->
 
+        <activity android:name=".FinishRecordActivity">
+        </activity>
     </application>
 
 </manifest>

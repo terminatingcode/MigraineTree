@@ -1,13 +1,18 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,6 +96,7 @@ public class ProcessRecordFragment extends Fragment {
     private TimePicker endTimePicker;
     private Button confirmButton;
     private boolean endDataInputted = false;
+    private boolean weatherDataReceived = false;
     private int numSetButtonPressed = 0;
     private static final int VIEW_DATE_PICKER = 1;
     private static final int VIEW_TIME_PICKER = 2;
@@ -173,12 +179,13 @@ public class ProcessRecordFragment extends Fragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Uri uri = saveToSQLite();
                 if(endDataInputted) {
                     //insert local sql then send data to cloud
-                    Uri uri = saveToSQLite();
                     persistToAWS(uri);
                 }else{
                     //make a prediction with current data and ensure user comes back to input end data
+                    displayNotification(uri);
                 }
             }
         });
@@ -215,13 +222,6 @@ public class ProcessRecordFragment extends Fragment {
     private Uri saveToSQLite() {
         ContentResolver mResolver = getActivity().getContentResolver();
         ContentValues values = new ContentValues();
-        long endHour = Constants.DEFAULT_NO_DATA;
-        try {
-            endHour = convertStringToInt();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
-        }
 
         values.put(MigraineRecord.START_HOUR, mMigraineRecordObject.getStartHour());
         values.put(MigraineRecord.CITY, mMigraineRecordObject.getCity());
@@ -244,18 +244,30 @@ public class ProcessRecordFragment extends Fragment {
         values.put(MigraineRecord.CONFUSION, mMigraineRecordObject.isConfusion());
         values.put(MigraineRecord.MENSTRUAL_DAY, mMigraineRecordObject.getMenstrualDay());
 
-        int painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
-        values.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
-        values.put(MigraineRecord.END_HOUR, endHour);
-        values.put(MigraineRecord.TEMP3HOURS, mWeather24Hour.getTempChange3Hrs());
-        values.put(MigraineRecord.TEMP12HOURS, mWeather24Hour.getTempChange12Hrs());
-        values.put(MigraineRecord.TEMP24HOURS, mWeather24Hour.getTempChange24Hrs());
-        values.put(MigraineRecord.HUM3HOURS, mWeather24Hour.getHumChange3Hrs());
-        values.put(MigraineRecord.HUM12HOURS, mWeather24Hour.getHumChange12Hrs());
-        values.put(MigraineRecord.HUM24HOURS, mWeather24Hour.getHumChange24Hrs());
-        values.put(MigraineRecord.AP3HOURS, mWeather24Hour.getApChange3Hrs());
-        values.put(MigraineRecord.AP12HOURS, mWeather24Hour.getApChange12Hrs());
-        values.put(MigraineRecord.AP24HOURS, mWeather24Hour.getApChange24Hrs());
+        if(weatherDataReceived) {
+            values.put(MigraineRecord.TEMP3HOURS, mWeather24Hour.getTempChange3Hrs());
+            values.put(MigraineRecord.TEMP12HOURS, mWeather24Hour.getTempChange12Hrs());
+            values.put(MigraineRecord.TEMP24HOURS, mWeather24Hour.getTempChange24Hrs());
+            values.put(MigraineRecord.HUM3HOURS, mWeather24Hour.getHumChange3Hrs());
+            values.put(MigraineRecord.HUM12HOURS, mWeather24Hour.getHumChange12Hrs());
+            values.put(MigraineRecord.HUM24HOURS, mWeather24Hour.getHumChange24Hrs());
+            values.put(MigraineRecord.AP3HOURS, mWeather24Hour.getApChange3Hrs());
+            values.put(MigraineRecord.AP12HOURS, mWeather24Hour.getApChange12Hrs());
+            values.put(MigraineRecord.AP24HOURS, mWeather24Hour.getApChange24Hrs());
+        }
+
+        if(endDataInputted) {
+            long endHour = Constants.DEFAULT_NO_DATA;
+            try {
+                endHour = convertStringToInt();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
+            }
+            int painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
+            values.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
+            values.put(MigraineRecord.END_HOUR, endHour);
+        }
 
         return mResolver.insert(LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, values);
     }
@@ -413,6 +425,7 @@ public class ProcessRecordFragment extends Fragment {
                 hum24ChangeTextView.setText(hum24Change);
                 ap12ChangeTextView.setText(ap12Change);
                 ap24ChangeTextView.setText(ap24Change);
+                weatherDataReceived = true;
             }
         }
     }
@@ -467,6 +480,34 @@ public class ProcessRecordFragment extends Fragment {
             return df.format(date);
         }
         return null;
+    }
+
+    private void displayNotification(Uri uri) {
+        String message = getActivity().getString(R.string.complete_your_migraine_record);
+        Intent notificationIntent = new Intent(getActivity(), FinishRecordActivity.class);
+        notificationIntent.setFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra(Constants.INSERTED_URI, uri)
+                .putExtra(Constants.START_HOUR, mMigraineRecordObject.getStartHour());
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), requestID, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Display a notification with an icon, message as content, and default sound. It also
+        // opens the app when the notification is clicked.
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity()).setSmallIcon(
+                R.drawable.ic_brain_notification)
+                .setContentTitle(getString(R.string.notification_title))
+                .setColor(Color.DKGRAY)
+                .setContentText(message)
+                .setOngoing(true)
+                .setContentIntent(contentIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(
+                Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, builder.build());
     }
 
 
