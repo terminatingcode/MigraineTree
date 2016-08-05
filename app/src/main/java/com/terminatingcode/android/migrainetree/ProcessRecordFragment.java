@@ -1,9 +1,9 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,9 +24,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.amazonaws.AmazonClientException;
 import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessageEvent;
+import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
+import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableBase;
+import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableFactory;
+import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
+import com.terminatingcode.android.migrainetree.amazonaws.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,9 +56,9 @@ import java.util.Locale;
  */
 public class ProcessRecordFragment extends Fragment {
     private static final String NAME = "ProcessRecordFragment";
-    private static final String ARG_URI = "uri";
+    private static final String ARG_RECORD = "record";
+    private static final String DYNAMODB_TABLE_NAME = "MigraineRecord";
 
-    private Uri uri;
     private TextView temp12ChangeTextView;
     private TextView temp24ChangeTextView;
     private TextView hum12ChangeTextView;
@@ -99,14 +105,13 @@ public class ProcessRecordFragment extends Fragment {
 
     /**
      * factory method for ProcessRecordFragment
-     * @param insertedUri the Uri for the ContentProvider
+     * @param migraineRecordObject the temporary object holding User inputted data
      * @return a new instance of ProcessRecordFragment
      */
-    public static ProcessRecordFragment newInstance(Uri insertedUri) {
-        Log.d(NAME, insertedUri.toString() + " NEWINSTANCE");
+    public static ProcessRecordFragment newInstance(MigraineRecordObject migraineRecordObject) {
         ProcessRecordFragment fragment = new ProcessRecordFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_URI, insertedUri);
+        args.putParcelable(ARG_RECORD, migraineRecordObject);
         fragment.setArguments(args);
         return fragment;
     }
@@ -115,8 +120,8 @@ public class ProcessRecordFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            uri = getArguments().getParcelable(ARG_URI);
-            Log.d(NAME, "uri = " + uri.toString());
+            mMigraineRecordObject = getArguments().getParcelable(ARG_RECORD);
+            Log.d(NAME, "received migraine info");
         }
         Log.d(NAME, "onCREATE");
     }
@@ -169,9 +174,9 @@ public class ProcessRecordFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(endDataInputted) {
-                    //update sql then send data to cloud
-                    updateData();
-                    createMigraineRecordObject();
+                    //insert local sql then send data to cloud
+                    Uri uri = saveToSQLite();
+                    persistToAWS(uri);
                 }else{
                     //make a prediction with current data and ensure user comes back to input end data
                 }
@@ -180,27 +185,79 @@ public class ProcessRecordFragment extends Fragment {
         return rootView;
     }
 
-    private void createMigraineRecordObject() {
-
+    private void persistToAWS(final Uri uri) {
+        final DemoNoSQLTableBase demoTable = DemoNoSQLTableFactory.instance(getContext().getApplicationContext())
+                .getNoSQLTableByTableName(DYNAMODB_TABLE_NAME);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    demoTable.insertRecord(uri);
+                } catch (final AmazonClientException ex) {
+                    DynamoDBUtils.showErrorDialogForServiceException(getActivity(),
+                            getString(R.string.nosql_dialog_title_failed_operation_text), ex);
+                    return;
+                }
+                ThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                        dialogBuilder.setTitle(R.string.uploading_data);
+                        dialogBuilder.setMessage(R.string.uploading_data_dialog_message);
+                        dialogBuilder.setNegativeButton(R.string.nosql_dialog_ok_text, null);
+                        dialogBuilder.show();
+                    }
+                });
+            }
+        }).start();
     }
 
-    private void updateData() {
-        if(uri != null){
-            ContentResolver mResolver = getActivity().getContentResolver();
-            ContentValues endValues = new ContentValues();
-            long endHour = Constants.DEFAULT_NO_DATA;
-            try {
-                endHour = convertStringToInt();
-            } catch (ParseException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
-            }
-            int painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
-            endValues.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
-            endValues.put(MigraineRecord.END_HOUR, endHour);
-            int updated = mResolver.update(uri, endValues, null, null);
-            Log.d(NAME, "updated " + updated + " at " + uri.toString());
+    private Uri saveToSQLite() {
+        ContentResolver mResolver = getActivity().getContentResolver();
+        ContentValues values = new ContentValues();
+        long endHour = Constants.DEFAULT_NO_DATA;
+        try {
+            endHour = convertStringToInt();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
         }
+
+        values.put(MigraineRecord.START_HOUR, mMigraineRecordObject.getStartHour());
+        values.put(MigraineRecord.CITY, mMigraineRecordObject.getCity());
+        values.put(MigraineRecord.PAIN_AT_ONSET, mMigraineRecordObject.getPainAtOnset());
+        values.put(MigraineRecord.AURA, mMigraineRecordObject.isAura());
+        values.put(MigraineRecord.EATEN, mMigraineRecordObject.isEaten());
+        values.put(MigraineRecord.WATER, mMigraineRecordObject.isWater());
+        values.put(MigraineRecord.SLEEP, mMigraineRecordObject.getSleep());
+        values.put(MigraineRecord.STRESS, mMigraineRecordObject.getStress());
+        values.put(MigraineRecord.EYE_STRAIN, mMigraineRecordObject.getEyeStrain());
+        values.put(MigraineRecord.PAIN_TYPE, mMigraineRecordObject.getPainType());
+        values.put(MigraineRecord.PAIN_SOURCE, mMigraineRecordObject.getPainSource());
+        values.put(MigraineRecord.MEDICATION, mMigraineRecordObject.getMedication());
+        values.put(MigraineRecord.NAUSEA, mMigraineRecordObject.isNausea());
+        values.put(MigraineRecord.SENSITIVITY_TO_LIGHT, mMigraineRecordObject.isSensitivityToLight());
+        values.put(MigraineRecord.SENSITIVITY_TO_NOISE, mMigraineRecordObject.isSensitivityToNoise());
+        values.put(MigraineRecord.SENSITIVITY_TO_SMELL, mMigraineRecordObject.isSensitivityToSmell());
+        values.put(MigraineRecord.CONGESTION, mMigraineRecordObject.isCongestion());
+        values.put(MigraineRecord.EARS, mMigraineRecordObject.isEars());
+        values.put(MigraineRecord.CONFUSION, mMigraineRecordObject.isConfusion());
+        values.put(MigraineRecord.MENSTRUAL_DAY, mMigraineRecordObject.getMenstrualDay());
+
+        int painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
+        values.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
+        values.put(MigraineRecord.END_HOUR, endHour);
+        values.put(MigraineRecord.TEMP3HOURS, mWeather24Hour.getTempChange3Hrs());
+        values.put(MigraineRecord.TEMP12HOURS, mWeather24Hour.getTempChange12Hrs());
+        values.put(MigraineRecord.TEMP24HOURS, mWeather24Hour.getTempChange24Hrs());
+        values.put(MigraineRecord.HUM3HOURS, mWeather24Hour.getHumChange3Hrs());
+        values.put(MigraineRecord.HUM12HOURS, mWeather24Hour.getHumChange12Hrs());
+        values.put(MigraineRecord.HUM24HOURS, mWeather24Hour.getHumChange24Hrs());
+        values.put(MigraineRecord.AP3HOURS, mWeather24Hour.getApChange3Hrs());
+        values.put(MigraineRecord.AP12HOURS, mWeather24Hour.getApChange12Hrs());
+        values.put(MigraineRecord.AP24HOURS, mWeather24Hour.getApChange24Hrs());
+
+        return mResolver.insert(LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, values);
     }
 
     public long convertStringToInt() throws ParseException {
@@ -309,20 +366,22 @@ public class ProcessRecordFragment extends Fragment {
         }
     }
 
+    /**
+     * if user destroys fragment by pressing back button or
+     * closing app before finishing, cleanup SQLite data
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        int deleted = deleteMigraineData();
-        Log.d(NAME, "DETACH " + deleted);
     }
+
     @Override
     public void onStart(){
         super.onStart();
         EventBus.getDefault().register(this);
         Log.d(NAME, "subscribed to EventBus");
-        if(uri != null) getTriggersInputted();
-        Log.d(NAME, "START");
+        if(mMigraineRecordObject != null) getTriggersInputted();
     }
 
     @Override
@@ -330,19 +389,6 @@ public class ProcessRecordFragment extends Fragment {
         super.onStop();
         EventBus.getDefault().unregister(this);
         Log.d(NAME, "unsubscribed to EventBus");
-        Log.d(NAME, "STOP");
-    }
-
-    public void onBackPressed(){
-        deleteMigraineData();
-    }
-
-    /**
-     * forget previous data as user has
-     */
-    private int deleteMigraineData() {
-        ContentResolver mResolver = getActivity().getContentResolver();
-        return mResolver.delete(uri, null, null);
     }
 
     /**
@@ -372,77 +418,46 @@ public class ProcessRecordFragment extends Fragment {
     }
 
     public void getTriggersInputted(){
-        ContentResolver mResolver = getActivity().getContentResolver();
-        Cursor cursor = mResolver.query(uri, null, null, null, null);
-        try{
-            if(cursor != null && cursor.getCount() > 0){
-                cursor.moveToNext();
-                int dateColumnId = cursor.getColumnIndex(MigraineRecord.START_HOUR);
-                int cityColumnId = cursor.getColumnIndex(MigraineRecord.CITY);
-                int painAtOnsetColumnId = cursor.getColumnIndex(MigraineRecord.PAIN_AT_ONSET);
-                int sleepColumnId = cursor.getColumnIndex(MigraineRecord.SLEEP);
-                int stressColumnId = cursor.getColumnIndex(MigraineRecord.STRESS);
-                int eyeStrainColumnId = cursor.getColumnIndex(MigraineRecord.EYE_STRAIN);
-                int painTypeColumnId = cursor.getColumnIndex(MigraineRecord.PAIN_TYPE);
-                int painSourceColumnId = cursor.getColumnIndex(MigraineRecord.PAIN_SOURCE);
-                int medicationsColumnId = cursor.getColumnIndex(MigraineRecord.MEDICATION);
-                int auraColumnId = cursor.getColumnIndex(MigraineRecord.AURA);
-                int eatenColumnId = cursor.getColumnIndex(MigraineRecord.EATEN);
-                int waterColumnId = cursor.getColumnIndex(MigraineRecord.WATER);
-                int nauseaColumnId = cursor.getColumnIndex(MigraineRecord.NAUSEA);
-                int lightColumnId = cursor.getColumnIndex(MigraineRecord.SENSITIVITY_TO_LIGHT);
-                int noiseColumnId = cursor.getColumnIndex(MigraineRecord.SENSITIVITY_TO_NOISE);
-                int smellColumnId = cursor.getColumnIndex(MigraineRecord.SENSITIVITY_TO_SMELL);
-                int congestionColumnId = cursor.getColumnIndex(MigraineRecord.CONGESTION);
-                int earsColumnId = cursor.getColumnIndex(MigraineRecord.EARS);
-                int confusionColumnId = cursor.getColumnIndex(MigraineRecord.CONFUSION);
-                int cycleDayColumnId = cursor.getColumnIndex(MigraineRecord.MENSTRUAL_DAY);
 
-                String startHour = convertLongToString(cursor.getLong(dateColumnId));
-                String city = cursor.getString(cityColumnId);
-                String painAtOnset = String.valueOf(cursor.getInt(painAtOnsetColumnId));
-                String sleep = String.valueOf(cursor.getInt(sleepColumnId));
-                String stress = String.valueOf(cursor.getInt(stressColumnId));
-                String eyeStrain = String.valueOf(cursor.getInt(eyeStrainColumnId));
-                String painType = cursor.getString(painTypeColumnId);
-                String painSource = cursor.getString(painSourceColumnId);
-                String medication = cursor.getString(medicationsColumnId);
-                String cycleDay = String.valueOf(cursor.getInt(cycleDayColumnId));
+        String startHour = convertLongToString(mMigraineRecordObject.getStartHour());
+        String city = mMigraineRecordObject.getCity();
+        String painAtOnset = String.valueOf(mMigraineRecordObject.getPainAtOnset());
+        String sleep = String.valueOf(mMigraineRecordObject.getSleep());
+        String stress = String.valueOf(mMigraineRecordObject.getStress());
+        String eyeStrain = String.valueOf(mMigraineRecordObject.getEyeStrain());
+        String painType = mMigraineRecordObject.getPainType();
+        String painSource = mMigraineRecordObject.getPainSource();
+        String medication = mMigraineRecordObject.getMedication();
+        String cycleDay = String.valueOf(mMigraineRecordObject.getMenstrualDay());
 
-                locationTextView.setText(city);
-                if (startHour != null) dateTextView.setText(startHour);
-                painTextView.setText(painAtOnset);
-                Drawable checkmark = getActivity().getDrawable(android.R.drawable.checkbox_on_background);
-                Drawable x = getActivity().getDrawable(android.R.drawable.checkbox_off_background);
-                if (cursor.getInt(auraColumnId) > 0) auraImageView.setImageDrawable(checkmark);
-                else auraImageView.setImageDrawable(x);
-                if (cursor.getInt(eatenColumnId) > 0) eatenImageView.setImageDrawable(checkmark);
-                else eatenImageView.setImageDrawable(x);
-                if (cursor.getInt(waterColumnId) > 0) waterImageView.setImageDrawable(checkmark);
-                else waterImageView.setImageDrawable(x);
-                sleepTextView.setText(sleep);
-                stressTextView.setText(stress);
-                eyesTextView.setText(eyeStrain);
-                painTypeTextView.setText(painType);
-                painSourceTextView.setText(painSource);
-                medicationTextView.setText(medication);
-                cycleDayTextView.setText(cycleDay);
+        locationTextView.setText(city);
+        if (startHour != null) dateTextView.setText(startHour);
+        painTextView.setText(painAtOnset);
+        Drawable checkmark = getActivity().getDrawable(android.R.drawable.checkbox_on_background);
+        Drawable x = getActivity().getDrawable(android.R.drawable.checkbox_off_background);
+        if (mMigraineRecordObject.isAura()) auraImageView.setImageDrawable(checkmark);
+        else auraImageView.setImageDrawable(x);
+        if (mMigraineRecordObject.isEaten()) eatenImageView.setImageDrawable(checkmark);
+        else eatenImageView.setImageDrawable(x);
+        if (mMigraineRecordObject.isWater()) waterImageView.setImageDrawable(checkmark);
+        else waterImageView.setImageDrawable(x);
+        sleepTextView.setText(sleep);
+        stressTextView.setText(stress);
+        eyesTextView.setText(eyeStrain);
+        painTypeTextView.setText(painType);
+        painSourceTextView.setText(painSource);
+        medicationTextView.setText(medication);
+        cycleDayTextView.setText(cycleDay);
 
-                StringBuilder sb = new StringBuilder();
-                if (cursor.getInt(nauseaColumnId) > 0) sb.append("Nausea\n");
-                if (cursor.getInt(lightColumnId) > 0) sb.append("Sensitivity to light\n");
-                if (cursor.getInt(noiseColumnId) > 0) sb.append("Sensitivity to noise\n");
-                if (cursor.getInt(smellColumnId) > 0) sb.append("Sensitivity to smell\n");
-                if (cursor.getInt(congestionColumnId) > 0) sb.append("Nasal congestion\n");
-                if (cursor.getInt(earsColumnId) > 0) sb.append("Ringin/popped ears\n");
-                if (cursor.getInt(confusionColumnId) > 0) sb.append("Confusion/mental fog");
-                symptomsTextView.setText(sb.toString());
-            }
-        }catch(NullPointerException npe){
-            npe.printStackTrace();
-        }finally {
-            if(cursor != null) cursor.close();
-        }
+        StringBuilder sb = new StringBuilder();
+        if (mMigraineRecordObject.isNausea()) sb.append("Nausea\n");
+        if (mMigraineRecordObject.isSensitivityToLight()) sb.append("Sensitivity to light\n");
+        if (mMigraineRecordObject.isSensitivityToNoise()) sb.append("Sensitivity to noise\n");
+        if (mMigraineRecordObject.isSensitivityToSmell()) sb.append("Sensitivity to smell\n");
+        if (mMigraineRecordObject.isCongestion()) sb.append("Nasal congestion\n");
+        if (mMigraineRecordObject.isEars()) sb.append("Ringin/popped ears\n");
+        if (mMigraineRecordObject.isConfusion()) sb.append("Confusion/mental fog");
+        symptomsTextView.setText(sb.toString());
     }
 
     private String convertLongToString(long milliseconds){

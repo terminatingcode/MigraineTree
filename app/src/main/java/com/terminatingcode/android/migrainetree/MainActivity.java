@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
 import com.terminatingcode.android.migrainetree.amazonaws.UI.PushListenerService;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(NAME, "onCreate");
         setContentView(R.layout.activity_main);
         mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
         sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
@@ -356,13 +358,13 @@ public class MainActivity extends AppCompatActivity
      * @param locationUID the current user's location Weather Underground id
      */
     @Override
-    public void onSaveRecordButtonPressed(String date, String locationUID, Uri uri) {
+    public void onSaveRecordButtonPressed(String date, String locationUID, MigraineRecordObject migraineRecordObject) {
         Log.d(NAME, "starting intent with date = " + date);
         Intent intent = new Intent(this, WeatherHistoryService.class);
         intent.putExtra(Constants.DATE_KEY, date);
         intent.putExtra(Constants.LOCATIONUID, locationUID);
         startService(intent);
-        ProcessRecordFragment processRecordFragment = ProcessRecordFragment.newInstance(uri);
+        ProcessRecordFragment processRecordFragment = ProcessRecordFragment.newInstance(migraineRecordObject);
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, processRecordFragment)
                 .addToBackStack(null)
@@ -400,6 +402,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(NAME, "onResume");
 
 
         final AWSMobileClient awsMobileClient = AWSMobileClient.defaultMobileClient();
@@ -420,6 +423,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(NAME, "onPause");
 
         // Obtain a reference to the mobile client.
         final AWSMobileClient awsMobileClient = AWSMobileClient.defaultMobileClient();
@@ -429,6 +433,18 @@ public class MainActivity extends AppCompatActivity
 
         // unregister notification receiver
         LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d(NAME, "onStop");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(NAME, "onDestroy");
     }
 
     /**

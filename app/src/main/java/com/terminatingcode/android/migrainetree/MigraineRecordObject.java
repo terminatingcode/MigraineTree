@@ -1,19 +1,17 @@
 package com.terminatingcode.android.migrainetree;
 
-import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
-
-import java.util.Calendar;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Holds Migraine Record data prior to being confirmed
- * Once confirmed, saves to SQL
  * Created by Sarah on 7/28/2016.
  */
-public class MigraineRecordObject {
+public class MigraineRecordObject implements Parcelable{
     private final String NAME = "MigraineRecordObject";
 
-    private Calendar StartHour;
-    private Calendar EndHour;
+    private long StartHour;
+    private long EndHour;
     private int PainAtOnset;
     private int PainAtPeak;
     private String City;
@@ -34,21 +32,22 @@ public class MigraineRecordObject {
     private boolean Ears;
     private boolean Confusion;
     private int MenstrualDay;
-    private Weather24Hour sWeather24Hour;
 
-    public Calendar getStartHour() {
+    public MigraineRecordObject(){}
+
+    public long getStartHour() {
         return StartHour;
     }
 
-    public void setStartHour(Calendar startHour) {
+    public void setStartHour(long startHour) {
         StartHour = startHour;
     }
 
-    public Calendar getEndHour() {
+    public long getEndHour() {
         return EndHour;
     }
 
-    public void setEndHour(Calendar endHour) {
+    public void setEndHour(long endHour) {
         EndHour = endHour;
     }
 
@@ -212,13 +211,72 @@ public class MigraineRecordObject {
         MenstrualDay = menstrualDay;
     }
 
-    public Weather24Hour getWeather24Hour() {
-        return sWeather24Hour;
+    protected MigraineRecordObject(Parcel in) {
+        StartHour = in.readLong();
+        EndHour = in.readLong();
+        PainAtOnset = in.readInt();
+        PainAtPeak = in.readInt();
+        City = in.readString();
+        Aura = in.readByte() != 0x00;
+        Eaten = in.readByte() != 0x00;
+        Water = in.readByte() != 0x00;
+        Sleep = in.readInt();
+        Stress = in.readInt();
+        EyeStrain = in.readInt();
+        PainType = in.readString();
+        PainSource = in.readString();
+        Medication = in.readString();
+        Nausea = in.readByte() != 0x00;
+        SensitivityToLight = in.readByte() != 0x00;
+        SensitivityToNoise = in.readByte() != 0x00;
+        SensitivityToSmell = in.readByte() != 0x00;
+        Congestion = in.readByte() != 0x00;
+        Ears = in.readByte() != 0x00;
+        Confusion = in.readByte() != 0x00;
+        MenstrualDay = in.readInt();
     }
 
-    public void setWeather24Hour(Weather24Hour weather24Hour) {
-        sWeather24Hour = weather24Hour;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(StartHour);
+        dest.writeLong(EndHour);
+        dest.writeInt(PainAtOnset);
+        dest.writeInt(PainAtPeak);
+        dest.writeString(City);
+        dest.writeByte((byte) (Aura ? 0x01 : 0x00));
+        dest.writeByte((byte) (Eaten ? 0x01 : 0x00));
+        dest.writeByte((byte) (Water ? 0x01 : 0x00));
+        dest.writeInt(Sleep);
+        dest.writeInt(Stress);
+        dest.writeInt(EyeStrain);
+        dest.writeString(PainType);
+        dest.writeString(PainSource);
+        dest.writeString(Medication);
+        dest.writeByte((byte) (Nausea ? 0x01 : 0x00));
+        dest.writeByte((byte) (SensitivityToLight ? 0x01 : 0x00));
+        dest.writeByte((byte) (SensitivityToNoise ? 0x01 : 0x00));
+        dest.writeByte((byte) (SensitivityToSmell ? 0x01 : 0x00));
+        dest.writeByte((byte) (Congestion ? 0x01 : 0x00));
+        dest.writeByte((byte) (Ears ? 0x01 : 0x00));
+        dest.writeByte((byte) (Confusion ? 0x01 : 0x00));
+        dest.writeInt(MenstrualDay);
+    }
+
+    public static final Parcelable.Creator<MigraineRecordObject> CREATOR = new Parcelable.Creator<MigraineRecordObject>() {
+        @Override
+        public MigraineRecordObject createFromParcel(Parcel in) {
+            return new MigraineRecordObject(in);
+        }
+
+        @Override
+        public MigraineRecordObject[] newArray(int size) {
+            return new MigraineRecordObject[size];
+        }
+    };
 
 }

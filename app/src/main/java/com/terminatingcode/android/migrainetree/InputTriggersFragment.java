@@ -1,11 +1,9 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,7 +23,6 @@ import android.widget.Toast;
 
 import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
-import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -360,7 +357,7 @@ public class InputTriggersFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onSetLocationPressed();
         void onUpdateCalendarButtonPressed();
-        void onSaveRecordButtonPressed(String date, String locationUID, Uri uri);
+        void onSaveRecordButtonPressed(String date, String locationUID, MigraineRecordObject migraineRecordObject);
     }
 
     /**
@@ -388,18 +385,22 @@ public class InputTriggersFragment extends Fragment {
      */
     public void onSaveRecordPressed(String dateTime, String locationUID) {
         if (mListener != null) {
-            Uri insertedUri = saveMigraineData();
-            mListener.onSaveRecordButtonPressed(dateTime, locationUID, insertedUri);
+            MigraineRecordObject migraineRecordObject = saveMigraineData();
+            if(migraineRecordObject != null) mListener.onSaveRecordButtonPressed(dateTime, locationUID, migraineRecordObject);
+            else{
+                Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
-    public Uri saveMigraineData(){
+    public MigraineRecordObject saveMigraineData(){
         long startHour = Constants.DEFAULT_NO_DATA;
         try {
             startHour = convertStringToInt();
         } catch (ParseException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
+            return null;
         }
         int painAtOnset = Integer.valueOf(painTextView.getText().toString());
         boolean aura = auraCheckbox.isChecked();
@@ -420,30 +421,29 @@ public class InputTriggersFragment extends Fragment {
         boolean confusion = confusionCheckBox.isChecked();
         int cycleDay = Integer.valueOf(cycleDayTextView.getText().toString());
 
-        ContentValues values = new ContentValues();
-        values.put(MigraineRecord.START_HOUR, startHour);
-        values.put(MigraineRecord.CITY, city);
-        values.put(MigraineRecord.PAIN_AT_ONSET, painAtOnset);
-        values.put(MigraineRecord.AURA, aura);
-        values.put(MigraineRecord.EATEN, eaten);
-        values.put(MigraineRecord.WATER, water);
-        values.put(MigraineRecord.SLEEP, sleep);
-        values.put(MigraineRecord.STRESS, stress);
-        values.put(MigraineRecord.EYE_STRAIN, eyeStrain);
-        values.put(MigraineRecord.PAIN_TYPE, painType);
-        values.put(MigraineRecord.PAIN_SOURCE, painSource);
-        values.put(MigraineRecord.MEDICATION, medication);
-        values.put(MigraineRecord.NAUSEA, nausea);
-        values.put(MigraineRecord.SENSITIVITY_TO_LIGHT, light);
-        values.put(MigraineRecord.SENSITIVITY_TO_NOISE, noise);
-        values.put(MigraineRecord.SENSITIVITY_TO_SMELL, smell);
-        values.put(MigraineRecord.CONGESTION, congestion);
-        values.put(MigraineRecord.EARS, ears);
-        values.put(MigraineRecord.CONFUSION, confusion);
-        values.put(MigraineRecord.MENSTRUAL_DAY, cycleDay);
+        MigraineRecordObject migraineRecordObject = new MigraineRecordObject();
+        migraineRecordObject.setStartHour(startHour);
+        migraineRecordObject.setCity(city);
+        migraineRecordObject.setPainAtOnset(painAtOnset);
+        migraineRecordObject.setAura(aura);
+        migraineRecordObject.setEaten(eaten);
+        migraineRecordObject.setWater(water);
+        migraineRecordObject.setSleep(sleep);
+        migraineRecordObject.setStress(stress);
+        migraineRecordObject.setEyeStrain(eyeStrain);
+        migraineRecordObject.setPainType(painType);
+        migraineRecordObject.setPainSource(painSource);
+        migraineRecordObject.setMedication(medication);
+        migraineRecordObject.setNausea(nausea);
+        migraineRecordObject.setSensitivityToLight(light);
+        migraineRecordObject.setSensitivityToNoise(noise);
+        migraineRecordObject.setSensitivityToSmell(smell);
+        migraineRecordObject.setCongestion(congestion);
+        migraineRecordObject.setEars(ears);
+        migraineRecordObject.setConfusion(confusion);
+        migraineRecordObject.setMenstrualDay(cycleDay);
 
-        ContentResolver mResolver = getActivity().getContentResolver();
-        return mResolver.insert(LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, values);
+        return migraineRecordObject;
     }
 
     public long convertStringToInt() throws ParseException {

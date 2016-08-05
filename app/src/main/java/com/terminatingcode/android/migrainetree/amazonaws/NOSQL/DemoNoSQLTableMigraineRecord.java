@@ -1,6 +1,7 @@
 package com.terminatingcode.android.migrainetree.amazonaws.nosql;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -841,6 +842,11 @@ public class DemoNoSQLTableMigraineRecord extends DemoNoSQLTableBase {
     @Override
     public int getNumIndexes() {
         return 2;
+    }
+
+    @Override
+    public void insertRecord(Uri uri){
+        Log.d(LOG_TAG, "inserting record to dynamodb MigraineRecord table");
     }
 
     @Override

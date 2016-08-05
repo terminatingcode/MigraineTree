@@ -1,6 +1,7 @@
 package com.terminatingcode.android.migrainetree.amazonaws.nosql;
 
 import android.content.Context;
+import android.net.Uri;
 
 import java.util.List;
 
@@ -36,6 +37,8 @@ public abstract class DemoNoSQLTableBase {
      * @return the number of secondary indexes for the table.
      */
     public abstract int getNumIndexes();
+
+    public abstract void insertRecord(Uri uri);
 
     /**
      * Insert Sample data into the table.

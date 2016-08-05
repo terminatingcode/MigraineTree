@@ -19,7 +19,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="location_prompt">Please enter the city you are located in</string>
     <string name="newRecord">New Record</string>
-    <string name="set_location">Set Location</string>
+    <string name="settings">Settings</string>
     <string name="default_text">--</string>
     <string name="app_name_HRM">HeartRateMonitor</string>
     <string name="i_have_a_migraine">I have a migraine!</string>
@@ -371,4 +371,7 @@
     <string name="nosql_dialog_message_confirm_update_item_text">Are you sure you want to update the selected item?</string>
     <string name="nosql_dialog_title_confirm_delete_item_text">Confirm Delete</string>
     <string name="nosql_dialog_message_confirm_delete_item_text">Are you sure you want to delete the selected item?</string>
+    <string name="uploading_data">Uploading your record to the online server</string>
+    <string name="uploading_data_dialog_message">Added your record to the database</string>
+    <string name="error">Error. Please try again.</string>
 </resources>

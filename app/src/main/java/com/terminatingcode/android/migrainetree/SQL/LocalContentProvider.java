@@ -209,7 +209,7 @@ public final class LocalContentProvider extends ContentProvider{
     }
 
     private class DbHelper extends SQLiteOpenHelper{
-        public static final int DATABASE_VERSION = 1;
+        public static final int DATABASE_VERSION = 2;
         public static final String DATABASE_NAME = "Records.db";
 
         private DbHelper(Context context){

@@ -2,6 +2,7 @@ package com.terminatingcode.android.migrainetree.Weather;
 
 import android.util.Log;
 
+import com.terminatingcode.android.migrainetree.Constants;
 import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,14 +22,18 @@ public class Weather24Hour {
     private static final String NAME = "Weather24Hour";
     private Calendar migraineStart;
     private List<WeatherHour> mHours;
-    private double mApChange24Hrs;
-    private double mApChange12Hrs;
-    private double mHumChange24Hrs;
-    private double mHumChange12Hrs;
-    private double mTempChange24Hrs;
-    private double mTempChange12Hrs;
-    private double mWspdChange24Hrs;
-    private double mWspdChange12Hrs;
+    private double mApChange24Hrs = Constants.DEFAULT_NO_DATA;
+    private double mApChange12Hrs = Constants.DEFAULT_NO_DATA;
+    private double mApChange3Hrs = Constants.DEFAULT_NO_DATA;
+    private double mHumChange24Hrs = Constants.DEFAULT_NO_DATA;
+    private double mHumChange12Hrs = Constants.DEFAULT_NO_DATA;
+    private double mHumChange3Hrs = Constants.DEFAULT_NO_DATA;
+    private double mTempChange24Hrs = Constants.DEFAULT_NO_DATA;
+    private double mTempChange12Hrs = Constants.DEFAULT_NO_DATA;
+    private double mTempChange3Hrs = Constants.DEFAULT_NO_DATA;
+    private double mWspdChange24Hrs = Constants.DEFAULT_NO_DATA;
+    private double mWspdChange12Hrs = Constants.DEFAULT_NO_DATA;
+    private double mWspdChange3Hrs = Constants.DEFAULT_NO_DATA;
 
     public Weather24Hour(){
         mHours = new ArrayList<>();
@@ -77,22 +82,28 @@ public class Weather24Hour {
                 }
             });
             for(WeatherHour hour : mHours){
-                Log.d(NAME, hour.getHourStart().get(Calendar.DAY_OF_MONTH) + ", " + hour.getHourStart().get(Calendar.HOUR_OF_DAY));
+//                Log.d(NAME, hour.getHourStart().get(Calendar.DAY_OF_MONTH) + ", " + hour.getHourStart().get(Calendar.HOUR_OF_DAY));
             }
             WeatherHour one = mHours.get(23);
-            Log.d(NAME, "one: " + one.getHourStart().get(Calendar.DAY_OF_MONTH) + one.getHourStart().get(Calendar.HOUR_OF_DAY));
+//            Log.d(NAME, "one: " + one.getHourStart().get(Calendar.DAY_OF_MONTH) + one.getHourStart().get(Calendar.HOUR_OF_DAY));
             WeatherHour twelve = mHours.get(11);
-            Log.d(NAME, "twelve: " + twelve.getHourStart().get(Calendar.DAY_OF_MONTH) + twelve.getHourStart().get(Calendar.HOUR_OF_DAY));
+//            Log.d(NAME, "twelve: " + twelve.getHourStart().get(Calendar.DAY_OF_MONTH) + twelve.getHourStart().get(Calendar.HOUR_OF_DAY));
+            WeatherHour three = mHours.get(2);
+//            Log.d(NAME, "three: " + three.getHourStart().get(Calendar.DAY_OF_MONTH) + twelve.getHourStart().get(Calendar.HOUR_OF_DAY));
             WeatherHour twentyFour = mHours.get(0);
-            Log.d(NAME, "24: " + twentyFour.getHourStart().get(Calendar.DAY_OF_MONTH) + twentyFour.getHourStart().get(Calendar.HOUR_OF_DAY));
+//            Log.d(NAME, "24: " + twentyFour.getHourStart().get(Calendar.DAY_OF_MONTH) + twentyFour.getHourStart().get(Calendar.HOUR_OF_DAY));
             mApChange24Hrs = one.getPressure() - twentyFour.getPressure();
             mApChange12Hrs = one.getPressure() - twelve.getPressure();
+            mApChange3Hrs = one.getPressure() - three.getPressure();
             mHumChange24Hrs = one.getHum() - twentyFour.getHum();
             mHumChange12Hrs = one.getHum() - twelve.getHum();
+            mHumChange3Hrs = one.getHum() - three.getHum();
             mTempChange24Hrs = one.getTemp() - twentyFour.getTemp();
             mTempChange12Hrs = one.getTemp() - twelve.getTemp();
+            mTempChange3Hrs = one.getHum() - three.getHum();
             mWspdChange24Hrs = one.getWspd() - twentyFour.getWspd();
             mWspdChange12Hrs = one.getWspd() - twelve.getWspd();
+            mWspdChange3Hrs = one.getWspd() - three.getWspd();
         }else{
             throw new RuntimeException("not enough hours parsed and placed in List");
         }
@@ -104,6 +115,22 @@ public class Weather24Hour {
 
     public void setMigraineStart(Calendar migraineStart) {
         this.migraineStart = migraineStart;
+    }
+
+    public double getApChange3Hrs() {
+        return mApChange3Hrs;
+    }
+
+    public double getHumChange3Hrs() {
+        return mHumChange3Hrs;
+    }
+
+    public double getTempChange3Hrs() {
+        return mTempChange3Hrs;
+    }
+
+    public double getWspdChange3Hrs() {
+        return mWspdChange3Hrs;
     }
     public double getApChange24Hrs() {
         return mApChange24Hrs;
