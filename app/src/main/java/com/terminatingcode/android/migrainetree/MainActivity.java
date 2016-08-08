@@ -2,6 +2,7 @@ package com.terminatingcode.android.migrainetree;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
@@ -34,7 +36,7 @@ import com.terminatingcode.android.migrainetree.amazonaws.UI.PushListenerService
 import com.terminatingcode.android.migrainetree.amazonaws.UI.SignInFragment;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityProvider;
-import com.terminatingcode.android.migrainetree.jwetherell_heart_rate_monitor.HeartRateMonitor;
+import com.terminatingcode.android.migrainetree.dummy.MigraineRecordItems;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity
         UserSettingsFragment.OnFragmentInteractionListener,
         SignInFragment.OnFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,
+        RecordsFragment.OnListFragmentInteractionListener,
         View.OnClickListener{
 
     private static final String NAME = "MainActivity";
@@ -120,7 +123,9 @@ public class MainActivity extends AppCompatActivity
         enableCalendar = sharedPrefsUtils.getsavedMenstrualPref();
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigationView != null) {
-            headerView = mNavigationView.inflateHeaderView(R.layout.nav_header_main);
+            if(headerView == null) {
+                headerView = mNavigationView.inflateHeaderView(R.layout.nav_header_main);
+            }
             mNavigationView.getMenu().findItem(R.id.nav_calendar).setVisible(enableCalendar);
             mNavigationView.setNavigationItemSelectedListener(this);
         }
@@ -272,8 +277,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_set_location) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
         } else if (id == R.id.nav_share) {
-            Intent intent = new Intent(this, HeartRateMonitor.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, HeartRateMonitor.class);
+//            startActivity(intent);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new RecordsFragment()).commit();
         } else if (id == R.id.nav_send) {
             Log.d(NAME, "starting AWS activity");
             Intent intent = new Intent(this, com.terminatingcode.android.migrainetree.amazonaws.UI.MainActivity.class);
@@ -376,6 +382,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onPartialRecordConfirmed() {
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, FeelBetterFragment.newInstance())
+                .commit();
+    }
 
 
     /**
@@ -461,5 +473,14 @@ public class MainActivity extends AppCompatActivity
         }else{
             fragmentManager.beginTransaction().replace(R.id.content_frame, new NewRecordFragment()).commit();
         }
+    }
+
+    @Override
+    public void onListDeleteItem(MigraineRecordItems.RecordItem item) {
+        ContentResolver mResolver = getContentResolver();
+        String whereClause = MigraineRecord._ID + " = " + item.id;
+        int deleted = mResolver.delete(
+                LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, whereClause, null);
+        Log.d(NAME, "deleted: " + deleted);
     }
 }

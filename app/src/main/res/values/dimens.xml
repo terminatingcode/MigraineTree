@@ -11,4 +11,5 @@
     <dimen name="sign_in_button_width">240dp</dimen>
     <dimen name="sign_in_button_height">40dp</dimen>
     <dimen name="demo_mobile_analytics_button_text_size">12sp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

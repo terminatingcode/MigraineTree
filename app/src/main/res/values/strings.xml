@@ -378,5 +378,8 @@
     <string name="complete_your_migraine_record">Please complete your migraine record</string>
     <string name="notification_title">Migraine Tree</string>
     <string name="timeError">Your migraine can\'t end before it started!</string>
+    <string name="feel_better">Get better soon!</string>
+    <string name="delete">delete</string>
+    <string name="update">update</string>
 
 </resources>

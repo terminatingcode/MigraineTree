@@ -186,6 +186,7 @@ public class ProcessRecordFragment extends Fragment {
                 }else{
                     //make a prediction with current data and ensure user comes back to input end data
                     displayNotification(uri);
+                    onPartialRecordConfirmed();
                 }
             }
         });
@@ -366,6 +367,15 @@ public class ProcessRecordFragment extends Fragment {
         }
     }
 
+    /**
+     * once user confirms submission, alert MainActivity
+     */
+    public void onPartialRecordConfirmed() {
+        if (mListener != null) {
+            mListener.onPartialRecordConfirmed();
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -524,5 +534,6 @@ public class ProcessRecordFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onRecordConfirmed();
+        void onPartialRecordConfirmed();
     }
 }
