@@ -1,6 +1,8 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,8 +25,11 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
+import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -43,6 +48,7 @@ public class ChartsFragment extends Fragment {
 
     private PieChart avgPainPieChart;
     private BarChart triggersBarChart;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -87,9 +93,72 @@ public class ChartsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_charts, container, false);
         avgPainPieChart = (PieChart) rootView.findViewById(R.id.averagePainchart);
         triggersBarChart = (BarChart) rootView.findViewById(R.id.triggersBarChart);
-        initialisePieChart();
+        querySQLite();
         initialiseBarChart();
         return rootView;
+    }
+
+    public void querySQLite(){
+        List<Integer> painPeak = new ArrayList<>();
+        ContentResolver mResolver = getActivity().getContentResolver();
+        Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, null, null, null, null);
+        try{
+            if(cursor != null  && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                do {
+                    int painIndex = cursor.getColumnIndex(MigraineRecord.PAIN_AT_PEAK);
+                    painPeak.add(cursor.getInt(painIndex));
+                    initialisePieChart(painPeak);
+                }while (cursor.moveToNext());
+            }
+        }finally {
+            if(cursor != null) cursor.close();
+        }
+    }
+
+
+
+    public void initialisePieChart(List<Integer> painPeak){
+        int average = 0;
+        int auraOnly = 0;
+        int mild = 0;
+        int moderate = 0;
+        int severe = 0;
+        int debilitating = 0;
+        for(Integer painLevel : painPeak){
+            average += painLevel;
+            if(painLevel == 0) auraOnly++;
+            else if(painLevel < 3) mild++;
+            else if(painLevel < 6) moderate++;
+            else if(painLevel < 9) severe++;
+            else debilitating++;
+        }
+        String avg = String.valueOf(average/painPeak.size());
+        avgPainPieChart.setDescription("Average Pain at Peak");
+        avgPainPieChart.setDescriptionColor(Color.WHITE);
+        avgPainPieChart.setDescriptionTextSize(18);
+        avgPainPieChart.setCenterText(avg);
+        avgPainPieChart.setUsePercentValues(true);
+        avgPainPieChart.setHoleRadius(42f);
+        avgPainPieChart.setTransparentCircleRadius(46f);
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(auraOnly, "aura only"));
+        entries.add(new PieEntry(mild,"mild"));
+        entries.add(new PieEntry(moderate,"moderate"));
+        entries.add(new PieEntry(severe,"severe"));
+        entries.add(new PieEntry(debilitating,"debilitating"));
+        PieDataSet dataSet = new PieDataSet(entries, "testing entries");
+        dataSet.setColors(new int[] {
+                R.color.aura_only,
+                R.color.mild,
+                R.color.moderate,
+                R.color.severe,
+                R.color.debilitating}, getActivity());
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(16f);
+        avgPainPieChart.setData(data);
     }
 
     private void initialiseBarChart() {
@@ -167,33 +236,6 @@ public class ChartsFragment extends Fragment {
         }
     }
 
-    public void initialisePieChart(){
-        avgPainPieChart.setDescription("Average Pain at Peak");
-        avgPainPieChart.setDescriptionColor(Color.WHITE);
-        avgPainPieChart.setDescriptionTextSize(18);
-        avgPainPieChart.setCenterText("average");
-        avgPainPieChart.setUsePercentValues(true);
-        avgPainPieChart.setHoleRadius(42f);
-        avgPainPieChart.setTransparentCircleRadius(46f);
-
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(3, "aura only"));
-        entries.add(new PieEntry(3,"mild"));
-        entries.add(new PieEntry(2,"moderate"));
-        entries.add(new PieEntry(1,"severe"));
-        entries.add(new PieEntry(2,"debilitating"));
-        PieDataSet dataSet = new PieDataSet(entries, "testing entries");
-        dataSet.setColors(new int[] {
-                R.color.aura_only,
-                R.color.mild,
-                R.color.moderate,
-                R.color.severe,
-                R.color.debilitating}, getActivity());
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(16f);
-        avgPainPieChart.setData(data);
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

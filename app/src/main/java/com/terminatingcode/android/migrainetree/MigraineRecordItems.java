@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.dummy;
+package com.terminatingcode.android.migrainetree;
 
 /**
  * Helper class for providing sample content for user interfaces created by

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
-import com.terminatingcode.android.migrainetree.dummy.MigraineRecordItems.RecordItem;
+import com.terminatingcode.android.migrainetree.MigraineRecordItems.RecordItem;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

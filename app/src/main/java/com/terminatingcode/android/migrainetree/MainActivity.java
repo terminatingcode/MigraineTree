@@ -36,7 +36,6 @@ import com.terminatingcode.android.migrainetree.amazonaws.UI.PushListenerService
 import com.terminatingcode.android.migrainetree.amazonaws.UI.SignInFragment;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityProvider;
-import com.terminatingcode.android.migrainetree.dummy.MigraineRecordItems;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,

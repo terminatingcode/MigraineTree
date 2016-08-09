@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.terminatingcode.android.migrainetree.RecordsFragment.OnListFragmentInteractionListener;
-import com.terminatingcode.android.migrainetree.dummy.MigraineRecordItems.RecordItem;
+import com.terminatingcode.android.migrainetree.MigraineRecordItems.RecordItem;
 
 import java.util.List;
 
