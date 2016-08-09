@@ -95,8 +95,8 @@ public class ProcessRecordFragment extends Fragment {
     private DatePicker endDatePicker;
     private TimePicker endTimePicker;
     private Button confirmButton;
-    private boolean endDataInputted = false;
-    private boolean weatherDataReceived = false;
+    private boolean endDataInputted;
+    private boolean weatherDataReceived;
     private int numSetButtonPressed = 0;
     private static final int VIEW_DATE_PICKER = 1;
     private static final int VIEW_TIME_PICKER = 2;
@@ -167,6 +167,8 @@ public class ProcessRecordFragment extends Fragment {
         endDatePicker = (DatePicker) rootView.findViewById(R.id.endDatePicker);
         endTimePicker = (TimePicker) rootView.findViewById(R.id.endTimePicker);
         confirmButton = (Button) rootView.findViewById(R.id.confirmButton);
+        endDataInputted = false;
+        weatherDataReceived = false;
         makeMigraineDoneVisible();
         migraineDoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

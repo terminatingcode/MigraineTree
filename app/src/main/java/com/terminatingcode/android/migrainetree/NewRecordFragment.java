@@ -1,12 +1,16 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
 
 
 /**
@@ -30,34 +34,32 @@ public class NewRecordFragment extends Fragment {
      *
      * @return A new instance of fragment NewRecordFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static NewRecordFragment newInstance() {
         NewRecordFragment fragment = new NewRecordFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            //
-//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_new_record, container, false);
         Button newRecordButton = (Button) rootView.findViewById(R.id.record_new_migraine_button);
         newRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onNewRecordButtonClicked();
+                final boolean isUserSignedIn = AWSMobileClient.defaultMobileClient()
+                        .getIdentityManager()
+                        .isUserSignedIn();
+                if (isUserSignedIn && mListener != null) {
+                    mListener.onNewRecordButtonClicked();
+                }else{
+                    promptSignin();
+                }
             }
         });
         return rootView;
@@ -80,6 +82,20 @@ public class NewRecordFragment extends Fragment {
         mListener = null;
     }
 
+    private void promptSignin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle(
+                R.string.main_fragment_title_user_files)
+                .setNegativeButton(android.R.string.cancel, null);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                if(mListener != null) mListener.onPromptForSignin();
+            }
+        });
+        builder.setMessage(R.string.user_files_demo_dialog_signin_message);
+        builder.show();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -92,5 +108,6 @@ public class NewRecordFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onNewRecordButtonClicked();
+        void onPromptForSignin();
     }
 }

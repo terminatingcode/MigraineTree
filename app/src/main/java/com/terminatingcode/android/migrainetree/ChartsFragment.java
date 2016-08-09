@@ -181,7 +181,7 @@ public class ChartsFragment extends Fragment {
         avgPainPieChart.setData(data);
     }
 
-    private void initialiseBarChart(int food, int dehydration, int sleepTooLittle, int sleepTooMuch,
+    public void initialiseBarChart(int food, int dehydration, int sleepTooLittle, int sleepTooMuch,
                                     int stress, int eyeStrain) {
         triggersBarChart.setDrawValueAboveBar(true);
         triggersBarChart.setDescription("Frequency of triggers");

@@ -335,6 +335,11 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.content_frame, new InputTriggersFragment()).commit();
     }
 
+    @Override
+    public void onPromptForSignin() {
+        fragmentManager.beginTransaction().add(R.id.content_frame, new SignInFragment()).commit();
+    }
+
     /**
      * replaces InputTriggersFragment with UserSettingsFragment
      */
