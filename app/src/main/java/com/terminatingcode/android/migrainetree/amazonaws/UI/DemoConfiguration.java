@@ -34,7 +34,7 @@ public class DemoConfiguration {
                 R.string.feature_user_data_storage_overview,
                 R.string.feature_user_data_storage_description,
                 R.string.feature_user_data_storage_powered_by
-                , new DemoItem(R.string.main_fragment_title_user_files, R.mipmap.user_files,
+                , new DemoItem(R.string.prompt_sign_in_title, R.mipmap.user_files,
                         R.string.feature_user_data_storage_demo_button_user_file_storage,
                         UserFilesDemoFragment.class)
                 , new DemoItem(R.string.main_fragment_title_user_settings, R.mipmap.user_profile_data,

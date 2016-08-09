@@ -2,6 +2,7 @@ package com.terminatingcode.android.migrainetree;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowPreferenceManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,7 +34,7 @@ public class SharedPrefsUtilsTest {
     @Before
     public void setUp(){
         Context context = RuntimeEnvironment.application.getApplicationContext();
-        mPrefs = ShadowPreferenceManager.getDefaultSharedPreferences(context);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         mSharedPrefsUtils = new SharedPrefsUtils(mPrefs);
     }
 

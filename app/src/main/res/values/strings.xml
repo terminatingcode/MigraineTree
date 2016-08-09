@@ -235,7 +235,7 @@
     <string name="content_removal_error_text">Content Removal Error</string>
     <string name="content_permission_failure_title_text">Permission Failure</string>
     <string name="content_permission_failure_text">Denial of Read External Storage Permission has disabled the ability to upload user files.</string>
-    <string name="main_fragment_title_user_files">User Files</string>
+    <string name="prompt_sign_in_title">User Files</string>
     <string name="main_fragment_subtitle_user_files">Store and access files for your users.</string>
     <string name="user_files_demo_button_public">PUBLIC</string>
     <string name="user_files_demo_button_private">PRIVATE</string>
@@ -261,14 +261,14 @@
     <string name="cloud_logic_invoke">INVOKE</string>
     <string name="cloud_logic_error_title">Error</string>
     <string name="cloud_logic_error_dismiss">Dismiss</string>
-    <string name="main_fragment_title_user_settings">User Profile Data</string>
+    <string name="main_fragment_title_user_settings">Need to sign in</string>
     <string name="migraine_ended">Migraine ended:</string>
     <string name="done">DONE</string>
     <string name="notDone">NOT DONE</string>
     <string name="pain_at_peak_of_migraine">Pain at peak of migraine:</string>
     <string name="noMenstrualData">No menstrual data!\nInput last cycle in the calendar or disable in settings.</string>
     <string name="main_nav_menu_default_user_text">guest</string>
-    <string name="user_files_demo_dialog_signin_message">Private user file storage is only available to users who are signed-in.\\n\\nWould you like to sign in?</string>
+    <string name="prompt_signin_message">In order to upload files, please sign in.</string>
     <string name="about_blurb">Anyone who knows someone or suffers from migraines themselves can attest to how debilitating this neurological disorder can be. The most common form of treatment for migraines are abortive medications that need to be taken at the very beginning of a migraine or else they will not work. Often, head pain can occur and you have no way of knowing if it\'s going to lead to a severe episode or if it will dissipate. Moreover, migraine medications are expensive and difficult on the body to take regularly so every migraineur weighs the pros and cons of whether to take medication right away. This project is my attempt at helping people understand their migraines and help them make an informed decision.</string>
     <string name="if_your_connection_is_weak_this_may_take_some_time">If your connection is weak, this may take some time</string>
     <string name="settings_fragment_dialog_title">Please wait &#8230;</string>

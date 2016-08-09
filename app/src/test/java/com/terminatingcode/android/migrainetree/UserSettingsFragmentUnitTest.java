@@ -16,7 +16,7 @@ import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk=21)
-public class UserSettingsFragmentUnitTest {
+public class UserSettingsFragmentUnitTest{
 
     private UserSettingsFragment mUserSettingsFragment;
     private MainActivity mActivity;
@@ -37,11 +37,6 @@ public class UserSettingsFragmentUnitTest {
 
     @Test
     public void testOnMessageEventSetCities() throws Exception {
-
-    }
-
-    @Test
-    public void testStartGeoLookupService() throws Exception {
 
     }
 }

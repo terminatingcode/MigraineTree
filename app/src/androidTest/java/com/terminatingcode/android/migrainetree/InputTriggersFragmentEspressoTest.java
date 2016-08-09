@@ -6,7 +6,6 @@ import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
-import android.support.v4.app.Fragment;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +27,8 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -36,7 +37,7 @@ import static org.hamcrest.core.IsNot.not;
  */
 public class InputTriggersFragmentEspressoTest {
 
-    private Fragment mFragment;
+    private InputTriggersFragment mFragment;
     private SharedPreferences mSharedPreferences;
     private String location = "testLocation";
 
@@ -343,6 +344,71 @@ public class InputTriggersFragmentEspressoTest {
         onView(withText(R.string.error_city_not_set))
                 .inRoot(withDecorView(not(mMainActivityActivityTestRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testSaveMigraineData(){
+        long startHour = 631152000000L;
+        int expected = 10;
+        String[] painTypes = mMainActivityActivityTestRule
+                .getActivity().getResources().getStringArray(R.array.pain_types_array);
+        String[] painSources = mMainActivityActivityTestRule
+                .getActivity().getResources().getStringArray(R.array.pain_areas_array);
+        String[] medications = mMainActivityActivityTestRule
+                .getActivity().getResources().getStringArray(R.array.medication_types);
+
+        onView(withId(R.id.painSeekBar)).perform(EspressoActions.setProgress(expected));
+        onView(withId(R.id.auraCheckBox)).perform(ViewActions.click());
+        onView(withId(R.id.eatenCheckBox)).perform(ViewActions.click());
+        onView(withId(R.id.sleepSeekBar)).perform(EspressoActions.setProgress(expected));
+        onView(withId(R.id.stressSeekBar))
+                .perform(ViewActions.scrollTo())
+                .perform(EspressoActions.setProgress(expected));
+        onView(withId(R.id.eyesSeekBar))
+                .perform(ViewActions.scrollTo())
+                .perform(EspressoActions.setProgress(expected));
+        onView(withId(R.id.nauseaCheckBox))
+                .perform(ViewActions.scrollTo())
+                .perform(ViewActions.click());
+        onView(withId(R.id.sensitivityLightCheckBox))
+                .perform(ViewActions.scrollTo())
+                .perform(ViewActions.click());
+        onView(withId(R.id.sensitivityNoiseCheckBox))
+                .perform(ViewActions.scrollTo())
+                .perform(ViewActions.click());
+        onView(withId(R.id.sensitivitySmellCheckBox))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()))
+                .perform(ViewActions.click());
+        onView(withId(R.id.nasalCongestionCheckBox))
+                .perform(ViewActions.scrollTo())
+                .perform(ViewActions.click());
+        onView(withId(R.id.earsCheckBox))
+                .perform(ViewActions.scrollTo())
+                .perform(ViewActions.click());
+        onView(withId(R.id.confusionCheckBox))
+                .perform(ViewActions.scrollTo())
+                .perform(ViewActions.click());
+
+        MigraineRecordObject result = mFragment.saveMigraineData(startHour);
+
+        assertEquals(startHour, result.getStartHour());
+        assertEquals(expected, result.getPainAtOnset());
+        assertTrue(result.isAura());
+        assertTrue(result.isEaten());
+        assertEquals(expected, result.getSleep());
+        assertEquals(expected, result.getStress());
+        assertEquals(expected, result.getEyeStrain());
+        assertEquals(medications[0], result.getMedication());
+        assertEquals(painSources[0], result.getPainSource());
+        assertEquals(painTypes[0], result.getPainType());
+        assertTrue(result.isNausea());
+        assertTrue(result.isSensitivityToLight());
+        assertTrue(result.isSensitivityToNoise());
+        assertTrue(result.isSensitivityToSmell());
+        assertTrue(result.isCongestion());
+        assertTrue(result.isEars());
+        assertTrue(result.isConfusion());
     }
 
     @After

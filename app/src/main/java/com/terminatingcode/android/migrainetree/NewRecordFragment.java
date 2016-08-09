@@ -84,7 +84,7 @@ public class NewRecordFragment extends Fragment {
 
     private void promptSignin() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle(
-                R.string.main_fragment_title_user_files)
+                R.string.prompt_sign_in_title)
                 .setNegativeButton(android.R.string.cancel, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -92,7 +92,7 @@ public class NewRecordFragment extends Fragment {
                 if(mListener != null) mListener.onPromptForSignin();
             }
         });
-        builder.setMessage(R.string.user_files_demo_dialog_signin_message);
+        builder.setMessage(R.string.prompt_signin_message);
         builder.show();
     }
 
