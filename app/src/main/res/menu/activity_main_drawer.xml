@@ -18,14 +18,14 @@
             android:id="@+id/nav_set_location"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/settings"/>
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_records"
+            android:title="@string/local_records"/>
     </group>
 
     <item android:title="External Libraries">
         <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_favorite_white_48dp"
-                android:title="Heart Rate Monitor"/>
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"

@@ -45,6 +45,7 @@ public class ChartsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String NAME = "ChartsFragment";
 
     private PieChart avgPainPieChart;
     private BarChart triggersBarChart;
@@ -94,7 +95,6 @@ public class ChartsFragment extends Fragment {
         avgPainPieChart = (PieChart) rootView.findViewById(R.id.averagePainchart);
         triggersBarChart = (BarChart) rootView.findViewById(R.id.triggersBarChart);
         querySQLite();
-        initialiseBarChart();
         return rootView;
     }
 
@@ -106,9 +106,28 @@ public class ChartsFragment extends Fragment {
             if(cursor != null  && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 do {
+                    int food = 0;
+                    int dehydration = 0;
+                    int sleepTooLittle = 0;
+                    int sleepTooMuch = 0;
+                    int stress = 0;
+                    int eyeStrain = 0;
                     int painIndex = cursor.getColumnIndex(MigraineRecord.PAIN_AT_PEAK);
+                    int foodIndex = cursor.getColumnIndex(MigraineRecord.EATEN);
+                    int dehydrationIndex = cursor.getColumnIndex(MigraineRecord.WATER);
+                    int sleepIndex = cursor.getColumnIndex(MigraineRecord.SLEEP);
+                    int stressIndex = cursor.getColumnIndex(MigraineRecord.STRESS);
+                    int eyeStrainIndex = cursor.getColumnIndex(MigraineRecord.EYE_STRAIN);
                     painPeak.add(cursor.getInt(painIndex));
+                    if(cursor.getInt(foodIndex) == 0) food++;
+                    if(cursor.getInt(dehydrationIndex) == 0) dehydration++;
+                    int sleepAmount = cursor.getInt(sleepIndex);
+                    if(sleepAmount < 6) sleepTooLittle++;
+                    if(sleepAmount > 9) sleepTooMuch++;
+                    if(cursor.getInt(stressIndex) > 5) stress++;
+                    if(cursor.getInt(eyeStrainIndex) > 5)eyeStrain++;
                     initialisePieChart(painPeak);
+                    initialiseBarChart(food, dehydration, sleepTooLittle, sleepTooMuch, stress, eyeStrain);
                 }while (cursor.moveToNext());
             }
         }finally {
@@ -119,7 +138,7 @@ public class ChartsFragment extends Fragment {
 
 
     public void initialisePieChart(List<Integer> painPeak){
-        int average = 0;
+        double average = 0.0;
         int auraOnly = 0;
         int mild = 0;
         int moderate = 0;
@@ -138,9 +157,10 @@ public class ChartsFragment extends Fragment {
         avgPainPieChart.setDescriptionColor(Color.WHITE);
         avgPainPieChart.setDescriptionTextSize(18);
         avgPainPieChart.setCenterText(avg);
+        avgPainPieChart.setCenterTextSize(24);
         avgPainPieChart.setUsePercentValues(true);
-        avgPainPieChart.setHoleRadius(42f);
-        avgPainPieChart.setTransparentCircleRadius(46f);
+        avgPainPieChart.setHoleRadius(32f);
+        avgPainPieChart.setTransparentCircleRadius(36f);
 
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(auraOnly, "aura only"));
@@ -161,7 +181,8 @@ public class ChartsFragment extends Fragment {
         avgPainPieChart.setData(data);
     }
 
-    private void initialiseBarChart() {
+    private void initialiseBarChart(int food, int dehydration, int sleepTooLittle, int sleepTooMuch,
+                                    int stress, int eyeStrain) {
         triggersBarChart.setDrawValueAboveBar(true);
         triggersBarChart.setDescription("Frequency of triggers");
         triggersBarChart.setDescriptionColor(Color.WHITE);
@@ -170,13 +191,12 @@ public class ChartsFragment extends Fragment {
 
         float start = 0.5f;
         int count = 6;
-        int range = 50;
         final String[] triggers = new String[]{
                 "",
-                "aura",
                 "food",
                 "dehydration",
-                "sleep",
+                "<6h sleep",
+                ">9h sleep",
                 "stress",
                 "eye strain",
                 ""};
@@ -199,24 +219,25 @@ public class ChartsFragment extends Fragment {
             }
         });
 
-        ArrayList<BarEntry> yVals1 = new ArrayList<>();
+        ArrayList<BarEntry> triggerVals = new ArrayList<>();
 
-        for (int i = (int) start; i < start + count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yVals1.add(new BarEntry(i + 1f, val));
-        }
+        triggerVals.add(new BarEntry(1, food));
+        triggerVals.add(new BarEntry(2, dehydration));
+        triggerVals.add(new BarEntry(3, sleepTooLittle));
+        triggerVals.add(new BarEntry(4, sleepTooMuch));
+        triggerVals.add(new BarEntry(5, stress));
+        triggerVals.add(new BarEntry(6, eyeStrain));
 
         BarDataSet set1;
 
         if (triggersBarChart.getData() != null &&
                 triggersBarChart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) triggersBarChart.getData().getDataSetByIndex(0);
-            set1.setValues(yVals1);
+            set1.setValues(triggerVals);
             triggersBarChart.getData().notifyDataChanged();
             triggersBarChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(yVals1, "Triggers");
+            set1 = new BarDataSet(triggerVals, "Triggers");
             set1.setColors(new int[] {
                     R.color.aura_only,
                     R.color.mild,

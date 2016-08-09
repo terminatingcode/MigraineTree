@@ -381,5 +381,6 @@
     <string name="feel_better">Get better soon!</string>
     <string name="delete">delete</string>
     <string name="update">update</string>
+    <string name="local_records">Local Records</string>
 
 </resources>
