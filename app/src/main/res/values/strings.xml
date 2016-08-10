@@ -86,6 +86,7 @@
     <string name="weather_data_provided_by_weather_underground">Weather data provided by Weather Underground</string>
     <string name="push_title">Push Notification</string>
     <string-array name="pain_types_array">
+        <item>no pain</item>
         <item>throbbing</item>
         <item>stabbing</item>
         <item>pressure</item>

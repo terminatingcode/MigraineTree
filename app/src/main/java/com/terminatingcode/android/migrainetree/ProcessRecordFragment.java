@@ -45,10 +45,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -95,7 +92,7 @@ public class ProcessRecordFragment extends Fragment {
     private DatePicker endDatePicker;
     private TimePicker endTimePicker;
     private Button confirmButton;
-    private boolean endDataInputted;
+    private boolean endDataComplete;
     private boolean weatherDataReceived;
     private int numSetButtonPressed = 0;
     private static final int VIEW_DATE_PICKER = 1;
@@ -167,9 +164,14 @@ public class ProcessRecordFragment extends Fragment {
         endDatePicker = (DatePicker) rootView.findViewById(R.id.endDatePicker);
         endTimePicker = (TimePicker) rootView.findViewById(R.id.endTimePicker);
         confirmButton = (Button) rootView.findViewById(R.id.confirmButton);
-        endDataInputted = false;
+        endDataComplete = false;
         weatherDataReceived = false;
         makeMigraineDoneVisible();
+        setOnClickListenersLogic();
+        return rootView;
+    }
+
+    private void setOnClickListenersLogic() {
         migraineDoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -182,7 +184,7 @@ public class ProcessRecordFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Uri uri = saveToSQLite();
-                if(endDataInputted) {
+                if(endDataComplete) {
                     //insert local sql then send data to cloud
                     persistToAWS(uri);
                 }else{
@@ -192,7 +194,6 @@ public class ProcessRecordFragment extends Fragment {
                 }
             }
         });
-        return rootView;
     }
 
     private void persistToAWS(final Uri uri) {
@@ -222,7 +223,7 @@ public class ProcessRecordFragment extends Fragment {
         }).start();
     }
 
-    private Uri saveToSQLite() {
+    public Uri saveToSQLite() {
         ContentResolver mResolver = getActivity().getContentResolver();
         ContentValues values = new ContentValues();
 
@@ -259,10 +260,10 @@ public class ProcessRecordFragment extends Fragment {
             values.put(MigraineRecord.AP24HOURS, mWeather24Hour.getApChange24Hrs());
         }
 
-        if(endDataInputted) {
+        if(endDataComplete) {
             long endHour = Constants.DEFAULT_NO_DATA;
             try {
-                endHour = convertStringToInt();
+                endHour = DateUtils.convertStringToLong(date + time);
             } catch (ParseException e) {
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
@@ -273,13 +274,6 @@ public class ProcessRecordFragment extends Fragment {
         }
 
         return mResolver.insert(LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, values);
-    }
-
-    public long convertStringToInt() throws ParseException {
-        String dateTime = date + time;
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyyhh:mm", Locale.getDefault());
-        Date date = df.parse(dateTime);
-        return date.getTime();
     }
 
     private void makeMigraineDoneVisible() {
@@ -311,8 +305,10 @@ public class ProcessRecordFragment extends Fragment {
             public void onClick(View v) {
                 numSetButtonPressed++;
                 int stage = numSetButtonPressed % 3;
-                if(stage == VIEW_DATE_PICKER) endDatePicker.setVisibility(View.VISIBLE);
-                else if(stage == VIEW_TIME_PICKER){
+                if(stage == VIEW_DATE_PICKER){
+                    endDatePicker.setVisibility(View.VISIBLE);
+                    endDataComplete = false;
+                }else if(stage == VIEW_TIME_PICKER){
                     setDate();
                     endDatePicker.setVisibility(View.GONE);
                     endTimePicker.setVisibility(View.VISIBLE);
@@ -320,7 +316,7 @@ public class ProcessRecordFragment extends Fragment {
                 else {
                     setTime();
                     endTimePicker.setVisibility(View.GONE);
-                    endDataInputted = true;
+                    endDataComplete = true;
                 }
 
             }
@@ -357,7 +353,7 @@ public class ProcessRecordFragment extends Fragment {
 
     private void disappearMigraineDoneView() {
         migraineDoneView.setVisibility(View.GONE);
-        endDataInputted = false;
+        endDataComplete = false;
     }
 
     /**
@@ -416,8 +412,8 @@ public class ProcessRecordFragment extends Fragment {
     }
 
     /**
-     * display results from Weather History
-     * @param event
+     * display results from Weather History Service Parser
+     * @param event the Weather24HourMessageEvent sent upon completion of parsing
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWeatherCalculated(Weather24HourMessageEvent event){
@@ -442,8 +438,11 @@ public class ProcessRecordFragment extends Fragment {
         }
     }
 
+    /**
+     * uses MigraineRecordObject to retrieve user data inputted in InputTriggesFragment
+     * and displays it to the user
+     */
     public void getTriggersInputted(){
-
         String startHour = DateUtils.convertLongToString(mMigraineRecordObject.getStartHour());
         String city = mMigraineRecordObject.getCity();
         String painAtOnset = String.valueOf(mMigraineRecordObject.getPainAtOnset());

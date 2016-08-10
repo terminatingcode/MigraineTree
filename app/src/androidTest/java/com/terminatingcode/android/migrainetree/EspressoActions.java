@@ -2,12 +2,10 @@ package com.terminatingcode.android.migrainetree;
 
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 import android.widget.SeekBar;
 
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 
@@ -39,18 +37,11 @@ public class EspressoActions {
         };
     }
 
-    public static Matcher<View> withProgress(final int expectedProgress) {
-        return new BoundedMatcher<View, SeekBar>(SeekBar.class) {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("expected: ");
-                description.appendText("" + expectedProgress);
-            }
+    public static Matcher<View> withDrawable(final int resourceId) {
+        return new DrawableMatcher(resourceId);
+    }
 
-            @Override
-            public boolean matchesSafely(SeekBar seekBar) {
-                return seekBar.getProgress() == expectedProgress;
-            }
-        };
+    public static Matcher<View> noDrawable() {
+        return new DrawableMatcher(-1);
     }
 }

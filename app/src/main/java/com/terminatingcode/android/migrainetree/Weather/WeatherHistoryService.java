@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.terminatingcode.android.migrainetree.Constants;
+import com.terminatingcode.android.migrainetree.DateUtils;
 import com.terminatingcode.android.migrainetree.MyRequestQueue;
 import com.terminatingcode.android.migrainetree.R;
 
@@ -52,13 +53,13 @@ public class WeatherHistoryService extends IntentService {
     }
 
     public void getWeatherHistory(String dateString, String locationID){
-        SimpleDateFormat oldDateFormat = new SimpleDateFormat("dd/MM/yyyyhh:mm", Locale.getDefault());
         SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         String newDateString;
         Date date;
         Calendar calendar = Calendar.getInstance();
         try {
-            date = oldDateFormat.parse(dateString);
+            long milliseconds = DateUtils.convertStringToLong(dateString);
+            date = new Date(milliseconds);
             calendar.setTimeInMillis(date.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
