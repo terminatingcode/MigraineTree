@@ -26,10 +26,7 @@ import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -419,7 +416,7 @@ public class InputTriggersFragment extends Fragment {
     public long checkStartHourChosen(){
         long startHour = Constants.DEFAULT_NO_DATA;
         try {
-            startHour = convertStringToInt();
+            startHour = DateUtils.convertStringToLong(date + time);
         } catch (ParseException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
@@ -472,10 +469,4 @@ public class InputTriggersFragment extends Fragment {
         return migraineRecordObject;
     }
 
-    public long convertStringToInt() throws ParseException {
-        String dateTime = date + time;
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyyhh:mm", Locale.getDefault());
-        Date date = df.parse(dateTime);
-        return date.getTime();
-    }
 }

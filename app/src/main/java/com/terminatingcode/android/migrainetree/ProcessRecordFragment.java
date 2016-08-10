@@ -444,7 +444,7 @@ public class ProcessRecordFragment extends Fragment {
 
     public void getTriggersInputted(){
 
-        String startHour = convertLongToString(mMigraineRecordObject.getStartHour());
+        String startHour = DateUtils.convertLongToString(mMigraineRecordObject.getStartHour());
         String city = mMigraineRecordObject.getCity();
         String painAtOnset = String.valueOf(mMigraineRecordObject.getPainAtOnset());
         String sleep = String.valueOf(mMigraineRecordObject.getSleep());
@@ -483,15 +483,6 @@ public class ProcessRecordFragment extends Fragment {
         if (mMigraineRecordObject.isEars()) sb.append("Ringin/popped ears\n");
         if (mMigraineRecordObject.isConfusion()) sb.append("Confusion/mental fog");
         symptomsTextView.setText(sb.toString());
-    }
-
-    private String convertLongToString(long milliseconds){
-        if(milliseconds != Constants.DEFAULT_NO_DATA) {
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy\nhh:mm", Locale.getDefault());
-            Date date = new Date(milliseconds);
-            return df.format(date);
-        }
-        return null;
     }
 
     private void displayNotification(Uri uri) {
