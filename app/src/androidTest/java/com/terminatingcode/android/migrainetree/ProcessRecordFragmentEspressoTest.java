@@ -1,7 +1,14 @@
 package com.terminatingcode.android.migrainetree;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
+
+import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -9,8 +16,12 @@ import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Sarah on 8/10/2016.
@@ -130,5 +141,56 @@ public class ProcessRecordFragmentEspressoTest {
         onView(withId(R.id.symptomsEntered))
                 .perform(ViewActions.scrollTo())
                 .check(matches(withText(expectedSymptomsString)));
+    }
+
+    @Test
+    public void testMigraineDoneVisibility(){
+        onView(withId(R.id.migraineDoneView))
+                .perform(ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.switchMigraineDone))
+                .perform(ViewActions.scrollTo())
+                .perform(ViewActions.click());
+        onView(withId(R.id.migraineDoneView))
+                .check(matches(ViewMatchers.withEffectiveVisibility
+                        (ViewMatchers.Visibility.GONE)));
+    }
+
+    @Test
+    public void testSaveToSQLite(){
+        ContentResolver mResolver =
+                mMainActivityActivityTestRule.getActivity().getContentResolver();
+        Uri uri = mFragment.saveToSQLite(mResolver, mMockRecordObject);
+        Log.d("test", uri.toString());
+        Cursor cursor = mResolver.query(uri, null, null, null, null);
+        try {
+            assertNotNull(cursor);
+            assertTrue(cursor.getCount() > 0);
+            cursor.moveToFirst();
+            int startHourIndex = cursor.getColumnIndex(MigraineRecord.START_HOUR);
+            int painIndex = cursor.getColumnIndex(MigraineRecord.PAIN_AT_ONSET);
+            int foodIndex = cursor.getColumnIndex(MigraineRecord.EATEN);
+            int dehydrationIndex = cursor.getColumnIndex(MigraineRecord.WATER);
+            int sleepIndex = cursor.getColumnIndex(MigraineRecord.SLEEP);
+            int stressIndex = cursor.getColumnIndex(MigraineRecord.STRESS);
+            int eyeStrainIndex = cursor.getColumnIndex(MigraineRecord.EYE_STRAIN);
+            long savedStartHour = cursor.getLong(startHourIndex);
+            int pain = cursor.getInt(painIndex);
+            boolean food = cursor.getInt(foodIndex) > 0;
+            boolean dehydration = cursor.getInt(dehydrationIndex) > 0;
+            int sleepResult = cursor.getInt(sleepIndex);
+            int stressResult = cursor.getInt(stressIndex);
+            int eyeStrainResult = cursor.getInt(eyeStrainIndex);
+            assertEquals(startHour, savedStartHour);
+            assertEquals(painAtOnset, pain);
+            assertEquals(eaten, food);
+            assertEquals(water, dehydration);
+            assertEquals(sleep, sleepResult);
+            assertEquals(stress, stressResult);
+            assertEquals(eyeStrain, eyeStrainResult);
+        }finally{
+            if(cursor != null) cursor.close();
+            mResolver.delete(uri, null, null);
+        }
     }
 }

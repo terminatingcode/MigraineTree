@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.terminatingcode.android.migrainetree.R;
@@ -35,6 +36,7 @@ public class SignInFragment extends Fragment {
     private ImageButton signInButton;
 
     private OnFragmentInteractionListener mListener;
+    private ProgressBar mProgressBar;
 
     /** Permission Request Code (Must be < 256). */
     private static final int GET_ACCOUNTS_PERMISSION_REQUEST_CODE = 93;
@@ -55,7 +57,6 @@ public class SignInFragment extends Fragment {
         public void onSuccess(final IdentityProvider provider) {
             Log.d(LOG_TAG, String.format("User sign-in with %s succeeded",
                 provider.getDisplayName()));
-
             // The sign-in manager is no longer needed once signed in.
             SignInManager.dispose();
             if(getActivity() != null) {
@@ -82,7 +83,6 @@ public class SignInFragment extends Fragment {
         public void onCancel(final IdentityProvider provider) {
             Log.d(LOG_TAG, String.format("User sign-in with %s canceled.",
                 provider.getDisplayName()));
-
             Toast.makeText(getActivity(), String.format("Sign-in with %s canceled.",
                 provider.getDisplayName()), Toast.LENGTH_LONG).show();
         }
@@ -97,7 +97,6 @@ public class SignInFragment extends Fragment {
             if (provider != null) {
                 Log.e(LOG_TAG, String.format("User Sign-in failed for %s : %s",
                         provider.getDisplayName(), ex.getMessage()), ex);
-
                 final AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(getActivity());
                 errorDialogBuilder.setTitle("Sign-In Error");
                 errorDialogBuilder.setMessage(
@@ -140,9 +139,9 @@ public class SignInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sign_in, container, false);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.signInProgressBar);
         signInButton = (ImageButton) rootView.findViewById(R.id.g_login_button);
         signInManager = SignInManager.getInstance(getActivity());
-
         signInManager.setResultsHandler(getActivity(), new SignInResultsHandler());
 
         // Initialize sign-in buttons.
@@ -164,6 +163,7 @@ public class SignInFragment extends Fragment {
                     }
 
                     // call the Google onClick listener.
+                    mProgressBar.setVisibility(View.VISIBLE);
                     googleOnClickListener.onClick(view);
                 }
             });
@@ -193,6 +193,7 @@ public class SignInFragment extends Fragment {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mProgressBar.setVisibility(View.GONE);
         signInManager.handleActivityResult(requestCode, resultCode, data);
     }
 

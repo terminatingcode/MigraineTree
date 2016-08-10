@@ -123,11 +123,33 @@ public final class LocalContentProvider extends ContentProvider{
             case MIGRAINE_RECORDS:
                 return db.query(MigraineRecord.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
             case MIGRAINE_RECORDS_ID:
+                String taskId = uri.getLastPathSegment();
+                selectionArgs = fixSelectionArgs(selectionArgs, taskId);
+                selection = fixSelectionString(selection);
                 return db.query(MigraineRecord.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
             default:
                 throw new IllegalArgumentException("Invalid Uri: " + uri);
 
         }
+    }
+
+    public static String[] fixSelectionArgs(String[] selectionArgs, String taskId){
+        if(selectionArgs == null) {
+            selectionArgs = new String[]{taskId};
+            return selectionArgs;
+        }
+        else{
+            String[] newSelectionArgs = new String[selectionArgs.length + 1];
+            newSelectionArgs[0] = taskId;
+            System.arraycopy(selectionArgs, 0, newSelectionArgs, 1, selectionArgs.length);
+            return newSelectionArgs;
+        }
+    }
+
+    public static String fixSelectionString(String selection){
+        selection = selection == null? MigraineRecord._ID + " = ?" :
+                MigraineRecord._ID + " = ? AND (" + selection + ")";
+        return selection;
     }
 
 
@@ -182,6 +204,9 @@ public final class LocalContentProvider extends ContentProvider{
             case MIGRAINE_RECORDS:
                 return db.delete(MigraineRecord.TABLE_NAME, selection, selectionArgs);
             case MIGRAINE_RECORDS_ID:
+                String taskId = uri.getLastPathSegment();
+                selectionArgs = fixSelectionArgs(selectionArgs, taskId);
+                selection = fixSelectionString(selection);
                 return db.delete(MigraineRecord.TABLE_NAME, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("invalid URI: " + uri);
@@ -200,6 +225,9 @@ public final class LocalContentProvider extends ContentProvider{
                 count = db.update(MigraineRecord.TABLE_NAME, values, selection, selectionArgs);
                 return count;
             case MIGRAINE_RECORDS_ID:
+                String taskId = uri.getLastPathSegment();
+                selectionArgs = fixSelectionArgs(selectionArgs, taskId);
+                selection = fixSelectionString(selection);
                 count = db.update(MigraineRecord.TABLE_NAME, values, selection, selectionArgs);
                 return count;
             default:

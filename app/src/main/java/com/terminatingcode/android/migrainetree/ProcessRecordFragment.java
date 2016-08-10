@@ -154,7 +154,7 @@ public class ProcessRecordFragment extends Fragment {
         medicationTextView = (TextView) rootView.findViewById(R.id.medicationEntered);
         symptomsTextView = (TextView) rootView.findViewById(R.id.symptomsEntered);
         cycleDayTextView = (TextView) rootView.findViewById(R.id.cycleDayEntered);
-        migraineDoneSwitch = (Switch) rootView.findViewById(R.id.switch1);
+        migraineDoneSwitch = (Switch) rootView.findViewById(R.id.switchMigraineDone);
         migraineDoneView = (LinearLayout) rootView.findViewById(R.id.migraineDoneView);
         peakPainLevelTextView = (TextView) rootView.findViewById(R.id.painPeakLevelTextView);
         peakPainSeekbar = (SeekBar) rootView.findViewById(R.id.painPeakSeekBar);
@@ -183,7 +183,8 @@ public class ProcessRecordFragment extends Fragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = saveToSQLite();
+                ContentResolver mResolver = getActivity().getContentResolver();
+                Uri uri = saveToSQLite(mResolver, mMigraineRecordObject);
                 if(endDataComplete) {
                     //insert local sql then send data to cloud
                     persistToAWS(uri);
@@ -223,30 +224,29 @@ public class ProcessRecordFragment extends Fragment {
         }).start();
     }
 
-    public Uri saveToSQLite() {
-        ContentResolver mResolver = getActivity().getContentResolver();
+    public Uri saveToSQLite(ContentResolver mResolver, MigraineRecordObject recordObject) {
         ContentValues values = new ContentValues();
 
-        values.put(MigraineRecord.START_HOUR, mMigraineRecordObject.getStartHour());
-        values.put(MigraineRecord.CITY, mMigraineRecordObject.getCity());
-        values.put(MigraineRecord.PAIN_AT_ONSET, mMigraineRecordObject.getPainAtOnset());
-        values.put(MigraineRecord.AURA, mMigraineRecordObject.isAura());
-        values.put(MigraineRecord.EATEN, mMigraineRecordObject.isEaten());
-        values.put(MigraineRecord.WATER, mMigraineRecordObject.isWater());
-        values.put(MigraineRecord.SLEEP, mMigraineRecordObject.getSleep());
-        values.put(MigraineRecord.STRESS, mMigraineRecordObject.getStress());
-        values.put(MigraineRecord.EYE_STRAIN, mMigraineRecordObject.getEyeStrain());
-        values.put(MigraineRecord.PAIN_TYPE, mMigraineRecordObject.getPainType());
-        values.put(MigraineRecord.PAIN_SOURCE, mMigraineRecordObject.getPainSource());
-        values.put(MigraineRecord.MEDICATION, mMigraineRecordObject.getMedication());
-        values.put(MigraineRecord.NAUSEA, mMigraineRecordObject.isNausea());
-        values.put(MigraineRecord.SENSITIVITY_TO_LIGHT, mMigraineRecordObject.isSensitivityToLight());
-        values.put(MigraineRecord.SENSITIVITY_TO_NOISE, mMigraineRecordObject.isSensitivityToNoise());
-        values.put(MigraineRecord.SENSITIVITY_TO_SMELL, mMigraineRecordObject.isSensitivityToSmell());
-        values.put(MigraineRecord.CONGESTION, mMigraineRecordObject.isCongestion());
-        values.put(MigraineRecord.EARS, mMigraineRecordObject.isEars());
-        values.put(MigraineRecord.CONFUSION, mMigraineRecordObject.isConfusion());
-        values.put(MigraineRecord.MENSTRUAL_DAY, mMigraineRecordObject.getMenstrualDay());
+        values.put(MigraineRecord.START_HOUR, recordObject.getStartHour());
+        values.put(MigraineRecord.CITY, recordObject.getCity());
+        values.put(MigraineRecord.PAIN_AT_ONSET, recordObject.getPainAtOnset());
+        values.put(MigraineRecord.AURA, recordObject.isAura());
+        values.put(MigraineRecord.EATEN, recordObject.isEaten());
+        values.put(MigraineRecord.WATER, recordObject.isWater());
+        values.put(MigraineRecord.SLEEP, recordObject.getSleep());
+        values.put(MigraineRecord.STRESS, recordObject.getStress());
+        values.put(MigraineRecord.EYE_STRAIN, recordObject.getEyeStrain());
+        values.put(MigraineRecord.PAIN_TYPE, recordObject.getPainType());
+        values.put(MigraineRecord.PAIN_SOURCE, recordObject.getPainSource());
+        values.put(MigraineRecord.MEDICATION, recordObject.getMedication());
+        values.put(MigraineRecord.NAUSEA, recordObject.isNausea());
+        values.put(MigraineRecord.SENSITIVITY_TO_LIGHT, recordObject.isSensitivityToLight());
+        values.put(MigraineRecord.SENSITIVITY_TO_NOISE, recordObject.isSensitivityToNoise());
+        values.put(MigraineRecord.SENSITIVITY_TO_SMELL, recordObject.isSensitivityToSmell());
+        values.put(MigraineRecord.CONGESTION, recordObject.isCongestion());
+        values.put(MigraineRecord.EARS, recordObject.isEars());
+        values.put(MigraineRecord.CONFUSION, recordObject.isConfusion());
+        values.put(MigraineRecord.MENSTRUAL_DAY, recordObject.getMenstrualDay());
 
         if(weatherDataReceived) {
             values.put(MigraineRecord.TEMP3HOURS, mWeather24Hour.getTempChange3Hrs());

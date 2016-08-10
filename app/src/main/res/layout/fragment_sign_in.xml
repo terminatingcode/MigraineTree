@@ -10,8 +10,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:gravity="center"
-        >
+        android:gravity="center">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signInProgressBar"
+            android:indeterminate="true"
+            android:visibility="gone"/>
     <ImageButton
         android:id="@+id/g_login_button"
         android:src="@drawable/selector_button_google"
