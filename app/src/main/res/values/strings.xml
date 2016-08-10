@@ -383,5 +383,7 @@
     <string name="delete">delete</string>
     <string name="update">update</string>
     <string name="local_records">Local Records</string>
+    <string name="current_task">current task</string>
+    <string name="migraine_severity_prediction">Migraine severity prediction:</string>
 
 </resources>

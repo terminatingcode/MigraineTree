@@ -20,10 +20,7 @@ import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class FinishRecordActivity extends Activity {
     private static final String NAME = "FinishRecordActivity";
@@ -86,8 +83,6 @@ public class FinishRecordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //save to sql
-                notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.cancel(Constants.NOTIFICATION_ID);
                 updateSQLite();
             }
         });
@@ -100,7 +95,7 @@ public class FinishRecordActivity extends Activity {
             ContentValues values = new ContentValues();
             long endHour = Constants.DEFAULT_NO_DATA;
             try {
-                endHour = convertStringToInt();
+                endHour = DateUtils.convertStringToLong(date + time);
                 Log.d(NAME, "end: " + endHour + "start: " + startHour);
                 if(endHour <= startHour){
                     Toast.makeText(this, R.string.timeError, Toast.LENGTH_LONG).show();
@@ -117,16 +112,13 @@ public class FinishRecordActivity extends Activity {
 
             int updated = mResolver.update(uri, values, null, null);
             Log.d(NAME, "updated log "+ updated);
+
+            //cancel Notification
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(Constants.NOTIFICATION_ID);
         }else{
             Log.d(NAME, "uri is null");
         }
-    }
-
-    public long convertStringToInt() throws ParseException {
-        String dateTime = date + time;
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyyhh:mm", Locale.getDefault());
-        Date date = df.parse(dateTime);
-        return date.getTime();
     }
 
     private void setUpDateTime() {
