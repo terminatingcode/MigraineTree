@@ -50,6 +50,7 @@ public class InputTriggersFragmentEspressoTest {
         mSharedPreferences = mMainActivityActivityTestRule.getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         mSharedPreferences.edit().putString(Constants.LOCATION_NAME, location).commit();
+        mSharedPreferences.edit().putBoolean(Constants.SAVE_MENSTRUAL_DATA, false).commit();
         mFragment = new InputTriggersFragment();
         mMainActivityActivityTestRule
                 .getActivity()
@@ -409,6 +410,29 @@ public class InputTriggersFragmentEspressoTest {
         assertTrue(result.isCongestion());
         assertTrue(result.isEars());
         assertTrue(result.isConfusion());
+    }
+
+    @Test
+    public void testMenstrualViewHiddenIfUserSetToFalse(){
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.menstrualDataLayout))
+                .check(matches(ViewMatchers.withEffectiveVisibility
+                        (ViewMatchers.Visibility.GONE)));
+    }
+
+    @Test
+    public void testMenstrualViewHiddenIfUserSetToTrue(){
+        mSharedPreferences.edit().clear().commit();
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.menstrualDataLayout))
+                .perform(ViewActions.scrollTo())
+                .check(matches(ViewMatchers.withEffectiveVisibility
+                        (ViewMatchers.Visibility.VISIBLE)));
+
     }
 
     @After

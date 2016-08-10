@@ -235,7 +235,7 @@
     <string name="content_removal_error_text">Content Removal Error</string>
     <string name="content_permission_failure_title_text">Permission Failure</string>
     <string name="content_permission_failure_text">Denial of Read External Storage Permission has disabled the ability to upload user files.</string>
-    <string name="prompt_sign_in_title">User Files</string>
+    <string name="prompt_sign_in_title">Need to sign in</string>
     <string name="main_fragment_subtitle_user_files">Store and access files for your users.</string>
     <string name="user_files_demo_button_public">PUBLIC</string>
     <string name="user_files_demo_button_private">PRIVATE</string>

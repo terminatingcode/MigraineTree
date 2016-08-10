@@ -238,6 +238,7 @@ public class InputTriggersFragment extends Fragment {
      */
     private void initializeMenstrualData(Long migraineDate) {
         boolean trackingMenstrualData = mPrefUtils.getsavedMenstrualPref();
+        Log.d(NAME, "menstrual data" + trackingMenstrualData);
         if(!trackingMenstrualData){
             menstrualDataLayout.setVisibility(View.GONE);
         }else{
