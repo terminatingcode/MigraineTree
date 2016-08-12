@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -187,7 +188,7 @@ public class ProcessRecordFragment extends Fragment {
                 Uri uri = saveToSQLite(mResolver, mMigraineRecordObject);
                 if(endDataComplete) {
                     //insert local sql then send data to cloud
-                    persistToAWS(uri);
+                    persistToAWS(mMigraineRecordObject);
                 }else{
                     //make a prediction with current data and ensure user comes back to input end data
                     displayNotification(uri);
@@ -197,14 +198,14 @@ public class ProcessRecordFragment extends Fragment {
         });
     }
 
-    private void persistToAWS(final Uri uri) {
+    private void persistToAWS(final MigraineRecordObject migraineRecordObject) {
         final DemoNoSQLTableBase demoTable = DemoNoSQLTableFactory.instance(getContext().getApplicationContext())
                 .getNoSQLTableByTableName(DYNAMODB_TABLE_NAME);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    demoTable.insertRecord(uri);
+                    demoTable.insertRecord(migraineRecordObject);
                 } catch (final AmazonClientException ex) {
                     DynamoDBUtils.showErrorDialogForServiceException(getActivity(),
                             getString(R.string.nosql_dialog_title_failed_operation_text), ex);
@@ -216,7 +217,12 @@ public class ProcessRecordFragment extends Fragment {
                         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                         dialogBuilder.setTitle(R.string.uploading_data);
                         dialogBuilder.setMessage(R.string.uploading_data_dialog_message);
-                        dialogBuilder.setNegativeButton(R.string.nosql_dialog_ok_text, null);
+                        dialogBuilder.setPositiveButton(R.string.nosql_dialog_ok_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
                         dialogBuilder.show();
                     }
                 });
@@ -421,12 +427,30 @@ public class ProcessRecordFragment extends Fragment {
             if (event.mWeather24Hour.getSize() == 24) {
                 mWeather24Hour = event.mWeather24Hour;
                 event.mWeather24Hour.calculateChanges();
-                String temp12Change = String.valueOf(event.mWeather24Hour.getTempChange12Hrs());
-                String temp24Change = String.valueOf(event.mWeather24Hour.getTempChange24Hrs());
-                String hum12Change = String.valueOf(event.mWeather24Hour.getHumChange12Hrs());
-                String hum24Change = String.valueOf(event.mWeather24Hour.getHumChange24Hrs());
-                String ap12Change = String.valueOf(event.mWeather24Hour.getApChange12Hrs());
-                String ap24Change = String.valueOf(event.mWeather24Hour.getApChange24Hrs());
+                double temp3 = event.mWeather24Hour.getTempChange3Hrs();
+                double temp12 = event.mWeather24Hour.getTempChange12Hrs();
+                double temp24 = event.mWeather24Hour.getTempChange24Hrs();
+                double hum3 = event.mWeather24Hour.getHumChange3Hrs();
+                double hum12 = event.mWeather24Hour.getHumChange12Hrs();
+                double hum24 = event.mWeather24Hour.getHumChange24Hrs();
+                double ap3 = event.mWeather24Hour.getApChange3Hrs();
+                double ap12 = event.mWeather24Hour.getApChange12Hrs();
+                double ap24 = event.mWeather24Hour.getApChange24Hrs();
+                String temp12Change = String.valueOf(temp12);
+                String temp24Change = String.valueOf(temp24);
+                String hum12Change = String.valueOf(hum12);
+                String hum24Change = String.valueOf(hum24);
+                String ap12Change = String.valueOf(ap12);
+                String ap24Change = String.valueOf(ap24);
+                mMigraineRecordObject.setTemp3Hours(temp3);
+                mMigraineRecordObject.setTemp12Hours(temp12);
+                mMigraineRecordObject.setTemp24Hours(temp24);
+                mMigraineRecordObject.setHum3Hours(hum3);
+                mMigraineRecordObject.setHum12Hours(hum12);
+                mMigraineRecordObject.setHum24Hours(hum24);
+                mMigraineRecordObject.setAP3Hours(ap3);
+                mMigraineRecordObject.setAP12Hours(ap12);
+                mMigraineRecordObject.setAP24Hours(ap24);
                 temp12ChangeTextView.setText(temp12Change);
                 temp24ChangeTextView.setText(temp24Change);
                 hum12ChangeTextView.setText(hum12Change);

@@ -1,7 +1,8 @@
 package com.terminatingcode.android.migrainetree.amazonaws.nosql;
 
 import android.content.Context;
-import android.net.Uri;
+
+import com.terminatingcode.android.migrainetree.MigraineRecordObject;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public abstract class DemoNoSQLTableBase {
      */
     public abstract int getNumIndexes();
 
-    public abstract void insertRecord(Uri uri);
+    public abstract void insertRecord(MigraineRecordObject migraineRecordObject);
 
     /**
      * Insert Sample data into the table.

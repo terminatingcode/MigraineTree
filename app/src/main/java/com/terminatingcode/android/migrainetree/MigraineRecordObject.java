@@ -32,6 +32,20 @@ public class MigraineRecordObject implements Parcelable{
     private boolean Ears;
     private boolean Confusion;
     private int MenstrualDay;
+    private double currentTemp;
+
+
+    private double Temp3Hours;
+    private double Temp12Hours;
+    private double Temp24Hours;
+    private double currentHum;
+    private double Hum3Hours;
+    private double Hum12Hours;
+    private double Hum24Hours;
+    private double currentAP;
+    private double AP3Hours;
+    private double AP12Hours;
+    private double AP24Hours;
 
     public MigraineRecordObject(){}
 
@@ -205,6 +219,102 @@ public class MigraineRecordObject implements Parcelable{
 
     public int getMenstrualDay() {
         return MenstrualDay;
+    }
+
+    public double getCurrentTemp() {
+        return currentTemp;
+    }
+
+    public void setCurrentTemp(double currentTemp) {
+        this.currentTemp = currentTemp;
+    }
+
+    public double getTemp3Hours() {
+        return Temp3Hours;
+    }
+
+    public void setTemp3Hours(double temp3Hours) {
+        Temp3Hours = temp3Hours;
+    }
+
+    public double getTemp12Hours() {
+        return Temp12Hours;
+    }
+
+    public void setTemp12Hours(double temp12Hours) {
+        Temp12Hours = temp12Hours;
+    }
+
+    public double getTemp24Hours() {
+        return Temp24Hours;
+    }
+
+    public void setTemp24Hours(double temp24Hours) {
+        Temp24Hours = temp24Hours;
+    }
+
+    public double getCurrentHum() {
+        return currentHum;
+    }
+
+    public void setCurrentHum(double currentHum) {
+        this.currentHum = currentHum;
+    }
+
+    public double getHum3Hours() {
+        return Hum3Hours;
+    }
+
+    public void setHum3Hours(double hum3Hours) {
+        Hum3Hours = hum3Hours;
+    }
+
+    public double getHum12Hours() {
+        return Hum12Hours;
+    }
+
+    public void setHum12Hours(double hum12Hours) {
+        Hum12Hours = hum12Hours;
+    }
+
+    public double getHum24Hours() {
+        return Hum24Hours;
+    }
+
+    public void setHum24Hours(double hum24Hours) {
+        Hum24Hours = hum24Hours;
+    }
+
+    public double getCurrentAP() {
+        return currentAP;
+    }
+
+    public void setCurrentAP(double currentAP) {
+        this.currentAP = currentAP;
+    }
+
+    public double getAP3Hours() {
+        return AP3Hours;
+    }
+
+    public void setAP3Hours(double AP3Hours) {
+        this.AP3Hours = AP3Hours;
+    }
+
+    public double getAP12Hours() {
+        return AP12Hours;
+    }
+
+    public void setAP12Hours(double AP12Hours) {
+        this.AP12Hours = AP12Hours;
+    }
+
+    public double getAP24Hours() {
+        return AP24Hours;
+    }
+
+    public void setAP24Hours(double AP24Hours) {
+        this.AP24Hours = AP24Hours;
     }
 
     public void setMenstrualDay(int menstrualDay) {
