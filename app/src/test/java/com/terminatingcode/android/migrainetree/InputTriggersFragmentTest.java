@@ -36,11 +36,27 @@ public class InputTriggersFragmentTest {
     }
 
     @Test
-    public void testgetCycleDay(){
-        Long january11990 = 631152000000L;
-        Long december201989 = 630115200000L;
+    public void testGetCycleDay(){
+        long january11990 = 631152000000L;
+        long december201989 = 630115200000L;
         ContentValues values = new ContentValues();
         values.put(MenstrualRecord.DATE, december201989);
+        RuntimeEnvironment.application.getContentResolver().insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
+        long result = mInputTriggersFragment.getCycleDay(january11990);
+        long expected = 13;
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testgetCycleDayDoesntAccountForPreviousCycle(){
+        long january11990 = 631152000000L;
+        long december201989 = 630115200000L;
+        long december211989 = 630201600000L;
+        long november211989 = 627609600000L;
+        ContentValues values = new ContentValues();
+        values.put(MenstrualRecord.DATE, december201989);
+        values.put(MenstrualRecord.DATE, december211989);
+        values.put(MenstrualRecord.DATE, november211989);
         RuntimeEnvironment.application.getContentResolver().insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
         long result = mInputTriggersFragment.getCycleDay(january11990);
         long expected = 13;
