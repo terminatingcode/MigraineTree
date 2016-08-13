@@ -263,21 +263,21 @@ public class InputTriggersFragment extends Fragment {
                 cursor.moveToFirst();
                 int dateIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
                 long menstrualDate = cursor.getLong(dateIndex);
-                Log.d(NAME, new Date(menstrualDate).toString());
-                if(migraineDate >= menstrualDate) {
-                    day = (migraineDate - menstrualDate)/MILLISECONDS_IN_DAY + 1;
-                    while (cursor.moveToNext()) {
-                        long previousMenstrualDate = (cursor.getLong(dateIndex));
-                        Log.d(NAME, "day: " + day + " menstrual " + new Date(previousMenstrualDate).toString());
-                        long difference = (menstrualDate - previousMenstrualDate)/MILLISECONDS_IN_DAY;
-                        Log.d(NAME, "difference: "+ difference);
-                        if ((menstrualDate - previousMenstrualDate)/MILLISECONDS_IN_DAY > 1) break;
-                        else {
-                            day++;
-                            menstrualDate = previousMenstrualDate;
-                        }
-                    }
+                android.util.Log.d(NAME, new Date(menstrualDate).toString());
+                while ( migraineDate <= menstrualDate && cursor.moveToNext()) {
+                    menstrualDate = (cursor.getLong(dateIndex));
                 }
+                Log.d(NAME, "found the first prev record = " + new Date(menstrualDate).toString());
+                while (cursor.moveToNext()) {
+                    long previousMenstrualDate = (cursor.getLong(dateIndex));
+                    android.util.Log.d(NAME, " menstrual " + new Date(menstrualDate).toString());
+                    android.util.Log.d(NAME, "prev menstrual " + new Date(previousMenstrualDate).toString());
+                    long difference = (menstrualDate - previousMenstrualDate) / MILLISECONDS_IN_DAY;
+                    android.util.Log.d(NAME, "difference: " + difference);
+                    if (difference > 1) break;
+                    menstrualDate = previousMenstrualDate;
+                }
+                day = (migraineDate - menstrualDate)/MILLISECONDS_IN_DAY + 1;
             }
         }finally {
             if(cursor != null) cursor.close();

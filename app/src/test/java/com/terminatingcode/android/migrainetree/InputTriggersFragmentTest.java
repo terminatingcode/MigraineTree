@@ -1,11 +1,14 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,40 +30,53 @@ public class InputTriggersFragmentTest {
 
     private Activity mActivity;
     private InputTriggersFragment mInputTriggersFragment;
+    private ContentResolver mResolver;
+    private long january11990;
+    private long december201989;
+    private long december211989;
+    private long november211989;
 
     @Before
     public void setup(){
         mActivity = Robolectric.setupActivity(MainActivity.class);
         mInputTriggersFragment = new InputTriggersFragment();
         SupportFragmentTestUtil.startFragment(mInputTriggersFragment);
-    }
-
-    @Test
-    public void testGetCycleDay(){
-        long january11990 = 631152000000L;
-        long december201989 = 630115200000L;
-        ContentValues values = new ContentValues();
-        values.put(MenstrualRecord.DATE, december201989);
-        RuntimeEnvironment.application.getContentResolver().insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
-        long result = mInputTriggersFragment.getCycleDay(january11990);
-        long expected = 13;
-        assertEquals(expected, result);
+        mResolver = RuntimeEnvironment.application.getContentResolver();
+        january11990 = 631152000000L;
+        december201989 = 630115200000L;
+        december211989 = 630201600000L;
+        november211989 = 627609600000L;
     }
 
     @Test
     public void testgetCycleDayDoesntAccountForPreviousCycle(){
-        long january11990 = 631152000000L;
-        long december201989 = 630115200000L;
-        long december211989 = 630201600000L;
-        long november211989 = 627609600000L;
         ContentValues values = new ContentValues();
         values.put(MenstrualRecord.DATE, december201989);
+        mResolver.insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
+        Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, null, null, null, null);
+        values = new ContentValues();
         values.put(MenstrualRecord.DATE, december211989);
+        mResolver.insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
+        values = new ContentValues();
         values.put(MenstrualRecord.DATE, november211989);
-        RuntimeEnvironment.application.getContentResolver().insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
+        mResolver.insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
         long result = mInputTriggersFragment.getCycleDay(january11990);
         long expected = 13;
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void testGetCycleReturnsZeroIfBeforeDate(){
+        long result = mInputTriggersFragment.getCycleDay(january11990);
+        long expected = 0;
+        assertEquals(expected, result);
+    }
+
+    @After
+    public void tearDown(){
+        String selection = MenstrualRecord.DATE + " IN (" + december201989 + ","
+                + december211989 + "," + november211989 + ")";
+        mResolver.delete(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, selection,  null);
     }
 
 }
