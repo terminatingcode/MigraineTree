@@ -42,8 +42,8 @@ public class InputTriggersFragmentTest {
         ContentValues values = new ContentValues();
         values.put(MenstrualRecord.DATE, december201989);
         RuntimeEnvironment.application.getContentResolver().insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
-        int result = mInputTriggersFragment.getCycleDay(january11990);
-        int expected = 12;
+        long result = mInputTriggersFragment.getCycleDay(january11990);
+        long expected = 13;
         assertEquals(expected, result);
     }
 

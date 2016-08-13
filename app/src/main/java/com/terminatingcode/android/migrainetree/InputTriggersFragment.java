@@ -27,6 +27,7 @@ import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -235,12 +236,12 @@ public class InputTriggersFragment extends Fragment {
      */
     private void initializeMenstrualData(Long migraineDate) {
         boolean trackingMenstrualData = mPrefUtils.getsavedMenstrualPref();
-        Log.d(NAME, "menstrual data" + trackingMenstrualData);
+        Log.d(NAME, "menstrual data: " + trackingMenstrualData);
         if(!trackingMenstrualData){
             menstrualDataLayout.setVisibility(View.GONE);
         }else{
             ContentResolver mResolver = getActivity().getContentResolver();
-            int day = getCycleDay(migraineDate);
+            long day = getCycleDay(migraineDate);
             cycleDayTextView.setText(String.valueOf(day));
         }
     }
@@ -251,23 +252,31 @@ public class InputTriggersFragment extends Fragment {
      * @param migraineDate the day the migraine occurred on
      * @return day in cycle
      */
-    public int getCycleDay(Long migraineDate) {
+    public long getCycleDay(long migraineDate) {
         ContentResolver mResolver = getActivity().getContentResolver();
-
+        Log.d(NAME, "migraine date " +  new Date(migraineDate).toString());
         String sortOrder = MenstrualRecord.DATE + " DESC";
         Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, null, null, null, sortOrder);
-        int day = 0;
+        long day = 0;
         try{
             if(cursor != null  && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 int dateIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
-                int menstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
-                int currentDay = (int) (migraineDate / MILLISECONDS_IN_DAY);
-                day = currentDay - menstrualDate;
-                while (cursor.moveToNext()) {
-                    int previousMenstrualDate = (int) (cursor.getLong(dateIndex) / MILLISECONDS_IN_DAY);
-                    if (previousMenstrualDate - menstrualDate > 1) break;
-                    else day++;
+                long menstrualDate = cursor.getLong(dateIndex);
+                Log.d(NAME, new Date(menstrualDate).toString());
+                if(migraineDate >= menstrualDate) {
+                    day = (migraineDate - menstrualDate)/MILLISECONDS_IN_DAY + 1;
+                    while (cursor.moveToNext()) {
+                        long previousMenstrualDate = (cursor.getLong(dateIndex));
+                        Log.d(NAME, "day: " + day + " menstrual " + new Date(previousMenstrualDate).toString());
+                        long difference = (menstrualDate - previousMenstrualDate)/MILLISECONDS_IN_DAY;
+                        Log.d(NAME, "difference: "+ difference);
+                        if ((menstrualDate - previousMenstrualDate)/MILLISECONDS_IN_DAY > 1) break;
+                        else {
+                            day++;
+                            menstrualDate = previousMenstrualDate;
+                        }
+                    }
                 }
             }
         }finally {

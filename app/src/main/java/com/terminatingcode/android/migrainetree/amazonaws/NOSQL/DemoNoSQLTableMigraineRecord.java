@@ -1,7 +1,6 @@
 package com.terminatingcode.android.migrainetree.amazonaws.nosql;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -13,6 +12,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanLis
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.terminatingcode.android.migrainetree.MigraineRecordObject;
 import com.terminatingcode.android.migrainetree.R;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
 import com.terminatingcode.android.migrainetree.amazonaws.util.ThreadUtils;
@@ -845,8 +845,58 @@ public class DemoNoSQLTableMigraineRecord extends DemoNoSQLTableBase {
     }
 
     @Override
-    public void insertRecord(Uri uri){
-        Log.d(LOG_TAG, "inserting record to dynamodb MigraineRecord table");
+    public void insertRecord(MigraineRecordObject migraineRecordObject)throws AmazonClientException{
+        Log.d(LOG_TAG, "inserting record to DynamoDb MigraineRecord table");
+        final MigraineRecordDO firstItem = new MigraineRecordDO();
+
+        firstItem.setUserId(AWSMobileClient.defaultMobileClient().getIdentityManager().getCachedUserID());
+        firstItem.setRecordId((double)migraineRecordObject.getStartHour());
+        firstItem.setAP12Hours(migraineRecordObject.getAP12Hours());
+        firstItem.setAP24Hours(migraineRecordObject.getAP24Hours());
+        firstItem.setAP3Hours(migraineRecordObject.getAP3Hours());
+        firstItem.setAura(migraineRecordObject.isAura());
+        firstItem.setCity(migraineRecordObject.getCity());
+        firstItem.setConfusion(migraineRecordObject.isConfusion());
+        firstItem.setCongestion(migraineRecordObject.isCongestion());
+        firstItem.setCurrentAP(migraineRecordObject.getCurrentAP());
+        firstItem.setCurrentHum(migraineRecordObject.getCurrentHum());
+        firstItem.setCurrentTemp(migraineRecordObject.getCurrentTemp());
+        firstItem.setEars(migraineRecordObject.isEars());
+        firstItem.setEaten(migraineRecordObject.isEaten());
+        firstItem.setEndHour((double)migraineRecordObject.getEndHour());
+        firstItem.setEyeStrain((double)migraineRecordObject.getEyeStrain());
+        firstItem.setHum12Hours(migraineRecordObject.getHum12Hours());
+        firstItem.setHum24Hours(migraineRecordObject.getHum24Hours());
+        firstItem.setHum3Hours(migraineRecordObject.getHum3Hours());
+        firstItem.setMedication(migraineRecordObject.getMedication());
+        firstItem.setMenstrualDay((double)migraineRecordObject.getMenstrualDay());
+        firstItem.setNausea(migraineRecordObject.isNausea());
+        firstItem.setPainAtOnset((double)migraineRecordObject.getPainAtOnset());
+        firstItem.setPainAtPeak((double)migraineRecordObject.getPainAtPeak());
+        firstItem.setPainSource(migraineRecordObject.getPainSource());
+        firstItem.setPainType(migraineRecordObject.getPainType());
+        firstItem.setSensitivityToLight(migraineRecordObject.isSensitivityToLight());
+        firstItem.setSensitivityToNoise(migraineRecordObject.isSensitivityToNoise());
+        firstItem.setSensitivityToSmell(migraineRecordObject.isSensitivityToSmell());
+        firstItem.setSleep((double)migraineRecordObject.getSleep());
+        firstItem.setStartHour((double)migraineRecordObject.getStartHour());
+        firstItem.setStress((double)migraineRecordObject.getStress());
+        firstItem.setTemp12Hours(migraineRecordObject.getTemp12Hours());
+        firstItem.setTemp24Hours(migraineRecordObject.getTemp24Hours());
+        firstItem.setTemp3Hours(migraineRecordObject.getTemp3Hours());
+        firstItem.setWater(migraineRecordObject.isWater());
+        AmazonClientException lastException = null;
+
+        try {
+            mapper.save(firstItem);
+        } catch (final AmazonClientException ex) {
+            Log.e(LOG_TAG, "Failed saving item : " + ex.getMessage(), ex);
+            lastException = ex;
+        }
+        if (lastException != null) {
+            // Re-throw the last exception encountered to alert the user.
+            throw lastException;
+        }
     }
 
     @Override
@@ -864,12 +914,9 @@ public class DemoNoSQLTableMigraineRecord extends DemoNoSQLTableBase {
             DemoSampleDataGenerator.getRandomSampleString("City"));
         firstItem.setConfusion(DemoSampleDataGenerator.getRandomSampleBool());
         firstItem.setCongestion(DemoSampleDataGenerator.getRandomSampleBool());
-        firstItem.setCurrentAP(
-            DemoSampleDataGenerator.getRandomSampleString("CurrentAP"));
-        firstItem.setCurrentHum(
-            DemoSampleDataGenerator.getRandomSampleString("CurrentHum"));
-        firstItem.setCurrentTemp(
-            DemoSampleDataGenerator.getRandomSampleString("CurrentTemp"));
+        firstItem.setCurrentAP(DemoSampleDataGenerator.getRandomSampleNumber());
+        firstItem.setCurrentHum(DemoSampleDataGenerator.getRandomSampleNumber());
+        firstItem.setCurrentTemp(DemoSampleDataGenerator.getRandomSampleNumber());
         firstItem.setEars(DemoSampleDataGenerator.getRandomSampleBool());
         firstItem.setEaten(DemoSampleDataGenerator.getRandomSampleBool());
         firstItem.setEndHour(DemoSampleDataGenerator.getRandomSampleNumber());
@@ -918,9 +965,9 @@ public class DemoNoSQLTableMigraineRecord extends DemoNoSQLTableBase {
             item.setCity(DemoSampleDataGenerator.getRandomSampleString("City"));
             item.setConfusion(DemoSampleDataGenerator.getRandomSampleBool());
             item.setCongestion(DemoSampleDataGenerator.getRandomSampleBool());
-            item.setCurrentAP(DemoSampleDataGenerator.getRandomSampleString("CurrentAP"));
-            item.setCurrentHum(DemoSampleDataGenerator.getRandomSampleString("CurrentHum"));
-            item.setCurrentTemp(DemoSampleDataGenerator.getRandomSampleString("CurrentTemp"));
+            item.setCurrentAP(DemoSampleDataGenerator.getRandomSampleNumber());
+            item.setCurrentHum(DemoSampleDataGenerator.getRandomSampleNumber());
+            item.setCurrentTemp(DemoSampleDataGenerator.getRandomSampleNumber());
             item.setEars(DemoSampleDataGenerator.getRandomSampleBool());
             item.setEaten(DemoSampleDataGenerator.getRandomSampleBool());
             item.setEndHour(DemoSampleDataGenerator.getRandomSampleNumber());

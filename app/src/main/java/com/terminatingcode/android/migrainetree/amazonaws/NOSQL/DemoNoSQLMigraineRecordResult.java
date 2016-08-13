@@ -521,11 +521,11 @@ public class DemoNoSQLMigraineRecordResult implements com.terminatingcode.androi
         congestionKeyTextView.setText("Congestion");
         congestionValueTextView.setText("" + result.getCongestion());
         currentAPKeyTextView.setText("CurrentAP");
-        currentAPValueTextView.setText(result.getCurrentAP());
+        currentAPValueTextView.setText("" + result.getCurrentAP());
         currentHumKeyTextView.setText("CurrentHum");
-        currentHumValueTextView.setText(result.getCurrentHum());
+        currentHumValueTextView.setText("" + result.getCurrentHum());
         currentTempKeyTextView.setText("CurrentTemp");
-        currentTempValueTextView.setText(result.getCurrentTemp());
+        currentTempValueTextView.setText("" + result.getCurrentTemp());
         earsKeyTextView.setText("Ears");
         earsValueTextView.setText("" + result.getEars());
         eatenKeyTextView.setText("Eaten");

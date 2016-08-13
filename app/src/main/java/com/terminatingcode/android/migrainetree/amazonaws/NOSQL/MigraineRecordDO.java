@@ -19,9 +19,9 @@ public class MigraineRecordDO {
     private String _city;
     private Boolean _confusion;
     private Boolean _congestion;
-    private String _currentAP;
-    private String _currentHum;
-    private String _currentTemp;
+    private Double _currentAP;
+    private Double _currentHum;
+    private Double _currentTemp;
     private Boolean _ears;
     private Boolean _eaten;
     private Double _endHour;
@@ -122,27 +122,27 @@ public class MigraineRecordDO {
         this._congestion = _congestion;
     }
     @DynamoDBAttribute(attributeName = "CurrentAP")
-    public String getCurrentAP() {
+    public Double getCurrentAP() {
         return _currentAP;
     }
 
-    public void setCurrentAP(final String _currentAP) {
+    public void setCurrentAP(final Double _currentAP) {
         this._currentAP = _currentAP;
     }
     @DynamoDBAttribute(attributeName = "CurrentHum")
-    public String getCurrentHum() {
+    public Double getCurrentHum() {
         return _currentHum;
     }
 
-    public void setCurrentHum(final String _currentHum) {
+    public void setCurrentHum(final Double _currentHum) {
         this._currentHum = _currentHum;
     }
     @DynamoDBAttribute(attributeName = "CurrentTemp")
-    public String getCurrentTemp() {
+    public Double getCurrentTemp() {
         return _currentTemp;
     }
 
-    public void setCurrentTemp(final String _currentTemp) {
+    public void setCurrentTemp(final Double _currentTemp) {
         this._currentTemp = _currentTemp;
     }
     @DynamoDBAttribute(attributeName = "Ears")
