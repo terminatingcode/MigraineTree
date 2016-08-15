@@ -9,7 +9,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accuracy of predictions:"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Most common pain source:"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Most common pain type:"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average length of migraine with medication:"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Average length of migraine without medication:"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"/>
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/averagePainchart"

@@ -189,14 +189,16 @@ public class ProcessRecordFragment extends Fragment {
             public void onClick(View v) {
                 ContentResolver mResolver = getActivity().getContentResolver();
                 Uri uri = saveToSQLite(mResolver, mMigraineRecordObject);
-                if(endDataComplete) {
-                    //insert local sql then send data to cloud
-                    updateMigraineRecordObject();
-                    persistToAWS(mMigraineRecordObject);
-                }else{
-                    //make a prediction with current data and ensure user comes back to input end data
-                    displayNotification(uri);
-                    onPartialRecordConfirmed();
+                if(uri != null) {
+                    if (endDataComplete) {
+                        //insert local sql then send data to cloud
+                        updateMigraineRecordObject();
+                        persistToAWS(mMigraineRecordObject);
+                    } else {
+                        //make a prediction with current data and ensure user comes back to input end data
+                        displayNotification(uri);
+                        onPartialRecordConfirmed();
+                    }
                 }
             }
         });
@@ -282,6 +284,10 @@ public class ProcessRecordFragment extends Fragment {
             } catch (ParseException e) {
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
+            }
+            if(endHour <= recordObject.getStartHour()){
+                Toast.makeText(getActivity(), R.string.timeError, Toast.LENGTH_LONG).show();
+                return null;
             }
             painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
             values.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
@@ -371,14 +377,6 @@ public class ProcessRecordFragment extends Fragment {
         endDataComplete = false;
     }
 
-    /**
-     * once user confirms submission, alert MainActivity
-     */
-    public void onConfirmButtonPressed() {
-        if (mListener != null) {
-            mListener.onRecordConfirmed();
-        }
-    }
 
     /**
      * once user confirms submission, alert MainActivity
@@ -526,14 +524,14 @@ public class ProcessRecordFragment extends Fragment {
         String message = getActivity().getString(R.string.complete_your_migraine_record);
         Intent notificationIntent = new Intent(getActivity(), FinishRecordActivity.class);
         notificationIntent.setFlags(
-                Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra(Constants.INSERTED_URI, uri)
-                .putExtra(Constants.START_HOUR, mMigraineRecordObject.getStartHour());
+                .putExtra(Constants.RECORD_OBJECT, mMigraineRecordObject);
         int requestID = (int) System.currentTimeMillis();
         PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), requestID, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Display a notification with an icon, message as content, and default sound. It also
+        // Display a notification with an icon and message as content. It also
         // opens the app when the notification is clicked.
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity()).setSmallIcon(
@@ -563,7 +561,6 @@ public class ProcessRecordFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onRecordConfirmed();
         void onPartialRecordConfirmed();
     }
 }

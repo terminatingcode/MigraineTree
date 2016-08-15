@@ -254,7 +254,6 @@ public class InputTriggersFragment extends Fragment {
      */
     public long getCycleDay(long migraineDate) {
         ContentResolver mResolver = getActivity().getContentResolver();
-        Log.d(NAME, "migraine date " +  new Date(migraineDate).toString());
         String sortOrder = MenstrualRecord.DATE + " DESC";
         Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, null, null, null, sortOrder);
         long day = 0;
@@ -267,13 +266,9 @@ public class InputTriggersFragment extends Fragment {
                 while ( migraineDate <= menstrualDate && cursor.moveToNext()) {
                     menstrualDate = (cursor.getLong(dateIndex));
                 }
-                Log.d(NAME, "found the first prev record = " + new Date(menstrualDate).toString());
                 while (cursor.moveToNext()) {
                     long previousMenstrualDate = (cursor.getLong(dateIndex));
-                    android.util.Log.d(NAME, " menstrual " + new Date(menstrualDate).toString());
-                    android.util.Log.d(NAME, "prev menstrual " + new Date(previousMenstrualDate).toString());
                     long difference = (menstrualDate - previousMenstrualDate) / MILLISECONDS_IN_DAY;
-                    android.util.Log.d(NAME, "difference: " + difference);
                     if (difference > 1) break;
                     menstrualDate = previousMenstrualDate;
                 }

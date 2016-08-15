@@ -388,11 +388,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRecordConfirmed() {
-
-    }
-
-    @Override
     public void onPartialRecordConfirmed() {
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, FeelBetterFragment.newInstance())

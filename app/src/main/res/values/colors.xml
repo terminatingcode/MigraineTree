@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#303030</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#aafeff</color>
+    <color name="colorAccent">#00987c</color>
     <color name="textColor">#ffffff</color>
     <color name="summer">#ecdb96</color>
     <color name="winter">#a9edf5</color>
