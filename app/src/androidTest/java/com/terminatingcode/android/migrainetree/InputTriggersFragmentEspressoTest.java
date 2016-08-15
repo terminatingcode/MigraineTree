@@ -39,6 +39,7 @@ public class InputTriggersFragmentEspressoTest {
 
     private InputTriggersFragment mFragment;
     private SharedPreferences mSharedPreferences;
+//    UserSettings mUserSettings;
     private String location = "testLocation";
 
     @Rule
@@ -51,6 +52,7 @@ public class InputTriggersFragmentEspressoTest {
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         mSharedPreferences.edit().putString(Constants.LOCATION_NAME, location).commit();
         mSharedPreferences.edit().putBoolean(Constants.SAVE_MENSTRUAL_DATA, false).commit();
+
         mFragment = new InputTriggersFragment();
         mMainActivityActivityTestRule
                 .getActivity()
@@ -98,7 +100,7 @@ public class InputTriggersFragmentEspressoTest {
         int month = 7;
         int day = 13;
         onView(withId(R.id.set_button)).perform(click());
-        onView(withId(R.id.datePicker)).perform(PickerActions.setDate(year, month + 1, day));
+        onView(withId(R.id.datePicker)).perform(PickerActions.setDate(year, month, day));
         onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.migraineStartDateTextView)).check(matches(withText(day + "/" + month + "/" + year)));
     }
@@ -329,6 +331,7 @@ public class InputTriggersFragmentEspressoTest {
 
     @Test
     public void testsToastDisplayedWhenDateNotSet(){
+        mSharedPreferences.edit().putString(Constants.LOCATION_NAME, location).commit();
         onView(withId(R.id.saveRecordButton))
                 .perform(ViewActions.scrollTo())
                 .perform(click());
@@ -339,6 +342,9 @@ public class InputTriggersFragmentEspressoTest {
 
     @Test
     public void testsToastDisplayedWhenCityNotSet(){
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.saveRecordButton))
                 .perform(ViewActions.scrollTo())
                 .perform(click());
@@ -423,11 +429,8 @@ public class InputTriggersFragmentEspressoTest {
     }
 
     @Test
-    public void testMenstrualViewHiddenIfUserSetToTrue(){
+    public void testMenstrualViewVisibleIfUserSetToTrue(){
         mSharedPreferences.edit().clear().commit();
-        onView(withId(R.id.set_button)).perform(click());
-        onView(withId(R.id.set_button)).perform(click());
-        onView(withId(R.id.set_button)).perform(click());
         onView(withId(R.id.menstrualDataLayout))
                 .perform(ViewActions.scrollTo())
                 .check(matches(ViewMatchers.withEffectiveVisibility

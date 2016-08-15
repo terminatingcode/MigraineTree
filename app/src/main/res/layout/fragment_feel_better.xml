@@ -6,30 +6,20 @@
               android:padding="12dp"
              tools:context="com.terminatingcode.android.migrainetree.FeelBetterFragment"
              android:background="@color/colorPrimary">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/currentTaskTextView"
-            android:text="@string/current_task"
-            android:padding="12dp"
-            android:textColor="@color/textColor"
-            android:textSize="24sp"
-            android:layout_gravity="center_horizontal"/>
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/uploadProgressBar"
-            android:padding="12dp"
-            android:indeterminate="true"
-            android:layout_gravity="center_horizontal"
-            android:visibility="invisible"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/predictionView"
-            android:background="@android:color/black"
-            android:visibility="invisible">
+            android:background="@android:color/black">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/preditionProgressBar"
+                android:padding="12dp"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                android:layout_gravity="center_horizontal"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/predictionTextView"
-                android:text="@string/zero"
+                android:text="@string/default_text"
                 android:layout_gravity="center_horizontal"
                 android:padding="12dp"
                 android:textColor="@color/textColor"
@@ -60,7 +50,6 @@
         android:layout_gravity="center_horizontal"
         android:padding="12dp"
         android:drawableBottom="@drawable/ic_favorite_white_48dp"
-        android:clickable="true"
-        android:visibility="invisible"/>
+        android:clickable="true"/>
 
 </LinearLayout>

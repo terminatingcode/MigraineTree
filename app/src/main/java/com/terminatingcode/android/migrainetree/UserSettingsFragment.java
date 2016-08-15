@@ -11,9 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -35,7 +35,6 @@ public class UserSettingsFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
     private AutoCompleteTextView mAutoCompleteTextView;
     private TextView cityTextView;
-    private Button searchButton;
     private CheckBox menstrualDataEnabledCheckbox;
     private boolean preference;
 
@@ -51,10 +50,7 @@ public class UserSettingsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         mAutoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.location);
         cityTextView = (TextView) rootView.findViewById(R.id.displayCity);
-        searchButton = (Button) rootView.findViewById(R.id.searchCitiesButton);
         menstrualDataEnabledCheckbox = (CheckBox) rootView.findViewById(R.id.useMenstrualDataCheckBox);
-
-        //set cityTextView
         mSharedPreferences = getActivity()
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         final SharedPrefsUtils mSharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
@@ -76,17 +72,13 @@ public class UserSettingsFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (EditorInfo.IME_ACTION_DONE == actionId || EditorInfo.IME_ACTION_UNSPECIFIED == actionId) {
                     String inputtedCity = mAutoCompleteTextView.getText().toString();
+                    InputMethodManager imm =
+                            (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mAutoCompleteTextView.getWindowToken(), 0);
                     startGeoLookupService(inputtedCity);
                     return true;
                 }
                 return false;
-            }
-        });
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String inputtedCity = mAutoCompleteTextView.getText().toString();
-                startGeoLookupService(inputtedCity);
             }
         });
         //if a user selects a city, save to SharedPreferences
@@ -97,6 +89,7 @@ public class UserSettingsFragment extends Fragment {
                 String cityUID = CitiesMapSingleton.newInstance().getUID(citySelected);
                 mSharedPrefsUtils.saveSelectedCity(citySelected, cityUID);
                 cityTextView.setText(citySelected);
+                mAutoCompleteTextView.clearFocus();
             }
         });
 
@@ -137,7 +130,6 @@ public class UserSettingsFragment extends Fragment {
      */
     @Subscribe
     public void onMessageEventSetCities(CitiesMessageEvent event){
-        Log.d(NAME, event.cities[0]);
         if(mAdapter != null){
             for (String CITY : event.cities) {
                 mAdapter.add(CITY);

@@ -5,6 +5,12 @@
               android:background="@color/colorPrimary"
               tools:context=".UserSettingsFragment">
 
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,18 +36,6 @@
         style="@android:style/ThemeOverlay.Material.Dark"/>
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search"
-        android:id="@+id/searchCitiesButton"
-        android:clickable="true"
-        android:layout_below="@+id/location"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"/>
-
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,10 +44,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textColor="@color/textColor"
-        android:layout_below="@+id/searchCitiesButton"
+        android:layout_below="@+id/location"
         android:buttonTint="@color/colorAccent"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:checked="true"/>
+        android:checked="true"
+        android:padding="32dp"/>
 
     <TextView
         android:layout_width="match_parent"

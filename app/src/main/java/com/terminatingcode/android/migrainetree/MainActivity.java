@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener{
 
     private static final String NAME = "MainActivity";
-    private static final String DYNAMODB_TABLE_NAME = "MigraineRecord";
     private SharedPreferences mSharedPreferences;
     private FragmentManager fragmentManager;
     private boolean enableCalendar;
     private boolean locationNeedsToBeSet;
     private SharedPrefsUtils sharedPrefsUtils;
+//    private UserSettings mUserSettings;
     private NavigationView mNavigationView;
     private View headerView;
     private Button signOutButton;
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
         sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
+//        mUserSettings = UserSettings.getInstance(this);
         setUpAWS();
         initializeNavigationDrawer();
         chooseStartScreenBasedOnLocationStored();
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         enableCalendar = sharedPrefsUtils.getsavedMenstrualPref();
+//        enableCalendar = mUserSettings.isTrackingMenstruation();
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigationView != null) {
             if(headerView == null) {
@@ -219,10 +221,15 @@ public class MainActivity extends AppCompatActivity
         boolean needToSignIn = (identityProvider == null);
         fragmentManager = getSupportFragmentManager();
         locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
-        if(locationNeedsToBeSet){
-            fragmentManager.beginTransaction().add(R.id.content_frame, new UserSettingsFragment()).commit();
-        }else if(needToSignIn) {
+        if(needToSignIn) {
             fragmentManager.beginTransaction().add(R.id.content_frame, new SignInFragment()).commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if(drawer != null) {
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+        }else if(locationNeedsToBeSet){
+            fragmentManager.beginTransaction().add(R.id.content_frame, new UserSettingsFragment()).commit();
+
         }else{
             fragmentManager.beginTransaction().add(R.id.content_frame, new NewRecordFragment()).commit();
         }
@@ -467,8 +474,14 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void switchToHome() {
+        //unlock Navigation Drawer
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(drawer != null) {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
         fragmentManager = getSupportFragmentManager();
         locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
+//        String location = mUserSettings.getLocation();
         if(locationNeedsToBeSet){
             fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
         }else{

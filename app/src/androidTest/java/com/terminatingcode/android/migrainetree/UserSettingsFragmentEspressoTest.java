@@ -43,13 +43,6 @@ public class UserSettingsFragmentEspressoTest {
     }
 
     @Test
-    public void testStartButtonIsVisibleAndClickable(){
-        onView(withId(R.id.searchCitiesButton))
-                .check(matches(isDisplayed()))
-                .check(matches(isClickable()));
-    }
-
-    @Test
     public void testTextViewsAreVisible(){
         onView(withId(R.id.displayCity))
                 .check(matches(isDisplayed()));

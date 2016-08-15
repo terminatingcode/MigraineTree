@@ -73,6 +73,7 @@ public class InputTriggersFragment extends Fragment {
     private View menstrualDataLayout;
     private Button mSaveRecordButton;
     private SharedPrefsUtils mPrefUtils;
+//    private UserSettings mUserSettings;
     private String city;
     private int numSetButtonPressed = 0;
     private static final int VIEW_DATE_PICKER = 1;
@@ -108,6 +109,7 @@ public class InputTriggersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+//        mUserSettings = UserSettings.getInstance(getActivity());
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_input_triggers, container, false);
         mDateTextView = (TextView) rootView.findViewById(R.id.migraineStartDateTextView);
@@ -170,6 +172,11 @@ public class InputTriggersFragment extends Fragment {
                 startWeatherHistoryService(date, time);
             }
         });
+        boolean trackingMenstrualData = mPrefUtils.getsavedMenstrualPref();
+        Log.d(NAME, "menstrual data: " + trackingMenstrualData);
+        if(!trackingMenstrualData){
+            menstrualDataLayout.setVisibility(View.GONE);
+        }
         return rootView;
     }
 
@@ -226,6 +233,7 @@ public class InputTriggersFragment extends Fragment {
                 .getSharedPreferences(Constants.PREFERENCES_FILE_KEY, Context.MODE_PRIVATE);
         mPrefUtils = new SharedPrefsUtils(mSharedPreferences);
         city = mPrefUtils.getSavedCity();
+//        city = mUserSettings.getLocation();
         mCityTextView.setText(city);
     }
 
@@ -234,16 +242,9 @@ public class InputTriggersFragment extends Fragment {
      * if true, query MenstrualRecords and return most recent cycle day
      * if false, disappear the menstrual data view
      */
-    private void initializeMenstrualData(Long migraineDate) {
-        boolean trackingMenstrualData = mPrefUtils.getsavedMenstrualPref();
-        Log.d(NAME, "menstrual data: " + trackingMenstrualData);
-        if(!trackingMenstrualData){
-            menstrualDataLayout.setVisibility(View.GONE);
-        }else{
-            ContentResolver mResolver = getActivity().getContentResolver();
-            long day = getCycleDay(migraineDate);
-            cycleDayTextView.setText(String.valueOf(day));
-        }
+    private void updateMenstrualData(Long migraineDate) {
+        long day = getCycleDay(migraineDate);
+        cycleDayTextView.setText(String.valueOf(day));
     }
 
     /**
@@ -292,7 +293,7 @@ public class InputTriggersFragment extends Fragment {
         mDateTextView.setText(date);
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, day);
-        initializeMenstrualData(calendar.getTimeInMillis());
+        updateMenstrualData(calendar.getTimeInMillis());
     }
 
     /**
@@ -392,6 +393,7 @@ public class InputTriggersFragment extends Fragment {
      */
     public void startWeatherHistoryService(String date, String time){
         String locationUID = mPrefUtils.getSavedLocationUID();
+//        String locationUID = mUserSettings.getUidLocation();
         if(Objects.equals(locationUID, Constants.CITY_NOT_SET)){
             Toast.makeText(getActivity(), R.string.error_city_not_set, Toast.LENGTH_LONG).show();
         }else if(date == null || time == null){
