@@ -1,12 +1,8 @@
 package com.terminatingcode.android.migrainetree.amazonaws.nosql;
 
-import android.content.Context;
-
 import com.terminatingcode.android.migrainetree.MigraineRecordObject;
 
-import java.util.List;
-
-public abstract class DemoNoSQLTableBase {
+public abstract class NoSQLTableBase {
     /** The number of sample data entries to be inserted when calling insertSampleData. */
     public static final int SAMPLE_DATA_ENTRIES_PER_INSERT = 20;
 
@@ -41,31 +37,6 @@ public abstract class DemoNoSQLTableBase {
 
     public abstract void insertRecord(MigraineRecordObject migraineRecordObject);
 
-    /**
-     * Insert Sample data into the table.
-     */
-    public abstract void insertSampleData();
-
     public abstract void deleteRecord(long startHour);
 
-    /**
-     * Remove Sample data from the table.
-     */
-    public abstract void removeSampleData();
-
-    /**
-     * Handler interface to retrieve the supported table operations.
-     */
-    public interface SupportedDemoOperationsHandler {
-        /**
-         * @param supportedOperations the list of supported table operations.
-         */
-        void onSupportedOperationsReceived(List<DemoNoSQLOperationListItem> supportedOperations);
-    }
-
-    /**
-     * Get a list of supported demo operations.
-     * @return a list of support get, query, and scan operations.
-     */
-    public abstract void getSupportedDemoOperations(Context context, SupportedDemoOperationsHandler opsHandler);
 }

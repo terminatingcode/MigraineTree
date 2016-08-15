@@ -32,8 +32,7 @@ import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
-import com.terminatingcode.android.migrainetree.amazonaws.UI.PushListenerService;
-import com.terminatingcode.android.migrainetree.amazonaws.UI.SignInFragment;
+import com.terminatingcode.android.migrainetree.amazonaws.PushListenerService;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityProvider;
@@ -284,14 +283,8 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.content_frame, new NewRecordFragment()).commit();
         } else if (id == R.id.nav_set_location) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
-        } else if (id == R.id.nav_share) {
-//            Intent intent = new Intent(this, HeartRateMonitor.class);
-//            startActivity(intent);
+        } else if (id == R.id.nav_records) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new RecordsFragment()).commit();
-        } else if (id == R.id.nav_send) {
-            Log.d(NAME, "starting AWS activity");
-            Intent intent = new Intent(this, com.terminatingcode.android.migrainetree.amazonaws.UI.MainActivity.class);
-            startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

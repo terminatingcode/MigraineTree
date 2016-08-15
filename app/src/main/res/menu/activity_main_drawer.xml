@@ -3,6 +3,14 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_weather"
+            android:icon="@drawable/ic_menu_add_record"
+            android:title="@string/newRecord"/>
+        <item
+            android:id="@+id/nav_records"
+            android:icon="@drawable/ic_records"
+            android:title="@string/records"/>
+        <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/ic_menu_calendar"
             android:title="@string/calendar"/>
@@ -11,26 +19,9 @@
             android:icon="@drawable/ic_menu_charts"
             android:title="@string/charts"/>
         <item
-            android:id="@+id/nav_weather"
-            android:icon="@drawable/ic_menu_add_record"
-            android:title="@string/newRecord"/>
-        <item
             android:id="@+id/nav_set_location"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/settings"/>
-        <item
-            android:id="@+id/nav_share"
-            android:icon="@drawable/ic_records"
-            android:title="@string/local_records"/>
     </group>
-
-    <item android:title="External Libraries">
-        <menu>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="AWS Demo"/>
-        </menu>
-    </item>
 
 </menu>

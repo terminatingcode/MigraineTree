@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.amazonaws.UI;
+package com.terminatingcode.android.migrainetree.amazonaws;
 
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -40,7 +40,7 @@ public class PushListenerService extends GcmListenerService {
         // If a push notification is sent as plain text, then the message appears in "default".
         // Otherwise it's in the "message" for JSON format.
         return data.containsKey("default") ? data.getString("default") : data.getString(
-            "message", "");
+                "message", "");
     }
 
     private static boolean isForeground(Context context) {
@@ -54,7 +54,7 @@ public class PushListenerService extends GcmListenerService {
         final String packageName = context.getPackageName();
         for (ActivityManager.RunningAppProcessInfo appProcess : tasks) {
             if (ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND == appProcess.importance
-                && packageName.equals(appProcess.processName)) {
+                    && packageName.equals(appProcess.processName)) {
                 return true;
             }
         }
@@ -67,7 +67,7 @@ public class PushListenerService extends GcmListenerService {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         int requestID = (int) System.currentTimeMillis();
         PendingIntent contentIntent = PendingIntent.getActivity(this, requestID, notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Display a notification with an icon, message as content, and default sound. It also
         // opens the app when the notification is clicked.

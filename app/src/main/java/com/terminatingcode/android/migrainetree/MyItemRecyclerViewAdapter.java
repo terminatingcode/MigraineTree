@@ -63,7 +63,6 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final View mView;
         public final TextView mContentView;
         public final TextView mDetailsView;
-        public final Button mUpdateButton;
         public final Button mDeleteButton;
         public RecordItem mItem;
 
@@ -72,7 +71,6 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.content);
             mDetailsView = (TextView) view.findViewById(R.id.description);
-            mUpdateButton = (Button) view.findViewById(R.id.updateButton);
             mDeleteButton = (Button) view.findViewById(R.id.deleteButton);
         }
 

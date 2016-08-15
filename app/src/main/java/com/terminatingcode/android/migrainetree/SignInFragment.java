@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.amazonaws.UI;
+package com.terminatingcode.android.migrainetree;
 
 import android.Manifest;
 import android.app.Activity;
@@ -56,7 +56,7 @@ public class SignInFragment extends Fragment {
         @Override
         public void onSuccess(final IdentityProvider provider) {
             Log.d(LOG_TAG, String.format("User sign-in with %s succeeded",
-                provider.getDisplayName()));
+                    provider.getDisplayName()));
             // The sign-in manager is no longer needed once signed in.
             SignInManager.dispose();
             if(getActivity() != null) {
@@ -65,7 +65,7 @@ public class SignInFragment extends Fragment {
             }
             // Load user name and image.
             AWSMobileClient.defaultMobileClient()
-                .getIdentityManager().loadUserInfoAndImage(provider, new Runnable() {
+                    .getIdentityManager().loadUserInfoAndImage(provider, new Runnable() {
                 @Override
                 public void run() {
                     Log.d(LOG_TAG, "Launching Main Activity...");
@@ -82,9 +82,9 @@ public class SignInFragment extends Fragment {
         @Override
         public void onCancel(final IdentityProvider provider) {
             Log.d(LOG_TAG, String.format("User sign-in with %s canceled.",
-                provider.getDisplayName()));
+                    provider.getDisplayName()));
             Toast.makeText(getActivity(), String.format("Sign-in with %s canceled.",
-                provider.getDisplayName()), Toast.LENGTH_LONG).show();
+                    provider.getDisplayName()), Toast.LENGTH_LONG).show();
         }
 
         /**
@@ -182,7 +182,7 @@ public class SignInFragment extends Fragment {
                                            @NonNull final String permissions[], @NonNull final int[] grantResults) {
         if (requestCode == GET_ACCOUNTS_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 signInButton.callOnClick();
             } else {
                 Log.i(LOG_TAG, "Permissions not granted for Google sign-in. :(");

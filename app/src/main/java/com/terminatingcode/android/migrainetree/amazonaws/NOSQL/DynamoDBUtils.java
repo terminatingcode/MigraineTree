@@ -78,7 +78,7 @@ public final class DynamoDBUtils {
      * @param activity the Activity the AlertDialog will be viewed on
      */
     public static void persistToAWS(final MigraineRecordObject migraineRecordObject, final FragmentActivity activity) {
-        final DemoNoSQLTableBase demoTable = DemoNoSQLTableFactory.instance(activity)
+        final NoSQLTableBase demoTable = NoSQLTableFactory.instance(activity)
                 .getNoSQLTableByTableName(DYNAMODB_TABLE_NAME);
         new Thread(new Runnable() {
             @Override
@@ -119,7 +119,7 @@ public final class DynamoDBUtils {
      * @param activity the Activity the AlertDialog will be viewed on
      */
     public static void deleteFromAWS(MigraineRecordItems.RecordItem item, final FragmentActivity activity) {
-        final DemoNoSQLTableBase awsTable = DemoNoSQLTableFactory.instance(activity.getApplicationContext())
+        final NoSQLTableBase awsTable = NoSQLTableFactory.instance(activity.getApplicationContext())
                 .getNoSQLTableByTableName(DYNAMODB_TABLE_NAME);
         final long finalStartHour = item.startHour;
         new Thread(new Runnable() {

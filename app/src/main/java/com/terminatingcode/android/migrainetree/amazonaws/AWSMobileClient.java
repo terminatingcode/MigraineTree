@@ -24,7 +24,6 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.lambda.AWSLambdaClient;
-import com.terminatingcode.android.migrainetree.amazonaws.content.UserFileManager;
 import com.terminatingcode.android.migrainetree.amazonaws.push.GCMTokenHelper;
 import com.terminatingcode.android.migrainetree.amazonaws.push.PushManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
@@ -340,29 +339,5 @@ public class AWSMobileClient {
         AWSLambdaClient awsLambdaClient = new AWSLambdaClient(identityManager.getCredentialsProvider(), clientConfiguration);
         awsLambdaClient.setRegion(Region.getRegion(AWSConfiguration.AMAZON_CLOUD_LOGIC_REGION));
         return awsLambdaClient;
-    }
-
-    /**
-     * Creates a User File Manager instance, which facilitates file transfers
-     * between the device and the specified Amazon S3 (Simple Storage Service) bucket.
-     *
-     * @param s3Bucket Amazon S3 bucket
-     * @param s3FolderPrefix Folder pre-fix for files affected by this user file
-     *                       manager instance
-     * @param resultHandler handles the resulting UserFileManager instance
-     */
-    public void createUserFileManager(final String s3Bucket,
-                                      final String s3FolderPrefix,
-                                      final Regions region,
-                                      final UserFileManager.BuilderResultHandler resultHandler) {
-
-        new UserFileManager.Builder().withContext(context)
-                .withIdentityManager(getIdentityManager())
-                .withS3Bucket(s3Bucket)
-                .withS3ObjectDirPrefix(s3FolderPrefix)
-                .withLocalBasePath(context.getFilesDir().getAbsolutePath())
-                .withClientConfiguration(clientConfiguration)
-                .withRegion(region)
-                .build(resultHandler);
     }
 }
