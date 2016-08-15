@@ -1,12 +1,10 @@
 package com.terminatingcode.android.migrainetree;
 
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -30,16 +28,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.amazonaws.AmazonClientException;
 import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessageEvent;
 import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
 import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
-import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableBase;
-import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableFactory;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
-import com.terminatingcode.android.migrainetree.amazonaws.util.ThreadUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,7 +55,6 @@ import java.util.Calendar;
 public class ProcessRecordFragment extends Fragment {
     private static final String NAME = "ProcessRecordFragment";
     private static final String ARG_RECORD = "record";
-    private static final String DYNAMODB_TABLE_NAME = "MigraineRecord";
 
     private TextView temp12ChangeTextView;
     private TextView temp24ChangeTextView;
@@ -193,7 +186,7 @@ public class ProcessRecordFragment extends Fragment {
                     if (endDataComplete) {
                         //insert local sql then send data to cloud
                         updateMigraineRecordObject();
-                        persistToAWS(mMigraineRecordObject);
+                        DynamoDBUtils.persistToAWS(mMigraineRecordObject, getActivity());
                     } else {
                         //make a prediction with current data and ensure user comes back to input end data
                         displayNotification(uri);
@@ -204,37 +197,6 @@ public class ProcessRecordFragment extends Fragment {
         });
     }
 
-    private void persistToAWS(final MigraineRecordObject migraineRecordObject) {
-        final DemoNoSQLTableBase demoTable = DemoNoSQLTableFactory.instance(getContext().getApplicationContext())
-                .getNoSQLTableByTableName(DYNAMODB_TABLE_NAME);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    demoTable.insertRecord(migraineRecordObject);
-                } catch (final AmazonClientException ex) {
-                    DynamoDBUtils.showErrorDialogForServiceException(getActivity(),
-                            getString(R.string.nosql_dialog_title_failed_operation_text), ex);
-                    return;
-                }
-                ThreadUtils.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                        dialogBuilder.setTitle(R.string.uploading_data);
-                        dialogBuilder.setMessage(R.string.uploading_data_dialog_message);
-                        dialogBuilder.setPositiveButton(R.string.nosql_dialog_ok_text, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                        dialogBuilder.show();
-                    }
-                });
-            }
-        }).start();
-    }
 
     private void updateMigraineRecordObject() {
         mMigraineRecordObject.setEndHour(endHour);

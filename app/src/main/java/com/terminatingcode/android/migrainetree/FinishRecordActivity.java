@@ -1,11 +1,8 @@
 package com.terminatingcode.android.migrainetree;
 
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,12 +16,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.amazonaws.AmazonClientException;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
-import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableBase;
-import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableFactory;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
-import com.terminatingcode.android.migrainetree.amazonaws.util.ThreadUtils;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -98,7 +91,7 @@ public class FinishRecordActivity extends AppCompatActivity {
                 //save to sql
                 updateSQLite();
                 updateMigraineObject();
-                persistToAWS(mRecordObject);
+                DynamoDBUtils.persistToAWS(mRecordObject, FinishRecordActivity.this);
             }
         });
     }
@@ -140,40 +133,6 @@ public class FinishRecordActivity extends AppCompatActivity {
     private void updateMigraineObject() {
         mRecordObject.setPainAtPeak(painAtPeak);
         mRecordObject.setEndHour(endHour);
-    }
-
-    private void persistToAWS(final MigraineRecordObject migraineRecordObject) {
-        final DemoNoSQLTableBase demoTable = DemoNoSQLTableFactory.instance(this.getApplicationContext())
-                .getNoSQLTableByTableName(DYNAMODB_TABLE_NAME);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    demoTable.insertRecord(migraineRecordObject);
-                } catch (final AmazonClientException ex) {
-                    DynamoDBUtils.showErrorDialogForServiceException(FinishRecordActivity.this,
-                            getString(R.string.nosql_dialog_title_failed_operation_text), ex);
-                    return;
-                }
-                ThreadUtils.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(FinishRecordActivity.this);
-                        dialogBuilder.setTitle(R.string.uploading_data);
-                        dialogBuilder.setMessage(R.string.uploading_data_dialog_message);
-                        dialogBuilder.setPositiveButton(R.string.nosql_dialog_ok_text, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(FinishRecordActivity.this, MainActivity.class);
-                                intent.setFlags(
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        });
-                        dialogBuilder.show();
-                    }
-                });
-            }
-        }).start();
     }
 
     private void setUpDateTime() {
