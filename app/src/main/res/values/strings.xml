@@ -307,8 +307,8 @@
 
     <string name="nosql_dialog_title_added_sample_data_text">Added Sample Data</string>
     <string name="nosql_dialog_message_added_sample_data_text">20 Sample Items with random data were added to your table.</string>
-    <string name="nosql_dialog_title_removed_sample_data_text">Removed Sample Data</string>
-    <string name="nosql_dialog_message_removed_sample_data_text">All Sample Items have been removed from your table.</string>
+    <string name="nosql_dialog_title_removed_data_text">Removed Data</string>
+    <string name="nosql_dialog_message_removed_data_text">Record has been deleted from the cloud</string>
     <string name="nosql_dialog_ok_text">OK</string>
 
     <!-- NoSQL Demo Operations Headers -->

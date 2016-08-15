@@ -133,14 +133,14 @@ public class NoSQLSelectOperationDemoFragment extends DemoFragmentBase implement
                         final Activity activity = getActivity();
                         if (activity != null) {
                             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
-                            dialogBuilder.setTitle(R.string.nosql_dialog_title_removed_sample_data_text);
-                            dialogBuilder.setMessage(R.string.nosql_dialog_message_removed_sample_data_text);
+                            dialogBuilder.setTitle(R.string.nosql_dialog_title_removed_data_text);
+                            dialogBuilder.setMessage(R.string.nosql_dialog_message_removed_data_text);
                             dialogBuilder.setNegativeButton(R.string.nosql_dialog_ok_text, null);
                             dialogBuilder.show();
                         } else {
                             // if our activity has left the foreground, alert the user via a toast.
                             Toast.makeText(appContext,
-                                R.string.nosql_dialog_title_removed_sample_data_text,
+                                R.string.nosql_dialog_title_removed_data_text,
                                 Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -35,6 +35,7 @@ import com.terminatingcode.android.migrainetree.EventMessages.Weather24HourMessa
 import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
+import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableBase;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableFactory;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
@@ -93,6 +94,8 @@ public class ProcessRecordFragment extends Fragment {
     private DatePicker endDatePicker;
     private TimePicker endTimePicker;
     private Button confirmButton;
+    private long endHour;
+    private int painAtPeak;
     private boolean endDataComplete;
     private boolean weatherDataReceived;
     private int numSetButtonPressed = 0;
@@ -188,6 +191,7 @@ public class ProcessRecordFragment extends Fragment {
                 Uri uri = saveToSQLite(mResolver, mMigraineRecordObject);
                 if(endDataComplete) {
                     //insert local sql then send data to cloud
+                    updateMigraineRecordObject();
                     persistToAWS(mMigraineRecordObject);
                 }else{
                     //make a prediction with current data and ensure user comes back to input end data
@@ -230,6 +234,11 @@ public class ProcessRecordFragment extends Fragment {
         }).start();
     }
 
+    private void updateMigraineRecordObject() {
+        mMigraineRecordObject.setEndHour(endHour);
+        mMigraineRecordObject.setPainAtPeak(painAtPeak);
+    }
+
     public Uri saveToSQLite(ContentResolver mResolver, MigraineRecordObject recordObject) {
         ContentValues values = new ContentValues();
 
@@ -267,14 +276,14 @@ public class ProcessRecordFragment extends Fragment {
         }
 
         if(endDataComplete) {
-            long endHour = Constants.DEFAULT_NO_DATA;
+            endHour = Constants.DEFAULT_NO_DATA;
             try {
                 endHour = DateUtils.convertStringToLong(date + time);
             } catch (ParseException e) {
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
             }
-            int painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
+            painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
             values.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
             values.put(MigraineRecord.END_HOUR, endHour);
         }
@@ -442,6 +451,11 @@ public class ProcessRecordFragment extends Fragment {
                 String hum24Change = String.valueOf(hum24);
                 String ap12Change = String.valueOf(ap12);
                 String ap24Change = String.valueOf(ap24);
+
+                WeatherHour currentHour = mWeather24Hour.getCurrentHour();
+                mMigraineRecordObject.setCurrentTemp(currentHour.getTemp());
+                mMigraineRecordObject.setCurrentHum(currentHour.getHum());
+                mMigraineRecordObject.setCurrentAP(currentHour.getPressure());
                 mMigraineRecordObject.setTemp3Hours(temp3);
                 mMigraineRecordObject.setTemp12Hours(temp12);
                 mMigraineRecordObject.setTemp24Hours(temp24);

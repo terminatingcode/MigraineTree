@@ -28,14 +28,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amazonaws.AmazonClientException;
 import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
 import com.terminatingcode.android.migrainetree.amazonaws.UI.PushListenerService;
 import com.terminatingcode.android.migrainetree.amazonaws.UI.SignInFragment;
+import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableBase;
+import com.terminatingcode.android.migrainetree.amazonaws.nosql.DemoNoSQLTableFactory;
+import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityProvider;
+import com.terminatingcode.android.migrainetree.amazonaws.util.ThreadUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener{
 
     private static final String NAME = "MainActivity";
+    private static final String DYNAMODB_TABLE_NAME = "MigraineRecord";
     private SharedPreferences mSharedPreferences;
     private FragmentManager fragmentManager;
     private boolean enableCalendar;
@@ -481,10 +487,45 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListDeleteItem(MigraineRecordItems.RecordItem item) {
+        deleteFromSQLite(item);
+        deleteFromAWS(item);
+    }
+
+    private void deleteFromAWS(MigraineRecordItems.RecordItem item) {
+                final DemoNoSQLTableBase awsTable = DemoNoSQLTableFactory.instance(getApplicationContext())
+                .getNoSQLTableByTableName(DYNAMODB_TABLE_NAME);
+        final long finalStartHour = item.startHour;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    awsTable.deleteRecord(finalStartHour);
+                } catch (final AmazonClientException ex) {
+                    DynamoDBUtils.showErrorDialogForServiceException(MainActivity.this,
+                            getString(R.string.nosql_dialog_title_failed_operation_text), ex);
+                    return;
+                }
+                ThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            dialogBuilder.setTitle(R.string.nosql_dialog_title_removed_data_text);
+                            dialogBuilder.setMessage(R.string.nosql_dialog_message_removed_data_text);
+                            dialogBuilder.setNegativeButton(R.string.nosql_dialog_ok_text, null);
+                            dialogBuilder.show();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void deleteFromSQLite(MigraineRecordItems.RecordItem item) {
         ContentResolver mResolver = getContentResolver();
         String whereClause = MigraineRecord._ID + " = " + item.id;
         int deleted = mResolver.delete(
                 LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, whereClause, null);
         Log.d(NAME, "deleted: " + deleted);
     }
+
+
 }

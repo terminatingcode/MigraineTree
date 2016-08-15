@@ -28,6 +28,7 @@ import java.util.Map;
 
 public class DemoNoSQLTableMigraineRecord extends DemoNoSQLTableBase {
     private static final String LOG_TAG = DemoNoSQLTableMigraineRecord.class.getSimpleName();
+    private static final String RECORD_ID = "RecordId";
 
     /** Inner classes use this value to determine how many results to retrieve per service call. */
     private static final int RESULTS_PER_RESULT_GROUP = 40;
@@ -1005,6 +1006,47 @@ public class DemoNoSQLTableMigraineRecord extends DemoNoSQLTableBase {
         if (lastException != null) {
             // Re-throw the last exception encountered to alert the user.
             throw lastException;
+        }
+    }
+
+    /**
+     * Deletes a record selected by the user
+     * created by Sarah c
+     * @param startHour the id for migraine record
+     */
+    @Override
+    public void deleteRecord(long startHour){
+        final MigraineRecordDO itemToFind = new MigraineRecordDO();
+        itemToFind.setUserId(AWSMobileClient.defaultMobileClient().getIdentityManager().getCachedUserID());
+        itemToFind.setRecordId((double) startHour);
+
+        String hour = String.valueOf(startHour);
+        Condition rangeKeyCondition = new Condition()
+                .withComparisonOperator(ComparisonOperator.EQ.toString())
+                .withAttributeValueList(new AttributeValue().withN(hour));
+
+        final DynamoDBQueryExpression<MigraineRecordDO> queryExpression = new DynamoDBQueryExpression<MigraineRecordDO>()
+                .withHashKeyValues(itemToFind)
+                .withRangeKeyCondition(RECORD_ID, rangeKeyCondition)
+                .withConsistentRead(false)
+                .withLimit(MAX_BATCH_SIZE_FOR_DELETE);
+
+        final PaginatedQueryList<MigraineRecordDO> results = mapper.query(MigraineRecordDO.class, queryExpression);
+        Log.d(LOG_TAG, "results: " + results.size());
+
+        Iterator<MigraineRecordDO> resultsIterator = results.iterator();
+
+        AmazonClientException lastException = null;
+
+        if (resultsIterator.hasNext()) {
+            final MigraineRecordDO item = resultsIterator.next();
+
+            try {
+                mapper.delete(item);
+            } catch (final AmazonClientException ex) {
+                Log.e(LOG_TAG, "Failed deleting item : " + ex.getMessage(), ex);
+                lastException = ex;
+            }
         }
     }
 

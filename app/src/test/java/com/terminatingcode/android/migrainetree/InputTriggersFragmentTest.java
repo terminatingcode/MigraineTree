@@ -3,7 +3,6 @@ package com.terminatingcode.android.migrainetree;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
@@ -53,7 +52,6 @@ public class InputTriggersFragmentTest {
         ContentValues values = new ContentValues();
         values.put(MenstrualRecord.DATE, december201989);
         mResolver.insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);
-        Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, null, null, null, null);
         values = new ContentValues();
         values.put(MenstrualRecord.DATE, december211989);
         mResolver.insert(LocalContentProvider.CONTENT_URI_MENSTRUAL_RECORDS, values);

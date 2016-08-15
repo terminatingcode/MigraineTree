@@ -34,9 +34,14 @@ public class Weather24Hour {
     private double mWspdChange24Hrs = Constants.DEFAULT_NO_DATA;
     private double mWspdChange12Hrs = Constants.DEFAULT_NO_DATA;
     private double mWspdChange3Hrs = Constants.DEFAULT_NO_DATA;
+    private WeatherHour currentHour;
 
     public Weather24Hour(){
         mHours = new ArrayList<>();
+    }
+
+    public WeatherHour getCurrentHour() {
+        return currentHour;
     }
 
     public void addHour(WeatherHour hour){
@@ -85,6 +90,7 @@ public class Weather24Hour {
 //                Log.d(NAME, hour.getHourStart().get(Calendar.DAY_OF_MONTH) + ", " + hour.getHourStart().get(Calendar.HOUR_OF_DAY));
             }
             WeatherHour one = mHours.get(23);
+            currentHour = one;
 //            Log.d(NAME, "one: " + one.getHourStart().get(Calendar.DAY_OF_MONTH) + one.getHourStart().get(Calendar.HOUR_OF_DAY));
             WeatherHour twelve = mHours.get(11);
 //            Log.d(NAME, "twelve: " + twelve.getHourStart().get(Calendar.DAY_OF_MONTH) + twelve.getHourStart().get(Calendar.HOUR_OF_DAY));

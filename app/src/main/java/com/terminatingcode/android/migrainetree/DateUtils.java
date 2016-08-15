@@ -36,4 +36,16 @@ public class DateUtils {
         Date date = df.parse(dateTime);
         return date.getTime();
     }
+
+    public static long convertListStringToLong(String dateString) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd, MMM, yyyy", Locale.getDefault());
+        Date date = dateFormat.parse(dateString);
+        return date.getTime();
+    }
+
+    public static String convertLongToListString(long startHour){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd, MMM, yyyy", Locale.getDefault());
+        Date date = new Date(startHour);
+        return dateFormat.format(date);
+    }
 }

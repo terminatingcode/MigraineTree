@@ -46,6 +46,8 @@ public abstract class DemoNoSQLTableBase {
      */
     public abstract void insertSampleData();
 
+    public abstract void deleteRecord(long startHour);
+
     /**
      * Remove Sample data from the table.
      */
