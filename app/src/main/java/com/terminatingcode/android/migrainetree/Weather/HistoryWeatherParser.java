@@ -169,7 +169,7 @@ public class HistoryWeatherParser {
         sb.append(jsonObject.getString(hour)).append(":");
         sb.append(jsonObject.getString(minutes));
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH:mm", Locale.UK);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH:mm", Locale.getDefault());
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         return format.parse(sb.toString());
     }

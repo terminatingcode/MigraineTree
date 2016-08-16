@@ -19,7 +19,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_brain_notification"
+        android:icon="@drawable/brain"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -33,11 +33,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".amazonaws.UI.MainActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait">
         </activity>
 
         <provider
@@ -113,7 +108,7 @@
         </receiver>
 
         <service
-            android:name=".amazonaws.UI.PushListenerService"
+            android:name=".amazonaws.PushListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>

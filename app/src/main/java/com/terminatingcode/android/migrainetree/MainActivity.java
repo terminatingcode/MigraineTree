@@ -214,6 +214,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * if user has not signed in, have the user begin at the SignInFragment
+     * else if they haven't specified a location, start at the SettingsFragment
+     * else, start at the NewRecordFragment
+     */
     private void chooseStartScreenBasedOnLocationStored() {
         final IdentityManager identityManager =
                 AWSMobileClient.defaultMobileClient().getIdentityManager();
@@ -262,7 +267,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
             fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, new AboutFragment()).commit();
             return true;
@@ -339,6 +343,9 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.content_frame, new InputTriggersFragment()).commit();
     }
 
+    /**
+     * if user clicks ok on sign in prompt, redirect to SignInFragment
+     */
     @Override
     public void onPromptForSignin() {
         fragmentManager.beginTransaction().add(R.id.content_frame, new SignInFragment()).commit();
@@ -384,12 +391,18 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    /**
+     * ProcessRecordFragment signals to MainActivity when a partial record has been
+     * completed and sends the user data in MigraineRecordObject format
+     * This then starts the MLPredictionService and redirects the user to the FeelBetterFragment
+     * @param recordObject containing the user data
+     */
     @Override
     public void onPartialRecordConfirmed(MigraineRecordObject recordObject) {
         HashMap<String, String> record = SpanishDataConstants.makeRecord(recordObject);
         startPredictionService(record);
         fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, FeelBetterFragment.newInstance())
+                .replace(R.id.content_frame, new FeelBetterFragment())
                 .commit();
     }
 
@@ -448,16 +461,6 @@ public class MainActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
     }
 
-    @Override
-    public void onStop(){
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-    }
-
     /**
      * switches from SignInFragment once user signed in succesfully
      * replaces with UserSettingsFragment if no location set
@@ -480,12 +483,21 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * RecordsFragment signals to MainActivity when a user wishes to delete a record
+     * This deletes the item from SQLite and AWS
+     * @param item the list item
+     */
     @Override
     public void onListDeleteItem(MigraineRecordItems.RecordItem item) {
         deleteFromSQLite(item);
         DynamoDBUtils.deleteFromAWS(item, MainActivity.this);
     }
 
+    /**
+     * uses the list item to identify the SQLite record and delete it
+     * @param item the list item from RecordsFragment
+     */
     private void deleteFromSQLite(MigraineRecordItems.RecordItem item) {
         ContentResolver mResolver = getContentResolver();
         String whereClause = MigraineRecord._ID + " = " + item.id;
@@ -494,6 +506,10 @@ public class MainActivity extends AppCompatActivity
         Log.d(NAME, "deleted: " + deleted);
     }
 
+    /**
+     * starts the intent for MLPredictionService
+     * @param record Map of user data and model attributes
+     */
     private void startPredictionService(HashMap<String, String> record){
         Intent intent = new Intent(this, MLPredictionService.class);
         intent.putExtra(Constants.RECORD, record);

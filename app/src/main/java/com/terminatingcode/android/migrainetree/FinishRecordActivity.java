@@ -97,8 +97,11 @@ public class FinishRecordActivity extends AppCompatActivity {
         });
     }
 
-
-
+    /**
+     * updates the SQLite record with the end time and peak pain
+     * @return true if a successful update to SQLite
+     * false if date not inputted, before the start time or an error with the URI
+     */
     private boolean updateSQLite() {
         if(uri != null) {
             ContentResolver mResolver = getContentResolver();
@@ -133,6 +136,10 @@ public class FinishRecordActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * updates the MigraineRecordObject with the end time and peak pain
+     * so that the data can be passed to AWS to be inserted in DynamoDB
+     */
     private void updateMigraineObject() {
         mRecordObject.setPainAtPeak(painAtPeak);
         mRecordObject.setEndHour(endHour);

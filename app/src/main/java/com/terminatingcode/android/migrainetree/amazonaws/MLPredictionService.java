@@ -20,6 +20,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The service to consult the AWS Machine Learning Model
+ * sends an EventBus message with the result
+ */
 public class MLPredictionService extends IntentService {
     private static final String NAME = "MLPredictionService";
 

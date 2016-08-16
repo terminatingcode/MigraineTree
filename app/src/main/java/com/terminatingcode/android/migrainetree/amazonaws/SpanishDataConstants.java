@@ -40,6 +40,7 @@ public class SpanishDataConstants {
         record.put(AP_3_HOURS, String.valueOf(migraineRecordObject.getAP3Hours()));
         record.put(AP_12_HOURS, String.valueOf(migraineRecordObject.getAP12Hours()));
         record.put(AP_24_HOURS, String.valueOf(migraineRecordObject.getAP24Hours()));
+        record.put(AURA, String.valueOf(migraineRecordObject.isAura()));
         return record;
     }
 }
