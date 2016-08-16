@@ -190,7 +190,7 @@ public class ProcessRecordFragment extends Fragment {
                     } else {
                         //make a prediction with current data and ensure user comes back to input end data
                         displayNotification(uri);
-                        onPartialRecordConfirmed();
+                        onPartialRecordConfirmed(mMigraineRecordObject);
                     }
                 }
             }
@@ -343,9 +343,9 @@ public class ProcessRecordFragment extends Fragment {
     /**
      * once user confirms submission, alert MainActivity
      */
-    public void onPartialRecordConfirmed() {
+    public void onPartialRecordConfirmed(MigraineRecordObject migraineRecordObject) {
         if (mListener != null) {
-            mListener.onPartialRecordConfirmed();
+            mListener.onPartialRecordConfirmed(migraineRecordObject);
         }
     }
 
@@ -523,6 +523,6 @@ public class ProcessRecordFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onPartialRecordConfirmed();
+        void onPartialRecordConfirmed(MigraineRecordObject migraineRecordObject);
     }
 }

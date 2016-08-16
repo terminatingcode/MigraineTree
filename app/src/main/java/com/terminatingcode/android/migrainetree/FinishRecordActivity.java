@@ -89,16 +89,17 @@ public class FinishRecordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //save to sql
-                updateSQLite();
-                updateMigraineObject();
-                DynamoDBUtils.persistToAWS(mRecordObject, FinishRecordActivity.this);
+                if(updateSQLite()) {
+                    updateMigraineObject();
+                    DynamoDBUtils.persistToAWS(mRecordObject, FinishRecordActivity.this);
+                }
             }
         });
     }
 
 
 
-    private void updateSQLite() {
+    private boolean updateSQLite() {
         if(uri != null) {
             ContentResolver mResolver = getContentResolver();
             ContentValues values = new ContentValues();
@@ -108,12 +109,12 @@ public class FinishRecordActivity extends AppCompatActivity {
                 Log.d(NAME, "end: " + endHour + "start: " + startHour);
                 if(endHour <= startHour){
                     Toast.makeText(this, R.string.timeError, Toast.LENGTH_LONG).show();
-                    return;
+                    return false;
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
                 Toast.makeText(this, R.string.dateTimeError, Toast.LENGTH_LONG).show();
-                return;
+                return false;
             }
             painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
             values.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
@@ -125,8 +126,10 @@ public class FinishRecordActivity extends AppCompatActivity {
             //cancel Notification
             notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.cancel(Constants.NOTIFICATION_ID);
+            return true;
         }else{
             Log.d(NAME, "uri is null");
+            return false;
         }
     }
 

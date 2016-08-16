@@ -34,6 +34,7 @@ import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
 import com.terminatingcode.android.migrainetree.amazonaws.MLPredictionService;
 import com.terminatingcode.android.migrainetree.amazonaws.PushListenerService;
+import com.terminatingcode.android.migrainetree.amazonaws.SpanishDataConstants;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityProvider;
@@ -124,7 +125,6 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         enableCalendar = sharedPrefsUtils.getsavedMenstrualPref();
-//        enableCalendar = mUserSettings.isTrackingMenstruation();
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigationView != null) {
             if(headerView == null) {
@@ -286,10 +286,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
         } else if (id == R.id.nav_records) {
             Log.d(NAME, "clicked");
-            Intent intent = new Intent(this, MLPredictionService.class);
-            intent.putExtra(Constants.RECORD, new HashMap<String, String>());
-            startService(intent);
-//            fragmentManager.beginTransaction().replace(R.id.content_frame, new RecordsFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new RecordsFragment()).commit();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -388,7 +385,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPartialRecordConfirmed() {
+    public void onPartialRecordConfirmed(MigraineRecordObject recordObject) {
+        HashMap<String, String> record = SpanishDataConstants.makeRecord(recordObject);
+        startPredictionService(record);
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, FeelBetterFragment.newInstance())
                 .commit();
@@ -493,6 +492,12 @@ public class MainActivity extends AppCompatActivity
         int deleted = mResolver.delete(
                 LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, whereClause, null);
         Log.d(NAME, "deleted: " + deleted);
+    }
+
+    private void startPredictionService(HashMap<String, String> record){
+        Intent intent = new Intent(this, MLPredictionService.class);
+        intent.putExtra(Constants.RECORD, record);
+        startService(intent);
     }
 
 }

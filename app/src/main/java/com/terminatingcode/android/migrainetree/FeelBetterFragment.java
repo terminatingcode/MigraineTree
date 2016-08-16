@@ -4,9 +4,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.terminatingcode.android.migrainetree.EventMessages.MLPredictionMessage;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
 /**
@@ -18,6 +27,7 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class FeelBetterFragment extends Fragment {
+    private static final String NAME = "FeelBetterFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,6 +36,8 @@ public class FeelBetterFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private TextView predictionTextView;
+    private ProgressBar mProgressBar;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,8 +71,10 @@ public class FeelBetterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feel_better, container, false);
+        View rootview =  inflater.inflate(R.layout.fragment_feel_better, container, false);
+        predictionTextView = (TextView) rootview.findViewById(R.id.predictionTextView);
+        mProgressBar = (ProgressBar) rootview.findViewById(R.id.preditionProgressBar);
+        return rootview;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -85,6 +99,29 @@ public class FeelBetterFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        EventBus.getDefault().register(this);
+        Log.d(NAME, "subscribed to EventBus");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+        Log.d(NAME, "unsubscribed to EventBus");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPredictionMade(MLPredictionMessage message){
+        if(message != null) {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            predictionTextView.setText(message.result);
+        }
+
     }
 
     /**
