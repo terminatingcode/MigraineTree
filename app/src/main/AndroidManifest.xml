@@ -124,6 +124,12 @@
 
         <activity android:name=".FinishRecordActivity">
         </activity>
+
+        <service
+            android:name=".amazonaws.MLPredictionService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

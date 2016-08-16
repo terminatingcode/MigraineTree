@@ -32,10 +32,13 @@ import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
 import com.terminatingcode.android.migrainetree.Weather.WeatherHistoryService;
 import com.terminatingcode.android.migrainetree.amazonaws.AWSMobileClient;
+import com.terminatingcode.android.migrainetree.amazonaws.MLPredictionService;
 import com.terminatingcode.android.migrainetree.amazonaws.PushListenerService;
 import com.terminatingcode.android.migrainetree.amazonaws.nosql.DynamoDBUtils;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityProvider;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -67,7 +70,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(NAME, "onCreate");
         setContentView(R.layout.activity_main);
         mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
         sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
@@ -269,7 +271,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -284,7 +285,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_set_location) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
         } else if (id == R.id.nav_records) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new RecordsFragment()).commit();
+            Log.d(NAME, "clicked");
+            Intent intent = new Intent(this, MLPredictionService.class);
+            intent.putExtra(Constants.RECORD, new HashMap<String, String>());
+            startService(intent);
+//            fragmentManager.beginTransaction().replace(R.id.content_frame, new RecordsFragment()).commit();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -371,7 +376,6 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onSaveRecordButtonPressed(String date, String locationUID, MigraineRecordObject migraineRecordObject) {
-        Log.d(NAME, "starting intent with date = " + date);
         Intent intent = new Intent(this, WeatherHistoryService.class);
         intent.putExtra(Constants.DATE_KEY, date);
         intent.putExtra(Constants.LOCATIONUID, locationUID);
@@ -415,8 +419,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(NAME, "onResume");
-
 
         final AWSMobileClient awsMobileClient = AWSMobileClient.defaultMobileClient();
 
@@ -436,7 +438,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(NAME, "onPause");
 
         // Obtain a reference to the mobile client.
         final AWSMobileClient awsMobileClient = AWSMobileClient.defaultMobileClient();
@@ -451,13 +452,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop(){
         super.onStop();
-        Log.d(NAME, "onStop");
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Log.d(NAME, "onDestroy");
     }
 
     /**
@@ -495,6 +494,5 @@ public class MainActivity extends AppCompatActivity
                 LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, whereClause, null);
         Log.d(NAME, "deleted: " + deleted);
     }
-
 
 }

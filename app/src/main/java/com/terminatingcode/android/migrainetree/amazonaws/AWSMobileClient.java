@@ -24,6 +24,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.lambda.AWSLambdaClient;
+import com.amazonaws.services.machinelearning.AmazonMachineLearningClient;
 import com.terminatingcode.android.migrainetree.amazonaws.push.GCMTokenHelper;
 import com.terminatingcode.android.migrainetree.amazonaws.push.PushManager;
 import com.terminatingcode.android.migrainetree.amazonaws.user.IdentityManager;
@@ -49,6 +50,7 @@ public class AWSMobileClient {
     private CognitoSyncManager syncManager;
     private AmazonDynamoDBClient dynamoDBClient;
     private DynamoDBMapper dynamoDBMapper;
+    private AmazonMachineLearningClient mMachineLearningClient;
 
     /**
      * Build class used to create the AWS mobile client.
@@ -176,6 +178,7 @@ public class AWSMobileClient {
         this.dynamoDBClient = new AmazonDynamoDBClient(identityManager.getCredentialsProvider(), clientConfiguration);
         this.dynamoDBClient.setRegion(Region.getRegion(AWSConfiguration.AMAZON_DYNAMODB_REGION));
         this.dynamoDBMapper = new DynamoDBMapper(dynamoDBClient);
+        this.mMachineLearningClient = new AmazonMachineLearningClient(identityManager.getCredentialsProvider());
     }
 
     /**
@@ -339,5 +342,9 @@ public class AWSMobileClient {
         AWSLambdaClient awsLambdaClient = new AWSLambdaClient(identityManager.getCredentialsProvider(), clientConfiguration);
         awsLambdaClient.setRegion(Region.getRegion(AWSConfiguration.AMAZON_CLOUD_LOGIC_REGION));
         return awsLambdaClient;
+    }
+
+    public AmazonMachineLearningClient getMachineLearningClient(){
+        return mMachineLearningClient;
     }
 }

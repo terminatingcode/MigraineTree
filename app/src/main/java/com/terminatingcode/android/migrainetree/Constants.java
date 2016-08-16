@@ -16,6 +16,7 @@ public interface Constants {
     int DEFAULT_NO_DATA = 0;
     String INSERTED_URI = "insertedUri";
     String RECORD_OBJECT = "recordObject";
+    String RECORD = "record";
     int NOTIFICATION_ID = 0;
 
     String NETWORK_PREFIX = "network.";

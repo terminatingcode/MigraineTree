@@ -190,7 +190,6 @@ public class CalendarFragment extends Fragment {
                     int datesIndex = cursor.getColumnIndex(MenstrualRecord.DATE);
                     Long milliseconds = cursor.getLong(datesIndex);
                     calendar.setTimeInMillis(milliseconds);
-                    Log.d(NAME, calendar.toString());
                     events.add(calendar);
                 }while(cursor.moveToNext());
             }
