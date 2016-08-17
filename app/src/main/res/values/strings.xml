@@ -385,5 +385,8 @@
     <string name="records">Records</string>
     <string name="current_task">current task</string>
     <string name="migraine_severity_prediction">Migraine severity prediction:</string>
+    <string name="pain_source">pain source:</string>
+    <string name="pain_type">pain type:</string>
+    <string name="length">length:</string>
 
 </resources>

@@ -1,12 +1,11 @@
 package com.terminatingcode.android.migrainetree;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,59 +32,24 @@ import java.util.List;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ChartsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ChartsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class ChartsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final String NAME = "ChartsFragment";
 
     private PieChart avgPainPieChart;
+    private PieChart avgTimeOfDayPiechart;
     private BarChart triggersBarChart;
+    private BarChart symptomsBarChart;
 
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     public ChartsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ChartsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ChartsFragment newInstance(String param1, String param2) {
-        ChartsFragment fragment = new ChartsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -94,31 +58,47 @@ public class ChartsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_charts, container, false);
         avgPainPieChart = (PieChart) rootView.findViewById(R.id.averagePainchart);
         triggersBarChart = (BarChart) rootView.findViewById(R.id.triggersBarChart);
+        symptomsBarChart = (BarChart) rootView.findViewById(R.id.symptomsBarChart);
+        avgTimeOfDayPiechart = (PieChart) rootView.findViewById(R.id.averageTimeOfDayChart);
         querySQLite();
         return rootView;
     }
 
     public void querySQLite(){
         List<Integer> painPeak = new ArrayList<>();
+        List<Long> startHours = new ArrayList<>();
+        List<Integer> hoursOfDay = new ArrayList<>();
+        int[] symptoms = new int[8];
+        int food = 0;
+        int dehydration = 0;
+        int sleepTooLittle = 0;
+        int sleepTooMuch = 0;
+        int stress = 0;
+        int eyeStrain = 0;
+
         ContentResolver mResolver = getActivity().getContentResolver();
         Cursor cursor = mResolver.query(LocalContentProvider.CONTENT_URI_MIGRAINE_RECORDS, null, null, null, null);
         try{
             if(cursor != null  && cursor.getCount() > 0) {
+                int startTimeIndex = cursor.getColumnIndex(MigraineRecord.START_HOUR);
+                int painIndex = cursor.getColumnIndex(MigraineRecord.PAIN_AT_PEAK);
+                int foodIndex = cursor.getColumnIndex(MigraineRecord.EATEN);
+                int dehydrationIndex = cursor.getColumnIndex(MigraineRecord.WATER);
+                int sleepIndex = cursor.getColumnIndex(MigraineRecord.SLEEP);
+                int stressIndex = cursor.getColumnIndex(MigraineRecord.STRESS);
+                int eyeStrainIndex = cursor.getColumnIndex(MigraineRecord.EYE_STRAIN);
+                int auraIndex = cursor.getColumnIndex(MigraineRecord.AURA);
+                int nauseaIndex = cursor.getColumnIndex(MigraineRecord.NAUSEA);
+                int lightIndex = cursor.getColumnIndex(MigraineRecord.SENSITIVITY_TO_LIGHT);
+                int noiseIndex = cursor.getColumnIndex(MigraineRecord.SENSITIVITY_TO_NOISE);
+                int smellIndex = cursor.getColumnIndex(MigraineRecord.SENSITIVITY_TO_SMELL);
+                int confusionIndex = cursor.getColumnIndex(MigraineRecord.CONFUSION);
+                int earsIndex = cursor.getColumnIndex(MigraineRecord.EARS);
+                int congestionIndex = cursor.getColumnIndex(MigraineRecord.CONGESTION);
                 cursor.moveToFirst();
                 do {
-                    int food = 0;
-                    int dehydration = 0;
-                    int sleepTooLittle = 0;
-                    int sleepTooMuch = 0;
-                    int stress = 0;
-                    int eyeStrain = 0;
-                    int painIndex = cursor.getColumnIndex(MigraineRecord.PAIN_AT_PEAK);
-                    int foodIndex = cursor.getColumnIndex(MigraineRecord.EATEN);
-                    int dehydrationIndex = cursor.getColumnIndex(MigraineRecord.WATER);
-                    int sleepIndex = cursor.getColumnIndex(MigraineRecord.SLEEP);
-                    int stressIndex = cursor.getColumnIndex(MigraineRecord.STRESS);
-                    int eyeStrainIndex = cursor.getColumnIndex(MigraineRecord.EYE_STRAIN);
                     painPeak.add(cursor.getInt(painIndex));
+                    startHours.add(cursor.getLong(startTimeIndex));
                     if(cursor.getInt(foodIndex) == 0) food++;
                     if(cursor.getInt(dehydrationIndex) == 0) dehydration++;
                     int sleepAmount = cursor.getInt(sleepIndex);
@@ -126,18 +106,32 @@ public class ChartsFragment extends Fragment {
                     if(sleepAmount > 9) sleepTooMuch++;
                     if(cursor.getInt(stressIndex) > 5) stress++;
                     if(cursor.getInt(eyeStrainIndex) > 5)eyeStrain++;
-                    initialisePieChart(painPeak);
-                    initialiseBarChart(food, dehydration, sleepTooLittle, sleepTooMuch, stress, eyeStrain);
+                    if(cursor.getInt(auraIndex) == 0) symptoms[0] +=1;
+                    if(cursor.getInt(nauseaIndex) == 0) symptoms[1] +=1;
+                    if(cursor.getInt(lightIndex) == 0) symptoms[2] +=1;
+                    if(cursor.getInt(noiseIndex) == 0) symptoms[3] +=1;
+                    if(cursor.getInt(smellIndex) == 0) symptoms[4] +=1;
+                    if(cursor.getInt(confusionIndex) == 0) symptoms[5] +=1;
+                    if(cursor.getInt(earsIndex) == 0) symptoms[6] +=1;
+                    if(cursor.getInt(congestionIndex) == 0) symptoms[7] +=1;
                 }while (cursor.moveToNext());
             }
         }finally {
             if(cursor != null) cursor.close();
         }
+
+        initialisePainPieChart(painPeak);
+        initialiseTriggersBarChart(food, dehydration, sleepTooLittle, sleepTooMuch, stress, eyeStrain);
+        initialiseSymptomsBarChart(symptoms);
+        for(long date : startHours){
+            hoursOfDay.add(DateUtils.convertLongToHourOfDay(date));
+        }
+        initialiseTimeOfDayPieChart(hoursOfDay);
     }
 
 
 
-    public void initialisePieChart(List<Integer> painPeak){
+    public void initialisePainPieChart(List<Integer> painPeak){
         double average = 0.0;
         int auraOnly = 0;
         int mild = 0;
@@ -181,8 +175,8 @@ public class ChartsFragment extends Fragment {
         avgPainPieChart.setData(data);
     }
 
-    public void initialiseBarChart(int food, int dehydration, int sleepTooLittle, int sleepTooMuch,
-                                    int stress, int eyeStrain) {
+    public void initialiseTriggersBarChart(int food, int dehydration, int sleepTooLittle, int sleepTooMuch,
+                                           int stress, int eyeStrain) {
         triggersBarChart.setDrawValueAboveBar(true);
         triggersBarChart.setDescription("Frequency of triggers");
         triggersBarChart.setDescriptionColor(Color.WHITE);
@@ -257,48 +251,125 @@ public class ChartsFragment extends Fragment {
         }
     }
 
+    public void initialiseSymptomsBarChart(int[] symptoms) {
+        triggersBarChart.setDrawValueAboveBar(true);
+        triggersBarChart.setDescription("Frequency of triggers");
+        triggersBarChart.setDescriptionColor(Color.WHITE);
+        triggersBarChart.setDescriptionTextSize(18);
+        triggersBarChart.getAxisRight().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+        float start = 0.5f;
+        int count = 8;
+        final String[] triggers = new String[]{
+                "",
+                "aura",
+                "nausea",
+                "light",
+                "noise",
+                "smell",
+                "confusion",
+                "ears",
+                "congestion",
+                ""};
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        XAxis xAxis = symptomsBarChart.getXAxis();
+        xAxis.setAxisMinValue(start);
+        xAxis.setAxisMaxValue(count + 0.5f);
+        xAxis.setDrawLabels(true);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setGranularity(1f);
+        xAxis.setValueFormatter(new AxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return triggers[(int) value % triggers.length];
+            }
+
+            @Override
+            public int getDecimalDigits() {
+                return 0;
+            }
+        });
+
+        ArrayList<BarEntry> triggerVals = new ArrayList<>();
+
+        triggerVals.add(new BarEntry(1, symptoms[0]));
+        triggerVals.add(new BarEntry(2, symptoms[1]));
+        triggerVals.add(new BarEntry(3, symptoms[2]));
+        triggerVals.add(new BarEntry(4, symptoms[3]));
+        triggerVals.add(new BarEntry(5, symptoms[4]));
+        triggerVals.add(new BarEntry(6, symptoms[5]));
+        triggerVals.add(new BarEntry(6, symptoms[6]));
+        triggerVals.add(new BarEntry(6, symptoms[7]));
+
+        BarDataSet set1;
+
+        if (symptomsBarChart.getData() != null &&
+                symptomsBarChart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) symptomsBarChart.getData().getDataSetByIndex(0);
+            set1.setValues(triggerVals);
+            symptomsBarChart.getData().notifyDataChanged();
+            symptomsBarChart.notifyDataSetChanged();
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            set1 = new BarDataSet(triggerVals, "Triggers");
+            set1.setColors(new int[] {
+                    R.color.aura_only,
+                    R.color.mild,
+                    R.color.moderate,
+                    R.color.severe,
+                    R.color.debilitating}, getActivity());
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1);
+
+            BarData data = new BarData(dataSets);
+            data.setValueTextSize(10f);
+            data.setBarWidth(0.9f);
+            data.setValueTextColor(Color.LTGRAY);
+
+            symptomsBarChart.setData(data);
         }
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
+    public void initialiseTimeOfDayPieChart(List<Integer> hoursOfDay){
+        double average = 0.0;
+        int morning = 0;
+        int noon = 0;
+        int evening = 0;
+        int night = 0;
+        for(Integer hour : hoursOfDay){
+            Log.d(NAME, "hour " + hour);
+            average += hour;
+            if(hour >= 5 && hour <= 11) morning++;
+            else if(hour > 11 && hour <= 15) noon++;
+            else if(hour > 15 && hour < 20) evening++;
+            else night++;
+        }
+        String avg = String.valueOf(average/hoursOfDay.size()) + "h";
+        avgTimeOfDayPiechart.setDescription("Average Time of Day");
+        avgTimeOfDayPiechart.setDescriptionColor(Color.WHITE);
+        avgTimeOfDayPiechart.setDescriptionTextSize(18);
+        avgTimeOfDayPiechart.setCenterText(avg);
+        avgTimeOfDayPiechart.setCenterTextSize(24);
+        avgTimeOfDayPiechart.setUsePercentValues(true);
+        avgTimeOfDayPiechart.setHoleRadius(32f);
+        avgTimeOfDayPiechart.setTransparentCircleRadius(36f);
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(morning, "morning"));
+        entries.add(new PieEntry(noon,"noon"));
+        entries.add(new PieEntry(evening,"evening"));
+        entries.add(new PieEntry(night,"night"));
+        PieDataSet dataSet = new PieDataSet(entries, "time of day entries");
+        dataSet.setColors(new int[] {
+                R.color.morning,
+                R.color.noon,
+                R.color.evening,
+                R.color.night}, getActivity());
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(16f);
+        avgTimeOfDayPiechart.setData(data);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

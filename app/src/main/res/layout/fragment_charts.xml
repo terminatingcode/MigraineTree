@@ -11,41 +11,52 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="4dp">
-
-        <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Accuracy of predictions:"
-        android:textColor="@color/textColor"
-        android:textSize="24sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Most common pain source:"
-            android:textColor="@color/textColor"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Most common pain type:"
-            android:textColor="@color/textColor"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Average length of migraine with medication:"
-            android:textColor="@color/textColor"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Average length of migraine without medication:"
-            android:textColor="@color/textColor"
-            android:textSize="24sp"/>
+            android:padding="14dp"
+            android:stretchColumns="*"
+            android:background="@android:drawable/gallery_thumb"
+            android:showDividers="middle"
+            android:divider="@drawable/abc_seekbar_track_material">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Average Migraine:"
+                android:textColor="@color/textColor"
+                android:textSize="24sp"/>
+            <TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/pain_source"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:id="@+id/MostCommonPainSource"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/pain_type"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"/>
+            </TableRow>
+        </TableLayout>
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/averagePainchart"
@@ -54,6 +65,16 @@
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/triggersBarChart"
+            android:layout_width="match_parent"
+            android:layout_height="280dp" />
+
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/symptomsBarChart"
+            android:layout_width="match_parent"
+            android:layout_height="280dp" />
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/averageTimeOfDayChart"
             android:layout_width="match_parent"
             android:layout_height="280dp" />
 

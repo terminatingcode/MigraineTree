@@ -2,6 +2,7 @@ package com.terminatingcode.android.migrainetree;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -47,5 +48,11 @@ public class DateUtils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd, MMM, yyyy", Locale.getDefault());
         Date date = new Date(startHour);
         return dateFormat.format(date);
+    }
+
+    public static int convertLongToHourOfDay(long milliseconds){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 }
