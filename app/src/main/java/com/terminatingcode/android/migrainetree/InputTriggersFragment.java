@@ -273,7 +273,10 @@ public class InputTriggersFragment extends Fragment {
                     if (difference > 1) break;
                     menstrualDate = previousMenstrualDate;
                 }
-                day = (migraineDate - menstrualDate)/MILLISECONDS_IN_DAY + 1;
+                long calculatedDay =  (migraineDate - menstrualDate)/MILLISECONDS_IN_DAY + 1;
+                if(calculatedDay > 0) {
+                    day = calculatedDay;
+                }
             }
         }finally {
             if(cursor != null) cursor.close();

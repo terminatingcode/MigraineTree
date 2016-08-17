@@ -438,6 +438,17 @@ public class InputTriggersFragmentEspressoTest {
 
     }
 
+    @Test
+    public void testMenstrualDayNotLessThanZero(){
+        int year = 1970;
+        int month = 0;
+        int day = 0;
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.datePicker)).perform(PickerActions.setDate(year, month, day));
+        onView(withId(R.id.set_button)).perform(click());
+        onView(withId(R.id.cycleDayTextView)).check(matches(withText(R.string.zero)));
+    }
+
     @After
     public void cleanUp(){
         mSharedPreferences.edit().clear().commit();
