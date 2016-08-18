@@ -22,40 +22,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Average Migraine:"
+                android:text="@string/average_migraine"
                 android:textColor="@color/textColor"
                 android:textSize="24sp"/>
-            <TableRow>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/pain_source"
-                    android:textColor="@color/textColor"
-                    android:textSize="18sp"/>
-                <TextView
-                    android:id="@+id/MostCommonPainSource"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/textColor"
-                    android:textSize="18sp"/>
-            </TableRow>
-            <TableRow>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/pain_type"
-                    android:textColor="@color/textColor"
-                    android:textSize="18sp"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/textColor"
-                    android:textSize="18sp"/>
-            </TableRow>
+
         </TableLayout>
 
         <com.github.mikephil.charting.charts.PieChart

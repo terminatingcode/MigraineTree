@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity
     private View headerView;
     private Button signOutButton;
     private Button   signInButton;
+    private Uri partialRecordUri;
+    private MigraineRecordObject partialMigraineRecordObject;
     /** The identity manager used to keep track of the current user account. */
     private IdentityManager identityManager;
 
@@ -71,6 +74,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            partialRecordUri = extras.getParcelable(Constants.INSERTED_URI);
+            partialMigraineRecordObject = extras.getParcelable(Constants.RECORD_OBJECT);
+        }
         mSharedPreferences = this.getSharedPreferences(Constants.PREFERENCES_FILE_KEY, MODE_PRIVATE);
         sharedPrefsUtils = new SharedPrefsUtils(mSharedPreferences);
 //        mUserSettings = UserSettings.getInstance(this);
@@ -232,6 +240,9 @@ public class MainActivity extends AppCompatActivity
             if(drawer != null) {
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
+        }else if(partialMigraineRecordObject != null && partialRecordUri != null){
+            Fragment fragment = FinishRecordFragment.newInstance(partialRecordUri, partialMigraineRecordObject);
+            fragmentManager.beginTransaction().add(R.id.content_frame, fragment).commit();
         }else if(locationNeedsToBeSet){
             fragmentManager.beginTransaction().add(R.id.content_frame, new UserSettingsFragment()).commit();
 
@@ -474,8 +485,10 @@ public class MainActivity extends AppCompatActivity
         }
         fragmentManager = getSupportFragmentManager();
         locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
-//        String location = mUserSettings.getLocation();
-        if(locationNeedsToBeSet){
+        if(partialMigraineRecordObject != null && partialRecordUri != null){
+            Fragment fragment = FinishRecordFragment.newInstance(partialRecordUri, partialMigraineRecordObject);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        }else if(locationNeedsToBeSet){
             fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
         }else{
             fragmentManager.beginTransaction().replace(R.id.content_frame, new NewRecordFragment()).commit();

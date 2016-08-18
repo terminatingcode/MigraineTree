@@ -484,7 +484,7 @@ public class ProcessRecordFragment extends Fragment {
 
     private void displayNotification(Uri uri) {
         String message = getActivity().getString(R.string.complete_your_migraine_record);
-        Intent notificationIntent = new Intent(getActivity(), FinishRecordActivity.class);
+        Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
         notificationIntent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra(Constants.INSERTED_URI, uri)

@@ -388,5 +388,6 @@
     <string name="pain_source">pain source:</string>
     <string name="pain_type">pain type:</string>
     <string name="length">length:</string>
+    <string name="average_migraine">Average Migraine:</string>
 
 </resources>

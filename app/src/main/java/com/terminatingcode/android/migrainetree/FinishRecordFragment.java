@@ -3,11 +3,14 @@ package com.terminatingcode.android.migrainetree;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -23,8 +26,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 
-public class FinishRecordActivity extends AppCompatActivity {
-    private static final String NAME = "FinishRecordActivity";
+public class FinishRecordFragment extends Fragment {
+    private static final String NAME = "FinishRecordFragment";
     private int numSetButtonPressed = 0;
     private static final int VIEW_DATE_PICKER = 1;
     private static final int VIEW_TIME_PICKER = 2;
@@ -46,28 +49,47 @@ public class FinishRecordActivity extends AppCompatActivity {
     private int painAtPeak;
     private MigraineRecordObject mRecordObject;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_finish_record);
+    /**
+     *  Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     * @param uri The uri reference to the record in SQLite
+     * @param migraineRecordObject the MigraineRecord Object holding partial record
+     * @return A new instance of fragment FinishRecordFragment
+     */
+    public static FinishRecordFragment newInstance(Uri uri, MigraineRecordObject migraineRecordObject) {
+        FinishRecordFragment fragment = new FinishRecordFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.INSERTED_URI, uri);
+        args.putParcelable(Constants.RECORD_OBJECT, migraineRecordObject);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            uri = extras.getParcelable(Constants.INSERTED_URI);
-            mRecordObject = extras.getParcelable(Constants.RECORD_OBJECT);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null){
+            uri = getArguments().getParcelable(Constants.INSERTED_URI);
+            mRecordObject = getArguments().getParcelable(Constants.RECORD_OBJECT);
             startHour = mRecordObject.getStartHour();
             Log.d(NAME, "received metadata uri " + uri + "starthour: " + mRecordObject.getStartHour());
         }
+    }
 
-        peakPainLevelTextView = (TextView) findViewById(R.id.FRpainPeakLevelTextView);
-        peakPainSeekbar = (SeekBar) findViewById(R.id.FRpainPeakSeekBar);
-        endTimeTextView = (TextView) findViewById(R.id.FREndTimeTextView);
-        endDateTextView = (TextView) findViewById(R.id.FREndDateTextView);
-        setTimeDateButton = (ImageButton) findViewById(R.id.fr_end_set_button);
-        endDatePicker = (DatePicker) findViewById(R.id.FRendDatePicker);
+    @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                     Bundle savedInstanceState) {
+        View rootview = inflater.inflate(R.layout.activity_finish_record, container, false);
+
+        peakPainLevelTextView = (TextView) rootview.findViewById(R.id.FRpainPeakLevelTextView);
+        peakPainSeekbar = (SeekBar) rootview.findViewById(R.id.FRpainPeakSeekBar);
+        endTimeTextView = (TextView) rootview.findViewById(R.id.FREndTimeTextView);
+        endDateTextView = (TextView) rootview.findViewById(R.id.FREndDateTextView);
+        setTimeDateButton = (ImageButton) rootview.findViewById(R.id.fr_end_set_button);
+        endDatePicker = (DatePicker) rootview.findViewById(R.id.FRendDatePicker);
         endDatePicker.setMinDate(startHour);
-        endTimePicker = (TimePicker) findViewById(R.id.FRendTimePicker);
-        confirmButton = (Button) findViewById(R.id.FRconfirmButton);
+        endTimePicker = (TimePicker) rootview.findViewById(R.id.FRendTimePicker);
+        confirmButton = (Button) rootview.findViewById(R.id.FRconfirmButton);
         setUpDateTime();
         if(peakPainSeekbar != null){
             peakPainSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -91,10 +113,11 @@ public class FinishRecordActivity extends AppCompatActivity {
                 //save to sql
                 if(updateSQLite()) {
                     updateMigraineObject();
-                    DynamoDBUtils.persistToAWS(mRecordObject, FinishRecordActivity.this);
+                    DynamoDBUtils.persistToAWS(mRecordObject, getActivity());
                 }
             }
         });
+        return rootview;
     }
 
     /**
@@ -104,19 +127,19 @@ public class FinishRecordActivity extends AppCompatActivity {
      */
     private boolean updateSQLite() {
         if(uri != null) {
-            ContentResolver mResolver = getContentResolver();
+            ContentResolver mResolver = getActivity().getContentResolver();
             ContentValues values = new ContentValues();
             endHour = Constants.DEFAULT_NO_DATA;
             try {
                 endHour = DateUtils.convertStringToLong(date + time);
                 Log.d(NAME, "end: " + endHour + "start: " + startHour);
                 if(endHour <= startHour){
-                    Toast.makeText(this, R.string.timeError, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.timeError, Toast.LENGTH_LONG).show();
                     return false;
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
-                Toast.makeText(this, R.string.dateTimeError, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();
                 return false;
             }
             painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
@@ -127,7 +150,7 @@ public class FinishRecordActivity extends AppCompatActivity {
             Log.d(NAME, "updated log "+ updated);
 
             //cancel Notification
-            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(Constants.NOTIFICATION_ID);
             return true;
         }else{

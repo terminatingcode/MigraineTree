@@ -117,7 +117,7 @@
 
         <!-- END - PUSH NOTIFICATIONS WITH GOOGLE CLOUD MESSAGING (GCM) -->
 
-        <activity android:name=".FinishRecordActivity">
+        <activity android:name=".FinishRecordFragment">
         </activity>
 
         <service
