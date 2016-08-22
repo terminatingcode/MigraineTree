@@ -21,6 +21,20 @@
         android:background="@color/colorPrimaryDark"
         android:textAlignment="center"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/medication"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/finishTypeOfMedsSpinner"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+
 
     <TextView
         android:layout_width="wrap_content"

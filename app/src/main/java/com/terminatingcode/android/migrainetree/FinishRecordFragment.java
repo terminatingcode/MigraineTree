@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -42,11 +44,13 @@ public class FinishRecordFragment extends Fragment {
     private DatePicker endDatePicker;
     private TimePicker endTimePicker;
     private Button confirmButton;
+    private Spinner typeOfMedsSpinner;
     private NotificationManager notificationManager;
     private Uri uri;
     private long startHour;
     private long endHour;
     private int painAtPeak;
+    private String medication;
     private MigraineRecordObject mRecordObject;
 
     /**
@@ -72,6 +76,7 @@ public class FinishRecordFragment extends Fragment {
             uri = getArguments().getParcelable(Constants.INSERTED_URI);
             mRecordObject = getArguments().getParcelable(Constants.RECORD_OBJECT);
             startHour = mRecordObject.getStartHour();
+            medication = mRecordObject.getMedication();
             Log.d(NAME, "received metadata uri " + uri + "starthour: " + mRecordObject.getStartHour());
         }
     }
@@ -79,7 +84,7 @@ public class FinishRecordFragment extends Fragment {
     @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                      Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.activity_finish_record, container, false);
+        View rootview = inflater.inflate(R.layout.fragment_finish_record, container, false);
 
         peakPainLevelTextView = (TextView) rootview.findViewById(R.id.FRpainPeakLevelTextView);
         peakPainSeekbar = (SeekBar) rootview.findViewById(R.id.FRpainPeakSeekBar);
@@ -90,6 +95,8 @@ public class FinishRecordFragment extends Fragment {
         endDatePicker.setMinDate(startHour);
         endTimePicker = (TimePicker) rootview.findViewById(R.id.FRendTimePicker);
         confirmButton = (Button) rootview.findViewById(R.id.FRconfirmButton);
+        typeOfMedsSpinner = (Spinner) rootview.findViewById(R.id.finishTypeOfMedsSpinner);
+        initialiseSpinner();
         setUpDateTime();
         if(peakPainSeekbar != null){
             peakPainSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -120,6 +127,17 @@ public class FinishRecordFragment extends Fragment {
         return rootview;
     }
 
+    private void initialiseSpinner() {
+        ArrayAdapter<CharSequence> typeOfMedsAdapter =
+                ArrayAdapter
+                        .createFromResource(getActivity(),
+                                R.array.medication_types,
+                                android.R.layout.simple_spinner_dropdown_item);
+        typeOfMedsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeOfMedsSpinner.setAdapter(typeOfMedsAdapter);
+        typeOfMedsSpinner.setSelection(typeOfMedsAdapter.getPosition(medication));
+    }
+
     /**
      * updates the SQLite record with the end time and peak pain
      * @return true if a successful update to SQLite
@@ -143,6 +161,8 @@ public class FinishRecordFragment extends Fragment {
                 return false;
             }
             painAtPeak = Integer.valueOf(peakPainLevelTextView.getText().toString());
+            medication = typeOfMedsSpinner.getSelectedItem().toString();
+            values.put(MigraineRecord.MEDICATION, medication);
             values.put(MigraineRecord.PAIN_AT_PEAK, painAtPeak);
             values.put(MigraineRecord.END_HOUR, endHour);
 
@@ -164,6 +184,7 @@ public class FinishRecordFragment extends Fragment {
      * so that the data can be passed to AWS to be inserted in DynamoDB
      */
     private void updateMigraineObject() {
+        mRecordObject.setMedication(medication);
         mRecordObject.setPainAtPeak(painAtPeak);
         mRecordObject.setEndHour(endHour);
     }
