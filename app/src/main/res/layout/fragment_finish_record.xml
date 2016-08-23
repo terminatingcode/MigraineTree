@@ -4,37 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".FinishRecordFragment"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/complete_your_migraine_record"
-        android:textColor="@color/textColor"
-        android:background="@color/colorPrimaryDark"
-        android:textAlignment="center"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/medication"
-        android:textColor="#ffffff"
-        android:clickable="true"
-        android:textSize="24sp"/>
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/finishTypeOfMedsSpinner"
-        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
-
 
     <TextView
         android:layout_width="wrap_content"
@@ -118,6 +92,19 @@
         android:background="#494949"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/medication"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:textSize="24sp"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/finishTypeOfMedsSpinner"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -77,7 +77,8 @@ public class FinishRecordFragment extends Fragment {
             mRecordObject = getArguments().getParcelable(Constants.RECORD_OBJECT);
             startHour = mRecordObject.getStartHour();
             medication = mRecordObject.getMedication();
-            Log.d(NAME, "received metadata uri " + uri + "starthour: " + mRecordObject.getStartHour());
+            Log.d(NAME, "received metadata uri " + uri + " starthour: " + mRecordObject.getStartHour());
+            Log.d(NAME, "weather data " + mRecordObject.getCurrentAP());
         }
     }
 

@@ -63,6 +63,7 @@ public class NoSQLTableMigraineRecord extends NoSQLTableBase {
     @Override
     public void insertRecord(MigraineRecordObject migraineRecordObject)throws AmazonClientException{
         Log.d(LOG_TAG, "inserting record to DynamoDb MigraineRecord table");
+        Log.d(LOG_TAG, "weather AP = " + migraineRecordObject.getCurrentAP());
         final MigraineRecordDO firstItem = new MigraineRecordDO();
 
         firstItem.setUserId(AWSMobileClient.defaultMobileClient().getIdentityManager().getCachedUserID());

@@ -33,8 +33,6 @@ public class MigraineRecordObject implements Parcelable{
     private boolean Confusion;
     private int MenstrualDay;
     private double currentTemp;
-
-
     private double Temp3Hours;
     private double Temp12Hours;
     private double Temp24Hours;
@@ -344,6 +342,18 @@ public class MigraineRecordObject implements Parcelable{
         Ears = in.readByte() != 0x00;
         Confusion = in.readByte() != 0x00;
         MenstrualDay = in.readInt();
+        currentTemp = in.readDouble();
+        Temp3Hours = in.readDouble();
+        Temp12Hours = in.readDouble();
+        Temp24Hours = in.readDouble();
+        currentHum = in.readDouble();
+        Hum3Hours = in.readDouble();
+        Hum12Hours = in.readDouble();
+        Hum24Hours = in.readDouble();
+        currentAP = in.readDouble();
+        AP3Hours = in.readDouble();
+        AP12Hours = in.readDouble();
+        AP24Hours = in.readDouble();
     }
 
     @Override
@@ -375,6 +385,18 @@ public class MigraineRecordObject implements Parcelable{
         dest.writeByte((byte) (Ears ? 0x01 : 0x00));
         dest.writeByte((byte) (Confusion ? 0x01 : 0x00));
         dest.writeInt(MenstrualDay);
+        dest.writeDouble(currentTemp);
+        dest.writeDouble(Temp3Hours);
+        dest.writeDouble(Temp12Hours);
+        dest.writeDouble(Temp24Hours);
+        dest.writeDouble(currentHum);
+        dest.writeDouble(Hum3Hours);
+        dest.writeDouble(Hum12Hours);
+        dest.writeDouble(Hum24Hours);
+        dest.writeDouble(currentAP);
+        dest.writeDouble(AP3Hours);
+        dest.writeDouble(AP12Hours);
+        dest.writeDouble(AP24Hours);
     }
 
     public static final Parcelable.Creator<MigraineRecordObject> CREATOR = new Parcelable.Creator<MigraineRecordObject>() {

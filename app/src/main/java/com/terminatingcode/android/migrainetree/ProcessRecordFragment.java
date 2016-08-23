@@ -190,7 +190,7 @@ public class ProcessRecordFragment extends Fragment {
                     } else {
                         //make a prediction with current data and ensure user comes back to input end data
                         displayNotification(uri);
-                        onPartialRecordConfirmed(mMigraineRecordObject);
+                        onPartialRecordConfirmed();
                     }
                 }
             }
@@ -228,6 +228,11 @@ public class ProcessRecordFragment extends Fragment {
         values.put(MigraineRecord.MENSTRUAL_DAY, recordObject.getMenstrualDay());
 
         if(weatherDataReceived) {
+            Log.d(NAME, "saving weather data ap = " + mWeather24Hour.getCurrentHour().getPressure());
+            WeatherHour hour = mWeather24Hour.getCurrentHour();
+            values.put(MigraineRecord.CURRENT_TEMP, hour.getTemp());
+            values.put(MigraineRecord.CURRENT_HUM, hour.getHum());
+            values.put(MigraineRecord.CURRENT_AP, hour.getPressure());
             values.put(MigraineRecord.TEMP3HOURS, mWeather24Hour.getTempChange3Hrs());
             values.put(MigraineRecord.TEMP12HOURS, mWeather24Hour.getTempChange12Hrs());
             values.put(MigraineRecord.TEMP24HOURS, mWeather24Hour.getTempChange24Hrs());
@@ -343,9 +348,10 @@ public class ProcessRecordFragment extends Fragment {
     /**
      * once user confirms submission, alert MainActivity
      */
-    public void onPartialRecordConfirmed(MigraineRecordObject migraineRecordObject) {
+    public void onPartialRecordConfirmed() {
         if (mListener != null) {
-            mListener.onPartialRecordConfirmed(migraineRecordObject);
+            Log.d(NAME, "weather before sending " + mMigraineRecordObject.getCurrentAP());
+            mListener.onPartialRecordConfirmed(mMigraineRecordObject);
         }
     }
 
@@ -432,6 +438,7 @@ public class ProcessRecordFragment extends Fragment {
                 ap12ChangeTextView.setText(ap12Change);
                 ap24ChangeTextView.setText(ap24Change);
                 weatherDataReceived = true;
+                Log.d(NAME, "weather ap = " + mMigraineRecordObject.getCurrentAP());
             }
         }
     }
