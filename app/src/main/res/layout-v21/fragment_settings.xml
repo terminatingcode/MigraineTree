@@ -1,0 +1,66 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorPrimary"
+              tools:context=".UserSettingsFragment">
+
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/displayCity"
+        android:text="@string/please_enter_your_current_city"
+        android:textAlignment="center"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/textColor"
+        tools:targetApi="jelly_bean_mr1"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/location_prompt"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:layout_below="@+id/displayCity"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/nav_drawer_background"/>
+
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/track_hormones"
+        android:id="@+id/useMenstrualDataCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/textColor"
+        android:layout_below="@+id/location"
+        android:buttonTint="@color/colorAccent"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:checked="true"
+        android:padding="32dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/weather_data_provided_by_weather_underground"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"
+        android:padding="4dp"
+        android:drawableEnd="@drawable/wu_logo"
+        android:drawableRight="@drawable/wu_logo"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+
+</RelativeLayout>

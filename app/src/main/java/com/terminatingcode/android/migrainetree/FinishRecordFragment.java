@@ -231,11 +231,22 @@ public class FinishRecordFragment extends Fragment {
     /**
      * Updates the startDateButton text to be the
      * time specified by the user
+     * Android versions prior to Marshmallow do not recognize new methods
+     * and must use depreciated methods
      */
     private void setTime() {
         final DecimalFormat decimalFormat = new DecimalFormat("00");
-        String hour = decimalFormat.format(endTimePicker.getHour());
-        String minutes = decimalFormat.format(endTimePicker.getMinute());
+        int h, m;
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1){
+            h = endTimePicker.getHour();
+            m = endTimePicker.getMinute();
+        } else {
+            h = endTimePicker.getCurrentHour();
+            m = endTimePicker.getCurrentMinute();
+        }
+        String hour = decimalFormat.format(h);
+        String minutes = decimalFormat.format(m);
         time =  hour +
                 ":" +
                 minutes;

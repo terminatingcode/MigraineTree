@@ -301,11 +301,22 @@ public class InputTriggersFragment extends Fragment {
     /**
      * Updates the startDateButton text to be the
      * time specified by the user
+     * Android versions prior to Marshmallow do not recognize new methods
+     * and must use depreciated methods
      */
     private void setTime() {
         final DecimalFormat decimalFormat = new DecimalFormat("00");
-        String hour = decimalFormat.format(mTimePicker.getHour());
-        String minutes = decimalFormat.format(mTimePicker.getMinute());
+        int h, m;
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1){
+            h = mTimePicker.getHour();
+            m = mTimePicker.getMinute();
+        } else {
+            h = mTimePicker.getCurrentHour();
+            m = mTimePicker.getCurrentMinute();
+        }
+        String hour = decimalFormat.format(h);
+        String minutes = decimalFormat.format(m);
         time =  hour +
                 ":" +
                 minutes;
