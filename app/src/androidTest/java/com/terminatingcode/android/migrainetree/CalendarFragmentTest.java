@@ -2,6 +2,9 @@ package com.terminatingcode.android.migrainetree;
 
 import android.support.test.rule.ActivityTestRule;
 
+import com.terminatingcode.android.migrainetree.view.CalendarFragment;
+import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

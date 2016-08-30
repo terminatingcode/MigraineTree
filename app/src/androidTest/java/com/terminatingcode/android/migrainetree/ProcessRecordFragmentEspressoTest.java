@@ -8,7 +8,11 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
 
-import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
+import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
+import com.terminatingcode.android.migrainetree.model.SQLite.MigraineRecord;
+import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.view.ProcessRecordFragment;
+import com.terminatingcode.android.migrainetree.utils.DateUtils;
 
 import org.junit.Before;
 import org.junit.Rule;

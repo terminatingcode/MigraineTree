@@ -7,6 +7,11 @@ import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 
+import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
+import com.terminatingcode.android.migrainetree.view.InputTriggersFragment;
+import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.utils.Constants;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

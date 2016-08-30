@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".presenter.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -36,17 +36,17 @@
         </activity>
 
         <provider
-            android:name=".SQL.LocalContentProvider"
+            android:name=".model.SQLite.LocalContentProvider"
             android:authorities="com.terminatingcode.android.migrainetree.provider"
             android:exported="false">
         </provider>
 
         <service
-            android:name=".Weather.GeoLookupService"
+            android:name=".model.weather.GeoLookupService"
             android:exported="false">
         </service>
         <service
-            android:name=".Weather.WeatherHistoryService"
+            android:name=".model.weather.WeatherHistoryService"
             android:exported="false">
         </service>
 
@@ -64,10 +64,10 @@
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true"/>
-        <service android:name=".amazonaws.downloader.service.DownloadService"/>
+        <service android:name=".model.amazonaws.downloader.service.DownloadService"/>
 
         <receiver
-            android:name=".amazonaws.downloader.service.NetworkStateListener"
+            android:name=".model.amazonaws.downloader.service.NetworkStateListener"
             android:enabled="false"
             android:exported="false">
             <intent-filter>
@@ -76,7 +76,7 @@
         </receiver>
 
         <provider
-            android:name=".amazonaws.downloader.query.DownloadQueueProvider"
+            android:name=".model.amazonaws.downloader.query.DownloadQueueProvider"
             android:authorities="@string/download_queue_provider_authority"
             android:enabled="true"
             android:exported="false">
@@ -108,7 +108,7 @@
         </receiver>
 
         <service
-            android:name=".amazonaws.PushListenerService"
+            android:name=".model.amazonaws.PushListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
@@ -117,11 +117,8 @@
 
         <!-- END - PUSH NOTIFICATIONS WITH GOOGLE CLOUD MESSAGING (GCM) -->
 
-        <activity android:name=".FinishRecordFragment">
-        </activity>
-
         <service
-            android:name=".amazonaws.MLPredictionService"
+            android:name=".model.amazonaws.MLPredictionService"
             android:enabled="true"
             android:exported="true">
         </service>

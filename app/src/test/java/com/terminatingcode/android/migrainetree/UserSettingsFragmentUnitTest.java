@@ -1,5 +1,8 @@
 package com.terminatingcode.android.migrainetree;
 
+import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.view.UserSettingsFragment;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

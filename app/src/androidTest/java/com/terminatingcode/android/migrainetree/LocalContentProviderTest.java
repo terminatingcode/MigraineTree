@@ -6,9 +6,9 @@ import android.net.Uri;
 import android.test.ProviderTestCase2;
 import android.test.mock.MockContentResolver;
 
-import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
-import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
-import com.terminatingcode.android.migrainetree.SQL.MigraineRecord;
+import com.terminatingcode.android.migrainetree.model.SQLite.LocalContentProvider;
+import com.terminatingcode.android.migrainetree.model.SQLite.MenstrualRecord;
+import com.terminatingcode.android.migrainetree.model.SQLite.MigraineRecord;
 
 import org.junit.Before;
 

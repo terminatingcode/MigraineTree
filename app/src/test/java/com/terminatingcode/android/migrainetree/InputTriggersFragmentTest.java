@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 
-import com.terminatingcode.android.migrainetree.SQL.LocalContentProvider;
-import com.terminatingcode.android.migrainetree.SQL.MenstrualRecord;
+import com.terminatingcode.android.migrainetree.model.SQLite.LocalContentProvider;
+import com.terminatingcode.android.migrainetree.model.SQLite.MenstrualRecord;
+import com.terminatingcode.android.migrainetree.view.InputTriggersFragment;
+import com.terminatingcode.android.migrainetree.presenter.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;

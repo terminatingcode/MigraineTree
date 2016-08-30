@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#00987c</color>
     <color name="textColor">#ffffff</color>
+
     <color name="summer">#ecdb96</color>
     <color name="winter">#a9edf5</color>
     <color name="fall">#ffa49d</color>
@@ -32,5 +33,4 @@
     <color name="evening">#c29aff</color>
     <color name="night">#9abcff</color>
 
-    <color name="notification_color">#e7fc7e</color>
 </resources>

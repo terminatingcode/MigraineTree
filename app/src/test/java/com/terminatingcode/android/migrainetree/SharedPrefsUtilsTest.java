@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.terminatingcode.android.migrainetree.utils.Constants;
+import com.terminatingcode.android.migrainetree.utils.SharedPrefsUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

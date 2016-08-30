@@ -1,5 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
+import com.terminatingcode.android.migrainetree.utils.DateUtils;
+
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

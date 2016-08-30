@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.terminatingcode.android.migrainetree.MainActivity"
+    tools:context=".presenter.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:background="#464646">
 

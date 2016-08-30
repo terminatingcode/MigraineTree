@@ -3,6 +3,9 @@ package com.terminatingcode.android.migrainetree;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v4.app.Fragment;
 
+import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.view.UserSettingsFragment;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
