@@ -1,8 +1,8 @@
 package com.terminatingcode.android.migrainetree;
 
-import com.terminatingcode.android.migrainetree.Weather.HistoryWeatherParser;
-import com.terminatingcode.android.migrainetree.Weather.Weather24Hour;
-import com.terminatingcode.android.migrainetree.Weather.WeatherHour;
+import com.terminatingcode.android.migrainetree.model.weather.HistoryWeatherParser;
+import com.terminatingcode.android.migrainetree.model.weather.Weather24Hour;
+import com.terminatingcode.android.migrainetree.model.weather.WeatherHour;
 
 import org.json.JSONArray;
 import org.json.JSONException;

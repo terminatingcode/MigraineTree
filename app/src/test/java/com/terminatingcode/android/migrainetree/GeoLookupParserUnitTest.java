@@ -1,6 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
-import com.terminatingcode.android.migrainetree.Weather.GeoLookupParser;
+import com.terminatingcode.android.migrainetree.model.weather.CitiesMapSingleton;
+import com.terminatingcode.android.migrainetree.model.weather.GeoLookupParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;

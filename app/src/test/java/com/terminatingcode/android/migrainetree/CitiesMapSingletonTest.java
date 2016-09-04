@@ -1,5 +1,7 @@
 package com.terminatingcode.android.migrainetree;
 
+import com.terminatingcode.android.migrainetree.model.weather.CitiesMapSingleton;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
