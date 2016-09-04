@@ -46,7 +46,7 @@ import java.util.Objects;
 public class InputTriggersFragment extends Fragment {
     private static final String NAME  = "InputTriggersFragment";
 
-    private OnFragmentInteractionListener mListener;
+    private FragmentListener mListener;
     private TextView mDateTextView;
     private TextView mTimeTextView;
     private ImageButton mSetButton;
@@ -375,8 +375,8 @@ public class InputTriggersFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentListener) {
+            mListener = (FragmentListener) context;
         }
     }
 
@@ -396,7 +396,7 @@ public class InputTriggersFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener extends FragmentListener{
         void onSetLocationPressed();
         void onUpdateCalendarButtonPressed();
         void onSaveRecordButtonPressed(String date, String locationUID, MigraineRecordObject migraineRecordObject);

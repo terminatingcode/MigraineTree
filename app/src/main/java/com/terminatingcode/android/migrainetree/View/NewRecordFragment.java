@@ -23,7 +23,7 @@ import com.terminatingcode.android.migrainetree.model.amazonaws.AWSMobileClient;
  * create an instance of this fragment.
  */
 public class NewRecordFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+    private FragmentListener mListener;
 
     public NewRecordFragment() {
         // Required empty public constructor
@@ -69,11 +69,11 @@ public class NewRecordFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentListener) {
+            mListener = (FragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement FragmentListener");
         }
     }
 
@@ -107,7 +107,7 @@ public class NewRecordFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener extends FragmentListener {
         void onNewRecordButtonClicked();
         void onPromptForSignin();
     }

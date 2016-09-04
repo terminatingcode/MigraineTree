@@ -24,13 +24,14 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.terminatingcode.android.migrainetree.utils.DateUtils;
 import com.terminatingcode.android.migrainetree.R;
 import com.terminatingcode.android.migrainetree.model.SQLite.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.model.SQLite.MigraineRecord;
+import com.terminatingcode.android.migrainetree.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -148,7 +149,7 @@ public class ChartsFragment extends Fragment {
             else if(painLevel < 9) severe++;
             else debilitating++;
         }
-        String avg = String.valueOf(average/painPeak.size());
+        String avg = String.format(Locale.UK,"%.2f", average/painPeak.size());
         avgPainPieChart.setDescription("Average Pain at Peak");
         avgPainPieChart.setDescriptionColor(Color.WHITE);
         avgPainPieChart.setDescriptionTextSize(18);
@@ -346,7 +347,7 @@ public class ChartsFragment extends Fragment {
             else if(hour > 15 && hour < 20) evening++;
             else night++;
         }
-        String avg = String.valueOf(average/hoursOfDay.size()) + "h";
+        String avg = String.format(Locale.UK,"%.2f",average/hoursOfDay.size()) + "h";
         avgTimeOfDayPiechart.setDescription("Average Time of Day");
         avgTimeOfDayPiechart.setDescriptionColor(Color.WHITE);
         avgTimeOfDayPiechart.setDescriptionTextSize(18);

@@ -102,7 +102,7 @@ public class ProcessRecordFragment extends Fragment {
     private String date;
     private String time;
     private MigraineRecordObject mMigraineRecordObject;
-    private OnFragmentInteractionListener mListener;
+    private FragmentListener mListener;
 
     public ProcessRecordFragment() {
         // Required empty public constructor
@@ -375,11 +375,11 @@ public class ProcessRecordFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.d(NAME, "ATTACH");
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentListener) {
+            mListener = (FragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement FragmentListener");
         }
     }
 
@@ -545,7 +545,7 @@ public class ProcessRecordFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener extends FragmentListener{
         void onPartialRecordConfirmed(MigraineRecordObject migraineRecordObject);
     }
 }

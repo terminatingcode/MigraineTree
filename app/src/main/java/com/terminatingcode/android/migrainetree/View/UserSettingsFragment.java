@@ -34,7 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
  */
 public class UserSettingsFragment extends Fragment {
     private static final String NAME = "UserSettingsFragment";
-    private OnFragmentInteractionListener mListener;
+    private FragmentListener mListener;
     private static GeoLookupArrayAdapter mAdapter;
     private SharedPreferences mSharedPreferences;
     private AutoCompleteTextView mAutoCompleteTextView;
@@ -144,8 +144,8 @@ public class UserSettingsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentListener) {
+            mListener = (FragmentListener) context;
         }
     }
 
@@ -154,19 +154,5 @@ public class UserSettingsFragment extends Fragment {
         Intent intent = new Intent(getActivity(), GeoLookupService.class);
         intent.setAction(inputtedCity);
         getActivity().startService(intent);
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onPreferenceChanged();
     }
 }

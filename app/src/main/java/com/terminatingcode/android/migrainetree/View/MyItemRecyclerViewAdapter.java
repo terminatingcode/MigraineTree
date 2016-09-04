@@ -21,9 +21,9 @@ import java.util.List;
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<RecordItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final FragmentListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<RecordItem> items, OnListFragmentInteractionListener listener) {
+    public MyItemRecyclerViewAdapter(List<RecordItem> items, FragmentListener listener) {
         mValues = items;
         mListener = listener;
     }
