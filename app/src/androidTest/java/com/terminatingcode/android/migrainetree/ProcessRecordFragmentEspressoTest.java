@@ -10,8 +10,8 @@ import android.util.Log;
 
 import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
 import com.terminatingcode.android.migrainetree.model.SQLite.MigraineRecord;
-import com.terminatingcode.android.migrainetree.presenter.MainActivity;
-import com.terminatingcode.android.migrainetree.view.ProcessRecordFragment;
+import com.terminatingcode.android.migrainetree.controller.MainActivity;
+import com.terminatingcode.android.migrainetree.controller.ProcessRecordFragment;
 import com.terminatingcode.android.migrainetree.utils.DateUtils;
 
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.view;
+package com.terminatingcode.android.migrainetree.controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

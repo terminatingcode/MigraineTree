@@ -1,11 +1,10 @@
-package com.terminatingcode.android.migrainetree.view;
+package com.terminatingcode.android.migrainetree.controller;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -225,17 +224,17 @@ public class ChartsFragment extends Fragment {
         triggerVals.add(new BarEntry(5, stress));
         triggerVals.add(new BarEntry(6, eyeStrain));
 
-        BarDataSet set1;
+        BarDataSet set;
 
         if (triggersBarChart.getData() != null &&
                 triggersBarChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) triggersBarChart.getData().getDataSetByIndex(0);
-            set1.setValues(triggerVals);
+            set = (BarDataSet) triggersBarChart.getData().getDataSetByIndex(0);
+            set.setValues(triggerVals);
             triggersBarChart.getData().notifyDataChanged();
             triggersBarChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(triggerVals, "Triggers");
-            set1.setColors(new int[] {
+            set = new BarDataSet(triggerVals, "Triggers");
+            set.setColors(new int[] {
                     R.color.aura_only,
                     R.color.mild,
                     R.color.moderate,
@@ -243,7 +242,7 @@ public class ChartsFragment extends Fragment {
                     R.color.debilitating}, getActivity());
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
+            dataSets.add(set);
 
             BarData data = new BarData(dataSets);
             data.setValueTextSize(10f);
@@ -255,11 +254,11 @@ public class ChartsFragment extends Fragment {
     }
 
     public void initialiseSymptomsBarChart(int[] symptoms) {
-        triggersBarChart.setDrawValueAboveBar(true);
-        triggersBarChart.setDescription("Frequency of triggers");
-        triggersBarChart.setDescriptionColor(Color.WHITE);
-        triggersBarChart.setDescriptionTextSize(18);
-        triggersBarChart.getAxisRight().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        symptomsBarChart.setDrawValueAboveBar(true);
+        symptomsBarChart.setDescription("Frequency of symptoms");
+        symptomsBarChart.setDescriptionColor(Color.WHITE);
+        symptomsBarChart.setDescriptionTextSize(18);
+        symptomsBarChart.getAxisRight().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
 
         float start = 0.5f;
         int count = 8;
@@ -293,28 +292,28 @@ public class ChartsFragment extends Fragment {
             }
         });
 
-        ArrayList<BarEntry> triggerVals = new ArrayList<>();
+        ArrayList<BarEntry> symptomVals = new ArrayList<>();
 
-        triggerVals.add(new BarEntry(1, symptoms[0]));
-        triggerVals.add(new BarEntry(2, symptoms[1]));
-        triggerVals.add(new BarEntry(3, symptoms[2]));
-        triggerVals.add(new BarEntry(4, symptoms[3]));
-        triggerVals.add(new BarEntry(5, symptoms[4]));
-        triggerVals.add(new BarEntry(6, symptoms[5]));
-        triggerVals.add(new BarEntry(6, symptoms[6]));
-        triggerVals.add(new BarEntry(6, symptoms[7]));
+        symptomVals.add(new BarEntry(1, symptoms[0]));
+        symptomVals.add(new BarEntry(2, symptoms[1]));
+        symptomVals.add(new BarEntry(3, symptoms[2]));
+        symptomVals.add(new BarEntry(4, symptoms[3]));
+        symptomVals.add(new BarEntry(5, symptoms[4]));
+        symptomVals.add(new BarEntry(6, symptoms[5]));
+        symptomVals.add(new BarEntry(7, symptoms[6]));
+        symptomVals.add(new BarEntry(8, symptoms[7]));
 
-        BarDataSet set1;
+        BarDataSet set;
 
         if (symptomsBarChart.getData() != null &&
                 symptomsBarChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) symptomsBarChart.getData().getDataSetByIndex(0);
-            set1.setValues(triggerVals);
+            set = (BarDataSet) symptomsBarChart.getData().getDataSetByIndex(0);
+            set.setValues(symptomVals);
             symptomsBarChart.getData().notifyDataChanged();
             symptomsBarChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(triggerVals, "Triggers");
-            set1.setColors(new int[] {
+            set = new BarDataSet(symptomVals, "Triggers");
+            set.setColors(new int[] {
                     R.color.aura_only,
                     R.color.mild,
                     R.color.moderate,
@@ -322,7 +321,7 @@ public class ChartsFragment extends Fragment {
                     R.color.debilitating}, getActivity());
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
+            dataSets.add(set);
 
             BarData data = new BarData(dataSets);
             data.setValueTextSize(10f);
@@ -340,7 +339,6 @@ public class ChartsFragment extends Fragment {
         int evening = 0;
         int night = 0;
         for(Integer hour : hoursOfDay){
-            Log.d(NAME, "hour " + hour);
             average += hour;
             if(hour >= 5 && hour <= 11) morning++;
             else if(hour > 11 && hour <= 15) noon++;

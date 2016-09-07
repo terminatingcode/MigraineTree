@@ -9,7 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.terminatingcode.android.migrainetree.model.eventBus.CitiesMessageEvent;
-import com.terminatingcode.android.migrainetree.model.MyRequestQueue;
+import com.terminatingcode.android.migrainetree.model.RequestQueueSingleton;
 import com.terminatingcode.android.migrainetree.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,7 +48,7 @@ public class GeoLookupService extends IntentService {
      */
     private void geoLookup(String location) {
         Log.d(NAME, "geolookup service started");
-        MyRequestQueue queue = MyRequestQueue.getInstance(this);
+        RequestQueueSingleton queue = RequestQueueSingleton.getInstance(this);
         final GeoLookupParser glp = new GeoLookupParser();
         final String[] splitLocation = location.split(" ");
         StringBuilder sb = new StringBuilder();

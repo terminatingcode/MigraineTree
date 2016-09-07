@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.view;
+package com.terminatingcode.android.migrainetree.controller;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.terminatingcode.android.migrainetree.R;
-import com.terminatingcode.android.migrainetree.view.RecordsFragment.OnListFragmentInteractionListener;
+import com.terminatingcode.android.migrainetree.controller.RecordsFragment.OnListFragmentInteractionListener;
 import com.terminatingcode.android.migrainetree.model.MigraineRecordItems.RecordItem;
 
 import java.util.List;
@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link RecordItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
@@ -53,6 +52,16 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                 }
             }
         });
+        holder.mViewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListViewItem(holder.mItem);
+                }
+            }
+        });
     }
 
     @Override
@@ -65,6 +74,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final TextView mContentView;
         public final TextView mDetailsView;
         public final Button mDeleteButton;
+        public final Button mViewButton;
         public RecordItem mItem;
 
         public ViewHolder(View view) {
@@ -73,6 +83,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             mContentView = (TextView) view.findViewById(R.id.content);
             mDetailsView = (TextView) view.findViewById(R.id.description);
             mDeleteButton = (Button) view.findViewById(R.id.deleteButton);
+            mViewButton = (Button) view.findViewById(R.id.viewButton);
         }
 
         @Override

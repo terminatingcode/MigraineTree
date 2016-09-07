@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.view;
+package com.terminatingcode.android.migrainetree.controller;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.terminatingcode.android.migrainetree.presenter.MainActivity;
 import com.terminatingcode.android.migrainetree.utils.Constants;
 import com.terminatingcode.android.migrainetree.utils.DateUtils;
 import com.terminatingcode.android.migrainetree.model.eventBus.Weather24HourMessageEvent;
@@ -472,7 +471,9 @@ public class ProcessRecordFragment extends Fragment {
         String eyeStrain = String.valueOf(mMigraineRecordObject.getEyeStrain());
         String painType = mMigraineRecordObject.getPainType();
         String painSource = mMigraineRecordObject.getPainSource();
-        String medication = mMigraineRecordObject.getMedication();
+        String medicationfull = mMigraineRecordObject.getMedication();
+        int i = medicationfull.indexOf(' ');
+        String medication = medicationfull.substring(0, i);
         String cycleDay = String.valueOf(mMigraineRecordObject.getMenstrualDay());
 
         locationTextView.setText(city);

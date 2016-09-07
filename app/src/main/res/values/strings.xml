@@ -270,7 +270,6 @@
     <string name="noMenstrualData">No menstrual data!\nInput last cycle in the calendar or disable in settings.</string>
     <string name="main_nav_menu_default_user_text">guest</string>
     <string name="prompt_signin_message">In order to upload files, please sign in.</string>
-    <string name="about_blurb">Anyone who knows someone or suffers from migraines themselves can attest to how debilitating this neurological disorder can be. The most common form of treatment for migraines are abortive medications that need to be taken at the very beginning of a migraine or else they will not work. Often, head pain can occur and you have no way of knowing if it\'s going to lead to a severe episode or if it will dissipate. Moreover, migraine medications are expensive and difficult on the body to take regularly so every migraineur weighs the pros and cons of whether to take medication right away. This project is my attempt at helping people understand their migraines and help them make an informed decision.</string>
     <string name="if_your_connection_is_weak_this_may_take_some_time">If your connection is weak, this may take some time</string>
     <string name="settings_fragment_dialog_title">Please wait &#8230;</string>
     <string name="settings_fragment_dialog_message">Loading&#8230;</string>
@@ -390,5 +389,11 @@
     <string name="length">length:</string>
     <string name="average_migraine">Average Migraine:</string>
     <string name="_1_to_10">1 to 10</string>
+    <string name="migraine_summary">Migraine Summary</string>
+    <string name="migraine_length">Migraine length:</string>
+    <string name="pain_at_peak">Pain at peak:</string>
+    <string name="weather">Weather:</string>
+    <string name="view">View</string>
+    <string name="about_blurb">Anyone who knows someone or suffers from migraines themselves can attest to how debilitating this neurological disorder can be. This app is a prototype designed for the Birkbeck College Master\'s of Computer Science project with the goal to help track and predict migraine severity to allow users a better understanding of their migraines and be able to make an informed decision as to when to take medication.\nData is collected on migraine triggers and weather conditions which is saved locally on the device and on Amazon Web Services DynamoDB.\nThis data is anonymous and no personal data is collected.\nData will be used to design a new migraine predictive model and then subsequently deleted.</string>
 
 </resources>

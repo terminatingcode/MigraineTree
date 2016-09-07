@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.NewRecordFragment"
+    tools:context=".controller.NewRecordFragment"
     android:background="@android:color/black"
     android:id="@+id/weather_data"
     android:layout_width="match_parent"

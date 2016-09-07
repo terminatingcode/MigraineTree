@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.view;
+package com.terminatingcode.android.migrainetree.controller;
 
 import android.app.NotificationManager;
 import android.content.ContentResolver;

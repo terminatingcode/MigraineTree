@@ -8,9 +8,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.terminatingcode.android.migrainetree.model.RequestQueueSingleton;
 import com.terminatingcode.android.migrainetree.utils.Constants;
 import com.terminatingcode.android.migrainetree.utils.DateUtils;
-import com.terminatingcode.android.migrainetree.model.MyRequestQueue;
 import com.terminatingcode.android.migrainetree.R;
 
 import org.json.JSONException;
@@ -85,7 +85,7 @@ public class WeatherHistoryService extends IntentService {
     }
 
     private void makeHTTPRequest(String locationID, String date) {
-        MyRequestQueue queue = MyRequestQueue.getInstance(this);
+        RequestQueueSingleton queue = RequestQueueSingleton.getInstance(this);
         final HistoryWeatherParser hwp = new HistoryWeatherParser();
         StringBuilder sb = new StringBuilder();
         sb.append(getString(R.string.WUurl))

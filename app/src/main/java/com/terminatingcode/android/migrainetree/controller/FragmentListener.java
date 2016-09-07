@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.view;
+package com.terminatingcode.android.migrainetree.controller;
 
 import com.terminatingcode.android.migrainetree.model.MigraineRecordItems;
 import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
@@ -17,4 +17,6 @@ public interface FragmentListener {
     void onSetLocationPressed();
     void onUpdateCalendarButtonPressed();
     void switchToHome();
+
+    void onListViewItem(MigraineRecordItems.RecordItem item);
 }

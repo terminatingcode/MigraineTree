@@ -26,4 +26,11 @@
         android:text="@string/delete"
         android:textSize="12sp"
         style="?android:attr/buttonStyleSmall"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewButton"
+        android:text="@string/view"
+        android:textSize="12sp"
+        style="?android:attr/buttonStyleSmall"/>
 </LinearLayout>

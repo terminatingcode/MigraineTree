@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.view;
+package com.terminatingcode.android.migrainetree.controller;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -135,5 +135,6 @@ public class RecordsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener extends FragmentListener{
         void onListDeleteItem(RecordItem item);
+        void onListViewItem(RecordItem item);
     }
 }

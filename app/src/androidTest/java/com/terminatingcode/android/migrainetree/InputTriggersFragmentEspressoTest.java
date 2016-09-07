@@ -8,8 +8,8 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 
 import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
-import com.terminatingcode.android.migrainetree.view.InputTriggersFragment;
-import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.controller.InputTriggersFragment;
+import com.terminatingcode.android.migrainetree.controller.MainActivity;
 import com.terminatingcode.android.migrainetree.utils.Constants;
 
 import org.junit.After;

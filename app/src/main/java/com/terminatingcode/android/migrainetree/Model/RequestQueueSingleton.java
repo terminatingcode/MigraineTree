@@ -3,30 +3,29 @@ package com.terminatingcode.android.migrainetree.model;
 import android.content.Context;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 /**
  * Singleton to hold Volley RequestQueue for GeoLookupService
  * Created by Sarah on 6/20/2016.
  */
-public class MyRequestQueue {
-    private static MyRequestQueue ourInstance = null;
-    private RequestQueue mRequestQueue;
+public class RequestQueueSingleton {
+    private static RequestQueueSingleton instance = null;
+    private com.android.volley.RequestQueue mRequestQueue;
     private static Context sContext;
 
-    public static synchronized MyRequestQueue getInstance(Context context) {
-        if(ourInstance == null)
-            ourInstance = new MyRequestQueue(context);
-        return ourInstance;
+    public static synchronized RequestQueueSingleton getInstance(Context context) {
+        if(instance == null)
+            instance = new RequestQueueSingleton(context);
+        return instance;
     }
 
-    private MyRequestQueue(Context context) {
+    private RequestQueueSingleton(Context context) {
         sContext = context;
         mRequestQueue = getRequestQueue();
     }
 
-    public RequestQueue getRequestQueue(){
+    public com.android.volley.RequestQueue getRequestQueue(){
         if(mRequestQueue == null){
             mRequestQueue = Volley.newRequestQueue(sContext.getApplicationContext());
         }

@@ -6,8 +6,8 @@ import android.content.ContentValues;
 
 import com.terminatingcode.android.migrainetree.model.SQLite.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.model.SQLite.MenstrualRecord;
-import com.terminatingcode.android.migrainetree.view.InputTriggersFragment;
-import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.controller.InputTriggersFragment;
+import com.terminatingcode.android.migrainetree.controller.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;
