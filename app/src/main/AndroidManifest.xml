@@ -118,7 +118,7 @@
         <!-- END - PUSH NOTIFICATIONS WITH GOOGLE CLOUD MESSAGING (GCM) -->
 
         <service
-            android:name=".model.amazonaws.MLPredictionService"
+            android:name=".model.amazonaws.MLPrediction.MLPredictionService"
             android:enabled="true"
             android:exported="true">
         </service>

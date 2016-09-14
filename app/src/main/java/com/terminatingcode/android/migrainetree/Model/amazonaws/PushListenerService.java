@@ -12,7 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.controller.MainActivity;
 import com.terminatingcode.android.migrainetree.R;
 
 import java.util.List;

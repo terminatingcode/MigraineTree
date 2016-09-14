@@ -35,9 +35,9 @@ import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
 import com.terminatingcode.android.migrainetree.model.SQLite.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.model.SQLite.MigraineRecord;
 import com.terminatingcode.android.migrainetree.model.amazonaws.AWSMobileClient;
-import com.terminatingcode.android.migrainetree.model.amazonaws.MLPredictionService;
+import com.terminatingcode.android.migrainetree.model.amazonaws.MLPrediction.MLPredictionService;
+import com.terminatingcode.android.migrainetree.model.amazonaws.MLPrediction.UserModelConstants;
 import com.terminatingcode.android.migrainetree.model.amazonaws.PushListenerService;
-import com.terminatingcode.android.migrainetree.model.amazonaws.SpanishDataConstants;
 import com.terminatingcode.android.migrainetree.model.amazonaws.nosql.DynamoDBUtils;
 import com.terminatingcode.android.migrainetree.model.amazonaws.user.IdentityManager;
 import com.terminatingcode.android.migrainetree.model.amazonaws.user.IdentityProvider;
@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * if user has not signed in, have the user begin at the SignInFragment
+     * else if the app was opened from the status bar with a partial record begin at the FinishRecordFragment
      * else if they haven't specified a location, start at the SettingsFragment
      * else, start at the NewRecordFragment
      */
@@ -292,6 +293,7 @@ public class MainActivity extends AppCompatActivity
         final IdentityProvider identityProvider =
                 identityManager.getCurrentIdentityProvider();
         boolean needToSignIn = (identityProvider == null);
+        boolean recordNotfinished = (partialMigraineRecordObject != null && partialRecordUri != null);
         fragmentManager = getSupportFragmentManager();
         locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
         if(needToSignIn) {
@@ -300,7 +302,7 @@ public class MainActivity extends AppCompatActivity
             if(drawer != null) {
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
-        }else if(partialMigraineRecordObject != null && partialRecordUri != null){
+        }else if(recordNotfinished){
             Fragment fragment = FinishRecordFragment.newInstance(partialRecordUri, partialMigraineRecordObject);
             fragmentManager.beginTransaction().add(R.id.content_frame, fragment).commit();
         }else if(locationNeedsToBeSet){
@@ -416,7 +418,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onPartialRecordConfirmed(MigraineRecordObject recordObject) {
-        HashMap<String, String> record = SpanishDataConstants.makeRecord(recordObject);
+        HashMap<String, String> record = UserModelConstants.makeRecord(recordObject);
         startPredictionService(record);
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, new FeelBetterFragment())
@@ -454,9 +456,12 @@ public class MainActivity extends AppCompatActivity
      * starts WeatherHistoryService and adds processRecordFragment to frame
      * @param date the start date of migraine record
      * @param locationUID the current user's location Weather Underground id
+     * @param migraineRecordObject the inputted data for the migraine record
      */
     @Override
-    public void onSaveRecordButtonPressed(String date, String locationUID, MigraineRecordObject migraineRecordObject) {
+    public void onSaveRecordButtonPressed(String date,
+                                          String locationUID,
+                                          MigraineRecordObject migraineRecordObject) {
         Intent intent = new Intent(this, WeatherHistoryService.class);
         intent.putExtra(Constants.DATE_KEY, date);
         intent.putExtra(Constants.LOCATIONUID, locationUID);
@@ -468,8 +473,9 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
     /**
-     * switches from SignInFragment once user signed in succesfully
-     * replaces with UserSettingsFragment if no location set
+     * switches from SignInFragment once user signed in successfully
+     * replaces with FinishRecordFragment if app opened from status bar
+     * else, replaces with UserSettingsFragment if no location set
      * or NewRecordFragment if all conditions met
      */
     @Override
@@ -482,12 +488,19 @@ public class MainActivity extends AppCompatActivity
         fragmentManager = getSupportFragmentManager();
         locationNeedsToBeSet = sharedPrefsUtils.needLocationSpecified();
         if(partialMigraineRecordObject != null && partialRecordUri != null){
-            Fragment fragment = FinishRecordFragment.newInstance(partialRecordUri, partialMigraineRecordObject);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+            Fragment fragment = FinishRecordFragment.newInstance(partialRecordUri,
+                    partialMigraineRecordObject);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
         }else if(locationNeedsToBeSet){
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new UserSettingsFragment()).commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new UserSettingsFragment())
+                    .commit();
         }else{
-            fragmentManager.beginTransaction().replace(R.id.content_frame, NewRecordFragment.newInstance()).commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, NewRecordFragment.newInstance())
+                    .commit();
         }
     }
 

@@ -90,6 +90,7 @@ public final class LocalContentProvider extends ContentProvider{
             + MigraineRecord.TEMP24HOURS + " REAL, "
             + MigraineRecord.HUM24HOURS + " REAL, "
             + MigraineRecord.AP24HOURS + " REAL);";
+
     public static final String DELETE_MIGRAINE_TABLE = "DROP TABLE IF EXISTS " + MigraineRecord.TABLE_NAME;
 
     static final UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

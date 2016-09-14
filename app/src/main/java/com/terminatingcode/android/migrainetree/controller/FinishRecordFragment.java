@@ -64,7 +64,8 @@ public class FinishRecordFragment extends Fragment {
      * @param migraineRecordObject the MigraineRecord Object holding partial record
      * @return A new instance of fragment FinishRecordFragment
      */
-    public static FinishRecordFragment newInstance(Uri uri, MigraineRecordObject migraineRecordObject) {
+    public static FinishRecordFragment newInstance(Uri uri,
+                                                   MigraineRecordObject migraineRecordObject) {
         FinishRecordFragment fragment = new FinishRecordFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.INSERTED_URI, uri);
@@ -81,8 +82,6 @@ public class FinishRecordFragment extends Fragment {
             mRecordObject = getArguments().getParcelable(Constants.RECORD_OBJECT);
             startHour = mRecordObject.getStartHour();
             medication = mRecordObject.getMedication();
-            Log.d(NAME, "received metadata uri " + uri + " starthour: " + mRecordObject.getStartHour());
-            Log.d(NAME, "weather data " + mRecordObject.getCurrentAP());
         }
     }
 

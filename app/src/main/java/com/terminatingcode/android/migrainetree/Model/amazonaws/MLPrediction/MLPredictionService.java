@@ -1,4 +1,4 @@
-package com.terminatingcode.android.migrainetree.model.amazonaws;
+package com.terminatingcode.android.migrainetree.model.amazonaws.MLPrediction;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -12,8 +12,9 @@ import com.amazonaws.services.machinelearning.model.GetMLModelResult;
 import com.amazonaws.services.machinelearning.model.PredictRequest;
 import com.amazonaws.services.machinelearning.model.PredictResult;
 import com.amazonaws.services.machinelearning.model.RealtimeEndpointStatus;
-import com.terminatingcode.android.migrainetree.utils.Constants;
+import com.terminatingcode.android.migrainetree.model.amazonaws.AWSMobileClient;
 import com.terminatingcode.android.migrainetree.model.eventBus.MLPredictionMessage;
+import com.terminatingcode.android.migrainetree.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -35,7 +36,7 @@ public class MLPredictionService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if(intent != null){
             HashMap<String, String> record = (HashMap<String, String>)intent.getSerializableExtra(Constants.RECORD);
-            String result = makeMLPrediction(SpanishDataConstants.MODEL_ID, record);
+            String result = makeMLPrediction(UserModelConstants.MODEL_ID, record);
             EventBus.getDefault().post(new MLPredictionMessage(result));
         }
         setIntentRedelivery(false);

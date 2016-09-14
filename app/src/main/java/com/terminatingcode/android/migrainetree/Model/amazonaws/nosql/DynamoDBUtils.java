@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 
 import com.amazonaws.AmazonClientException;
-import com.terminatingcode.android.migrainetree.presenter.MainActivity;
+import com.terminatingcode.android.migrainetree.controller.MainActivity;
 import com.terminatingcode.android.migrainetree.model.MigraineRecordItems;
 import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
 import com.terminatingcode.android.migrainetree.R;

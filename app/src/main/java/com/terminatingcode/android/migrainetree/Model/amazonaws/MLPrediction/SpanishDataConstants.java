@@ -1,7 +1,6 @@
-package com.terminatingcode.android.migrainetree.model.amazonaws;
+package com.terminatingcode.android.migrainetree.model.amazonaws.MLPrediction;
 
 import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
-
 import java.util.HashMap;
 
 /**
