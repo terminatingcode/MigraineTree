@@ -373,13 +373,14 @@ public class MainActivity extends AppCompatActivity
         if (v == signOutButton) {
             // The user is currently signed in with a provider. Sign out of that provider.
             identityManager.signOut();
+            fragmentManager.beginTransaction().add(R.id.content_frame, new SignInFragment()).commit();
             // Show the sign-in button and hide the sign-out button.
             signOutButton.setVisibility(View.INVISIBLE);
             signInButton.setVisibility(View.VISIBLE);
-
             // Close the navigation drawer.
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             return;
         }
         if (v == signInButton) {
