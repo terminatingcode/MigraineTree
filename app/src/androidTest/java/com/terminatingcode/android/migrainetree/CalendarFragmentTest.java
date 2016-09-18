@@ -33,7 +33,7 @@ public class CalendarFragmentTest {
                 .getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content_frame, mFragment, "testCalendar")
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Test

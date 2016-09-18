@@ -1,4 +1,6 @@
-package com.terminatingcode.android.migrainetree.model.weather;
+package com.terminatingcode.android.migrainetree;
+
+import com.terminatingcode.android.migrainetree.model.weather.WeatherHistoryService;
 
 import org.junit.Test;
 

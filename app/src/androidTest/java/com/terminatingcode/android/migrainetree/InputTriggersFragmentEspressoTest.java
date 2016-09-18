@@ -64,7 +64,7 @@ public class InputTriggersFragmentEspressoTest {
                 .getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content_frame, mFragment, "testInputTriggers")
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Test
@@ -332,17 +332,6 @@ public class InputTriggersFragmentEspressoTest {
                 .check(matches(isDisplayed()))
                 .check(matches(isClickable()))
                 .check(matches(ViewMatchers.isNotChecked()));
-    }
-
-    @Test
-    public void testsToastDisplayedWhenDateNotSet(){
-        mSharedPreferences.edit().putString(Constants.LOCATION_NAME, location).commit();
-        onView(withId(R.id.saveRecordButton))
-                .perform(ViewActions.scrollTo())
-                .perform(click());
-        onView(withText(R.string.dateTimeError))
-                .inRoot(withDecorView(not(mMainActivityActivityTestRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
     }
 
     @Test

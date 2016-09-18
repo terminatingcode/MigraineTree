@@ -1,19 +1,16 @@
 package com.terminatingcode.android.migrainetree;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 
+import com.terminatingcode.android.migrainetree.controller.InputTriggersFragment;
 import com.terminatingcode.android.migrainetree.model.SQLite.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.model.SQLite.MenstrualRecord;
-import com.terminatingcode.android.migrainetree.controller.InputTriggersFragment;
-import com.terminatingcode.android.migrainetree.controller.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -29,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 @Config(constants = BuildConfig.class, sdk=21)
 public class InputTriggersFragmentTest {
 
-    private Activity mActivity;
     private InputTriggersFragment mInputTriggersFragment;
     private ContentResolver mResolver;
     private long january11990;
@@ -39,7 +35,6 @@ public class InputTriggersFragmentTest {
 
     @Before
     public void setup(){
-        mActivity = Robolectric.setupActivity(MainActivity.class);
         mInputTriggersFragment = new InputTriggersFragment();
         SupportFragmentTestUtil.startFragment(mInputTriggersFragment);
         mResolver = RuntimeEnvironment.application.getContentResolver();

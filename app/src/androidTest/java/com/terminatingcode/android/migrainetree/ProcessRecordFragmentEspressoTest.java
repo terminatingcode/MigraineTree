@@ -141,7 +141,7 @@ public class ProcessRecordFragmentEspressoTest {
                 .check(matches(withText(String.valueOf(painSource))));
         onView(withId(R.id.medicationEntered))
                 .perform(ViewActions.scrollTo())
-                .check(matches(withText(String.valueOf(medication))));
+                .check(matches(withText("no")));
         onView(withId(R.id.symptomsEntered))
                 .perform(ViewActions.scrollTo())
                 .check(matches(withText(expectedSymptomsString)));
