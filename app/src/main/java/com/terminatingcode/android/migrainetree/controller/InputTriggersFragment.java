@@ -21,19 +21,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.terminatingcode.android.migrainetree.utils.Constants;
-import com.terminatingcode.android.migrainetree.utils.DateUtils;
-import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
 import com.terminatingcode.android.migrainetree.R;
+import com.terminatingcode.android.migrainetree.model.MigraineRecordObject;
 import com.terminatingcode.android.migrainetree.model.SQLite.LocalContentProvider;
 import com.terminatingcode.android.migrainetree.model.SQLite.MenstrualRecord;
+import com.terminatingcode.android.migrainetree.utils.Constants;
+import com.terminatingcode.android.migrainetree.utils.DateUtils;
 import com.terminatingcode.android.migrainetree.utils.SharedPrefsUtils;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -408,8 +407,7 @@ public class InputTriggersFragment extends Fragment {
      */
     public void startWeatherHistoryService(String date, String time){
         String locationUID = mPrefUtils.getSavedLocationUID();
-//        String locationUID = mUserSettings.getUidLocation();
-        if(Objects.equals(locationUID, Constants.CITY_NOT_SET)){
+        if(locationUID == Constants.CITY_NOT_SET){
             Toast.makeText(getActivity(), R.string.error_city_not_set, Toast.LENGTH_LONG).show();
         }else if(date == null || time == null){
             Toast.makeText(getActivity(), R.string.dateTimeError, Toast.LENGTH_LONG).show();

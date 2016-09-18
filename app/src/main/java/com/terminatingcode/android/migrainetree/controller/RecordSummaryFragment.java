@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -175,8 +176,8 @@ public class RecordSummaryFragment extends Fragment {
                 ap12ChangeTextView.setText(String.valueOf(cursor.getDouble(ap12Index)));
                 ap24ChangeTextView.setText(String.valueOf(cursor.getDouble(ap24Index)));
 
-                Drawable checkmark = getActivity().getDrawable(android.R.drawable.checkbox_on_background);
-                Drawable x = getActivity().getDrawable(android.R.drawable.checkbox_off_background);
+                Drawable checkmark = ContextCompat.getDrawable(getActivity(),android.R.drawable.checkbox_on_background);
+                Drawable x = ContextCompat.getDrawable(getActivity(),android.R.drawable.checkbox_off_background);
                 if (cursor.getInt(auraIndex) > 0) auraImageView.setImageDrawable(checkmark);
                 else auraImageView.setImageDrawable(x);
                 if (cursor.getInt(eatenIndex) > 0) eatenImageView.setImageDrawable(checkmark);

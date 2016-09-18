@@ -242,8 +242,7 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/typeOfPainSpinner"
-        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+        android:id="@+id/typeOfPainSpinner"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -257,8 +256,7 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/areasOfPainSpinner"
-        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+        android:id="@+id/areasOfPainSpinner"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -272,8 +270,7 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/typeOfMedsSpinner"
-        android:theme="@android:style/ThemeOverlay.Material.Dark"/>
+        android:id="@+id/typeOfMedsSpinner"/>
 
 
     <TextView

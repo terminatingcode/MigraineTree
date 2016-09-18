@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -479,8 +480,8 @@ public class ProcessRecordFragment extends Fragment {
         locationTextView.setText(city);
         if (startHour != null) dateTextView.setText(startHour);
         painTextView.setText(painAtOnset);
-        Drawable checkmark = getActivity().getDrawable(android.R.drawable.checkbox_on_background);
-        Drawable x = getActivity().getDrawable(android.R.drawable.checkbox_off_background);
+        Drawable checkmark = ContextCompat.getDrawable(getActivity(), android.R.drawable.checkbox_on_background);
+        Drawable x = ContextCompat.getDrawable(getActivity(), android.R.drawable.checkbox_off_background);
         if (mMigraineRecordObject.isAura()) auraImageView.setImageDrawable(checkmark);
         else auraImageView.setImageDrawable(x);
         if (mMigraineRecordObject.isEaten()) eatenImageView.setImageDrawable(checkmark);
